@@ -1,4 +1,122 @@
-/* Cập nhật ngày 27/10/2026 */
+/* Cập nhật ngày 28/10/2026 */
+/* ===== Phần 1: Khung banner cột trái - chuyển từ <style> trong section_group_product_1 sang đây để dùng chung ===== */
+
+.category-group-products-row {
+	display: flex;
+	align-items: stretch;
+}
+.category-group-products-row:before,
+.category-group-products-row:after {
+	display: none;
+}
+.category-group-products-row > div {
+	min-width: 0;
+}
+
+/* Cột banner: khung cố định, ảnh phủ kín bất kể tỉ lệ ảnh gốc */
+.category-group-products-row > .category-group-banner {
+	position: relative;
+	flex: 0 0 20%;
+	width: 20%;
+	max-width: 20%;
+	min-height: 340px;
+	padding: 0;
+	float: none;
+}
+.category-group-products-row > .category-group-banner + div {
+	flex: 1 1 0;
+	width: auto;
+	max-width: none;
+	padding-left: 15px;
+	float: none;
+}
+.category-group-products-row > .col-md-12 {
+	flex: 1 1 100%;
+	float: none;
+}
+
+.category-group-banner .cgb-link {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	overflow: hidden;
+	background: #f3f3f3;
+}
+.category-group-banner .cgb-link img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	transition: transform .4s ease;
+}
+.category-group-banner .cgb-link:hover img {
+	transform: scale(1.05);
+}
+
+/* Lớp phủ tên danh mục + nút */
+.category-group-banner .cgb-overlay {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 44px 14px 16px;
+	background: linear-gradient(to top, rgba(0, 0, 0, .7), rgba(0, 0, 0, 0));
+	color: #fff;
+	text-align: center;
+}
+.category-group-banner .cgb-title {
+	display: block;
+	margin-bottom: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.3;
+}
+.category-group-banner .cgb-btn {
+	display: inline-block;
+	padding: 7px 18px;
+	border-radius: 3px;
+	background: #bf2026;
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.2;
+}
+.category-group-banner .cgb-link:hover .cgb-btn {
+	background: #a01a20;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+	.category-group-products-row > .category-group-banner {
+		flex: 0 0 28%;
+		width: 28%;
+		max-width: 28%;
+		min-height: 280px;
+		padding: 0 0 0 5px;
+	}
+	.category-group-products-row > .category-group-banner + div {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.category-group-banner .cgb-link {
+		left: 5px;
+	}
+	.category-group-banner .cgb-overlay {
+		padding: 24px 6px 10px;
+	}
+	.category-group-banner .cgb-title {
+		margin-bottom: 0;
+		font-size: 12px;
+	}
+	.category-group-banner .cgb-btn {
+		display: none;
+	}
+}
+
+/* ===== Phần 2: Sửa hiển thị responsive (giữ nguyên từ bản 27/10/2026) ===== */
 /* Homepage responsive fix. Existing fonts, colors, buttons and carousel options stay in the theme. */
 /* Counteract the global pcx-grid.css flex row rule without changing desktop geometry. */
 body.bg-index .section_group_product.background-title .category-group-products-row{flex-wrap:nowrap!important}

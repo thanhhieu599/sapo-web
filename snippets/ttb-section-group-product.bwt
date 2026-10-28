@@ -1,0 +1,113 @@
+{% comment %}
+  KHỐI "NHÓM SẢN PHẨM" TRANG CHỦ - DÙNG CHUNG CHO MỌI NHÓM (1, 2, 3 ... N)
+  Cập nhật 28/10/2026.
+
+  Cách gọi (trong file section_group_product_N.bwt):
+    {% assign ttb_group_index = 'N' %}
+    {% include 'ttb-section-group-product' %}
+
+  Thiết lập lấy theo số N trong "Tùy chỉnh giao diện":
+    - Tiêu đề    : group_product_sec_tab_1_title_N   (nhóm 1: group_product_sec_tab_1_title)
+    - Danh mục   : group_product_sec_tab_1_col_N     (nhóm 1: group_product_sec_tab_1_col)
+    - Số SP      : group_product_limit_N
+    - Menu con   : group_product_menuN
+    - Link banner: group_product_banner_link_N
+    - Ảnh banner : group_product_banner_N.jpg
+  Muốn sửa giao diện cả 11 nhóm: chỉ sửa file này + assets/ttb-home-products.css.
+{% endcomment %}
+{% include 'ttb-home-product-styles' %}
+
+{% if ttb_group_index == '1' %}
+	{% assign ttb_key_col = 'group_product_sec_tab_1_col' %}
+	{% assign ttb_key_title = 'group_product_sec_tab_1_title' %}
+{% else %}
+	{% assign ttb_key_col = 'group_product_sec_tab_1_col_' | append: ttb_group_index %}
+	{% assign ttb_key_title = 'group_product_sec_tab_1_title_' | append: ttb_group_index %}
+{% endif %}
+{% assign ttb_key_limit = 'group_product_limit_' | append: ttb_group_index %}
+{% assign ttb_key_menu = 'group_product_menu' | append: ttb_group_index %}
+{% assign ttb_key_banner_link = 'group_product_banner_link_' | append: ttb_group_index %}
+{% assign ttb_banner_file = 'group_product_banner_' | append: ttb_group_index | append: '.jpg' %}
+
+{% assign ttb_col_alias = settings[ttb_key_col] %}
+{% assign ttb_title = settings[ttb_key_title] %}
+{% assign ttb_menu_alias_setting = settings[ttb_key_menu] %}
+
+{% if collections[ttb_col_alias].products.size > 0 %}
+	{% assign section_group_products_alias = ttb_col_alias %}
+	{% assign section_group_products_limit = settings[ttb_key_limit] %}
+{% else %}
+	{% assign section_group_products_alias = 'frontpage' %}
+	{% assign section_group_products_limit = 8 %}
+{% endif %}
+
+{% assign section_group_banner_image = collections[section_group_products_alias].image %}
+{% if section_group_banner_image == blank %}
+	{% assign section_group_banner_image = collections[section_group_products_alias].products.first.featured_image %}
+{% endif %}
+
+{% assign section_group_banner_link = settings[ttb_key_banner_link] %}
+{% if section_group_banner_link == blank %}
+	{% assign section_group_banner_link = collections[section_group_products_alias].url %}
+{% endif %}
+
+{% if linklists[ttb_menu_alias_setting].links.size > 0 %}
+	{% assign section_menu_alias = ttb_menu_alias_setting %}
+{% else %}
+	{% assign section_menu_alias = 'main-menu' %}
+{% endif %}
+
+<div class="section_group_product section_group_product_{{ ttb_group_index }} background-title">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box-shock">
+
+					<div class="barbox clearfix">
+						<h2 class="titlecate">{{ ttb_title }}</h2>
+						{% if linklists[ttb_menu_alias_setting].links.size > 0 %}
+						<div class="menu-button-edit">
+							<i class="fa fa-navicon" aria-hidden="true"></i>
+						</div>
+						<ul>
+							{% for link in linklists[section_menu_alias].links limit: 5 %}
+							<li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+							{% endfor %}
+							<li><a href="{{ collections[section_group_products_alias].url }}" class="viewmoretext" title="Xem tất cả {{ ttb_title }}">Xem tất cả</a></li>
+						</ul>
+						{% endif %}
+					</div>
+
+					<div class="row category-group-products-row">
+						{% if section_group_banner_image %}
+						<div class="col-md-2 category-group-banner">
+							<a href="{{ section_group_banner_link }}" class="cgb-link" title="{{ ttb_title }}">
+								<img src="{{ ttb_banner_file | asset_url }}"
+								     data-banner-fallback="{{ section_group_banner_image | img_url: 'large' }}"
+								     onerror="if(this.dataset.bannerFallback){this.onerror=null;this.src=this.dataset.bannerFallback;}"
+								     alt="{{ ttb_title }}"
+								     loading="lazy">
+								<span class="cgb-overlay">
+									<span class="cgb-title">{{ ttb_title }}</span>
+									<span class="cgb-btn">Xem ngay</span>
+								</span>
+							</a>
+						</div>
+						{% endif %}
+
+						<div class="{% if section_group_banner_image %}col-md-10{% else %}col-md-12{% endif %}">
+							<div class="section_tab_product-owl owl-carousel owl-theme not-dqowl">
+								{% for product in collections[section_group_products_alias].products limit: section_group_products_limit %}
+								<div class="item">
+									{% include 'product-grid-item' %}
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

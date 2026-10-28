@@ -3,11 +3,11 @@
 	<span class="stock-brand-title">Tình trạng:</span>
 	{% if variant.inventory_management == 'bizweb' %}
 	{% if variant.inventory_quantity <= 0 and variant.inventory_policy == 'deny' %}
-	<span class="a-stock a0"><link itemprop="availability" href="http://schema.org/OutOfStock" />Hết hàng</span>
+	<span class="a-stock a0">{% unless ttb_no_offer %}<link itemprop="availability" href="https://schema.org/OutOfStock" />{% endunless %}Hết hàng</span>
 	{% elsif variant.inventory_quantity <= 0 and variant.inventory_policy == 'continue' %}
-	<span class="a-stock a1"><link itemprop="availability" href="http://schema.org/InStock" />Còn hàng</span>
+	<span class="a-stock a1">{% unless ttb_no_offer %}<link itemprop="availability" href="https://schema.org/InStock" />{% endunless %}Còn hàng</span>
 	{% endif %}
 	{% else %}
-	<span class="a-stock a2"><link itemprop="availability" href="http://schema.org/InStock" />Còn hàng</span>
+	<span class="a-stock a2">{% unless ttb_no_offer %}<link itemprop="availability" href="https://schema.org/InStock" />{% endunless %}Còn hàng</span>
 	{% endif %}
 </div>

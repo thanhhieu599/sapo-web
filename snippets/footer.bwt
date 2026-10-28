@@ -243,7 +243,7 @@
 		</div>
 		<input type="hidden" name="contact[attachment_url]" id="quote-request-attachment-url">
 		<p class="quote-request-status" data-quote-status role="status" aria-live="polite"></p>
-		<p class="quote-request-file-note">Tệp sẽ được tải lên Cloudinary an toàn qua unsigned preset; liên kết công khai sẽ được gửi kèm yêu cầu báo giá. Email nhận yêu cầu theo cấu hình liên hệ quản trị trong Sapo.</p>
+		<p class="quote-request-file-note">Đính kèm danh sách vật tư (BOQ), bản vẽ hoặc ảnh mẫu để nhận báo giá chính xác. Bộ phận kinh doanh phản hồi trong giờ làm việc.</p>
 		<button type="submit" class="quote-request-submit">Gửi yêu cầu</button>
 		{% endform %}
 	</div>

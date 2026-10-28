@@ -1,31 +1,49 @@
+{% comment %}
+  Dữ liệu cấu trúc (JSON-LD) cho Google và các công cụ AI.
+  Cập nhật 28/10/2026: lấy tên pháp lý, SĐT, email, địa chỉ từ "Tùy chỉnh giao diện > Thông tin cửa hàng"
+  (settings.store_company / store_phone / store_email / store_address), bỏ các link mạng xã hội rỗng hoặc "#".
+{% endcomment %}
+{% if settings.store_company != blank %}{% assign ttb_org_name = settings.store_company %}{% else %}{% assign ttb_org_name = store.name %}{% endif %}
+{% if settings.store_phone != blank %}{% assign ttb_org_phone = settings.store_phone %}{% else %}{% assign ttb_org_phone = store.phone_number %}{% endif %}
+{% assign ttb_org_phone = ttb_org_phone | remove: ' ' | remove: '.' | remove_first: '0' | prepend: '+84' %}
+{% assign ttb_fb = settings.social_facebook_link | split: '?' | first %}
 <script type="application/ld+json">
 {
-	"@context" : "http://schema.org",
-  	"@type" : "Organization",
-  	"legalName" : "{{ store.name }}",
-  	"url" : "https:{{ store.url }}",
-  	"contactPoint":[{
-    	"@type" : "ContactPoint",
-    	"telephone" : "+84 {{ store.phone_number}}",
-    	"contactType" : "customer service"
-  	}],
-  	"logo":"{{ 'logo.png' | asset_url }}",
-  	"sameAs":[
-  	"{{ settings.social_facebook_link }}",
-    "{{ settings.social_twitter_link }}"
-	]
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	"@id": "https:{{ store.url }}/#organization",
+	"name": "{{ store.name | replace: '"', "'" }}",
+	"legalName": "{{ ttb_org_name | replace: '"', "'" }}",
+	"url": "https:{{ store.url }}",
+	"logo": "https:{{ 'logo.png' | asset_url }}",
+	{% if settings.store_email != blank %}"email": "{{ settings.store_email }}",{% endif %}
+	{% if settings.store_address != blank %}"address": {
+		"@type": "PostalAddress",
+		"streetAddress": "{{ settings.store_address | replace: '"', "'" }}",
+		"addressLocality": "Thành phố Hồ Chí Minh",
+		"addressCountry": "VN"
+	},{% endif %}
+	"contactPoint": [{
+		"@type": "ContactPoint",
+		"telephone": "{{ ttb_org_phone }}",
+		"contactType": "sales",
+		"areaServed": "VN",
+		"availableLanguage": ["Vietnamese", "English"]
+	}]{% if ttb_fb contains 'http' or settings.social_youtube_link contains 'http' %},
+	"sameAs": [{% if ttb_fb contains 'http' %}"{{ ttb_fb }}"{% endif %}{% if ttb_fb contains 'http' and settings.social_youtube_link contains 'http' %},{% endif %}{% if settings.social_youtube_link contains 'http' %}"{{ settings.social_youtube_link }}"{% endif %}]{% endif %}
 }
 </script>
 <script type="application/ld+json">
 {
-  "@context" : "http://schema.org",
-  "@type" : "WebSite", 
-  "name" : "{{ store.name }}",
-  "url" : "https:{{ store.url }}",
-  "potentialAction":{
-    	"@type" : "SearchAction",
-    	"target" : "https:{{ store.url}}/search?query={search_term}",
-    	"query-input" : "required name=search_term"
-  	}                     
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"name": "{{ store.name | replace: '"', "'" }}",
+	"url": "https:{{ store.url }}",
+	"publisher": { "@id": "https:{{ store.url }}/#organization" },
+	"potentialAction": {
+		"@type": "SearchAction",
+		"target": "https:{{ store.url }}/search?query={search_term_string}",
+		"query-input": "required name=search_term_string"
+	}
 }
 </script>
