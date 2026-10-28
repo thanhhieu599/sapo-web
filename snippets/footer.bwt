@@ -168,8 +168,17 @@
 							</a>
 						</div>
 						<div id="fb-root"></div>
-						<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0" nonce="2kTuVyXh"></script>
-						<div class="fb-page" data-href="{{ settings.social_facebook_link }}" data-tabs="" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="{{ settings.social_facebook_link }}" class="fb-xfbml-parse-ignore"><a rel="nofollow" href="{{ settings.social_facebook_link }}">Fanpage</a></blockquote></div>
+						
+						<div class="fb-page" data-href="{{ settings.social_facebook_link | split: '?' | first }}" data-tabs="" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="{{ settings.social_facebook_link }}" class="fb-xfbml-parse-ignore"><a rel="nofollow" href="{{ settings.social_facebook_link }}">Fanpage</a></blockquote></div>
+						<script>
+						/* D&T: chỉ tải Facebook SDK (~200KB) khi khách cuộn gần chân trang */
+						(function(){
+							var box=document.querySelector('.fb-page'); if(!box) return;
+							function load(){ if(document.getElementById('facebook-jssdk')) return; var js=document.createElement('script'); js.id='facebook-jssdk'; js.async=true; js.defer=true; js.crossOrigin='anonymous'; js.src='https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0'; document.body.appendChild(js); }
+							if(!('IntersectionObserver' in window)) { window.addEventListener('load', load); return; }
+							var io=new IntersectionObserver(function(es){ if(es[0].isIntersecting){ io.disconnect(); load(); } },{rootMargin:'400px'}); io.observe(box);
+						})();
+						</script>
 					</div>
 				</div>
 			</div>

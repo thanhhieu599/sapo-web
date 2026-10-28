@@ -1,0 +1,26 @@
+/* D&T 28/10/2026: chong vo giao dien tren dien thoai cho noi dung soan trong trinh soan thao Sapo
+   (mo ta san pham, bai viet, trang, mo ta danh muc) */
+.rte, .product-well, .collections_des_and_menu-content { overflow-wrap: break-word; word-wrap: break-word; }
+
+.rte img, .product-well img, .collections_des_and_menu-content img { max-width: 100% !important; height: auto !important; }
+
+/* Bang thong so ky thuat / bang tieu chuan: cuon ngang thay vi tran man hinh */
+.rte table, .product-well table, .collections_des_and_menu-content table {
+	display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-collapse: collapse;
+}
+
+.rte iframe, .product-well iframe, .collections_des_and_menu-content iframe,
+.rte video, .product-well video, .collections_des_and_menu-content video { max-width: 100%; }
+
+.rte iframe[src*="youtube"], .product-well iframe[src*="youtube"], .collections_des_and_menu-content iframe[src*="youtube"],
+.rte iframe[src*="youtu.be"], .product-well iframe[src*="youtu.be"], .collections_des_and_menu-content iframe[src*="youtu.be"] {
+	width: 100%; height: auto; aspect-ratio: 16 / 9; box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+	/* iPhone tu phong to khi bam vao o nhap chu nho hon 16px: giu 16px de form bao gia khong bi zoom */
+	input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="search"],
+	input[type="password"], input:not([type]), select, textarea { font-size: 16px !important; }
+	/* Facebook page plugin o chan trang khong tran ngang */
+	.fb-page, .fb-page span, .fb-page iframe { max-width: 100% !important; }
+}

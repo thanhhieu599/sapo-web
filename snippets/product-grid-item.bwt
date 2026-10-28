@@ -88,7 +88,7 @@
 		<div class="product-image-flip">
 			<a href="{{ product.url }}" title="{{ product.name }}">
 				{% if product.featured_image != null %}
-				<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ product.featured_image.src | img_url:'large' }}" alt="{{ product.name }}" class="img-responsive center-block" />
+				<img src="{{ product.featured_image.src | img_url:'large' }}" data-lazyload="{{ product.featured_image.src | img_url:'large' }}" loading="lazy" decoding="async" alt="{{ product.name | escape }}" class="img-responsive center-block" />
 				{% else %}
 				<img src="{{ 'no_image.jpg' | asset_url | img_url: 'medium' }}" alt="{{ product.name }}" class="img-responsive center-block" />
 				{% endif %}

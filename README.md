@@ -47,3 +47,45 @@ Cấu trúc thư mục giống hệt cột trái trong Sapo: `layouts/`, `templa
 - Mỗi lần sửa trên Sapo, cập nhật lại file tương ứng ở đây để GitHub luôn là bản mới nhất.
 - File mới do D&T thêm dùng tiền tố `ttb-` để phân biệt với file gốc của theme.
 - Không viết CSS/JS trực tiếp trong snippet; đưa vào `assets/` để trình duyệt cache được.
+
+---
+
+## Cập nhật đợt 2 – Tốc độ, responsive, dọn code (nhánh `toi-uu-dot-2`)
+
+**Làm sau khi đợt 1 đã chạy ổn.** Vẫn làm trên **bản sao giao diện** trước.
+
+**Bước 1 – Tạo 3 file asset mới** (Assets → "Thêm mới asset"/tải lên, đúng tên):
+
+| Thứ tự | File | Nội dung |
+|---|---|---|
+| 1 | `assets/ttb-vendor.js` | jQuery + Owl Carousel, trước nằm trong snippet `jquery` |
+| 2 | `assets/ttb-pcx.css` | Giao diện đánh giá / đã bán / đếm ngược trên thẻ sản phẩm |
+| 3 | `assets/ttb-responsive.css` | Chống vỡ khung trên điện thoại cho mô tả SP, bài viết |
+
+**Bước 2 – Dán đè 6 file:**
+
+| Thứ tự | File |
+|---|---|
+| 4 | `snippets/product-grid-item.bwt` |
+| 5 | `snippets/section_slider.bwt` |
+| 6 | `snippets/footer.bwt` |
+| 7 | `templates/product.bwt` |
+| 8 | `templates/article.bwt` |
+| 9 | `layouts/theme.bwt` (**dán cuối cùng**, vì file này gọi 3 asset ở bước 1) |
+
+**Bước 3 – Kiểm tra trên bản xem trước** (máy tính + điện thoại):
+- [ ] Slider trang chủ chạy, các khối sản phẩm trượt được (Owl Carousel).
+- [ ] Thẻ sản phẩm: ảnh hiện, ô đánh giá/đã bán, nút +/- số lượng, đồng hồ đếm ngược.
+- [ ] Trang sản phẩm: bấm ảnh nhỏ đổi ảnh lớn, zoom ảnh, chọn phiên bản, thêm giỏ hàng.
+- [ ] Chân trang: cuộn xuống thì khung Facebook Fanpage hiện ra.
+- [ ] Form báo giá trên iPhone: bấm vào ô nhập không bị phóng to màn hình.
+- [ ] Mở Console (F12) không có lỗi đỏ mới.
+
+**Bước 4 – Xóa file thừa trong Sapo** (sau khi bản sao chạy ổn 1–2 ngày):
+- Layouts: `theme-abds-bak`, `theme-absp-bak`
+- Templates: `article.amp`
+- Snippets: `aside-blog-recent`, `bootstrap.min.css`, `css-amp`, `js-amp`, `iwish`, `modal-ajax-cart`, `products-list-item`, `search-bar`, `section_banner`, `section_bestsell`, `section_feature_category`, `section_tab_product`, `social-link`
+- Assets: `ajaxify.min.js`, `bpr-products-module.scss`, `font.css`, `important_plugin.js`, `iwish.css`, `jquery-2.2.3.min.js`, `jquery.fancybox.scss`, `jquery.sticky.js`, `main.scss`, `mains.js`, `module.scss`, `owl.carousel.min.css`, `owl.carousel.min.js`, `print.css`, `recentview.js`, `responsive.scss`, `style.scss`, `tilt.jquery.min.js`, `update.scss`
+- Snippet `jquery` **giữ lại 2 tuần** làm phương án quay lại, sau đó xóa.
+
+**Quay lại nếu lỗi:** trong `layouts/theme.bwt`, thay dòng `<script src="{{ 'ttb-vendor.js' | asset_url }}"></script>` bằng `{% include 'jquery' %}`.

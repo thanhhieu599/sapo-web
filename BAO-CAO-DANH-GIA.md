@@ -55,3 +55,27 @@ Ngày đánh giá: 28/10/2026. Phạm vi: 162 file (3 layout, 28 template, 80 sn
 - Trang sản phẩm: bảng **tiêu chuẩn** (EN 388, EN ISO 374, EN ISO 20345, ANSI Z87.1, EN 149 / NIOSH N95…) lấy từ thẻ (tag) sản phẩm → đúng thứ QA/EHS cần, và là nội dung AI hay trích dẫn.
 - H1 trang chủ đang ẩn (`class="hidden"`) → H1 hiển thị, chứa từ khóa chính "Nhà cung cấp bảo hộ lao động & vật tư MRO cho nhà máy FDI".
 - `templates/product.color.bwt` là bản copy 26 KB của `product.bwt` → nếu không sản phẩm nào dùng, xóa để tránh sửa 2 nơi.
+
+## 4. Đợt 2 đã làm (nhánh `toi-uu-dot-2`)
+
+| # | Việc | Lợi ích |
+|---|---|---|
+| 1 | jQuery + Owl Carousel (130 KB) chuyển từ HTML sang file `ttb-vendor.js` | Mỗi trang HTML nhẹ đi ~130 KB; từ trang thứ 2 trình duyệt dùng bản đã lưu, không tải lại |
+| 2 | CSS thẻ sản phẩm (pcx) trước được JavaScript chèn vào sau khi tải trang → chuyển thành file CSS trong `<head>` | Hết hiện tượng thẻ sản phẩm "nhảy" giao diện khi tải (CLS) |
+| 3 | Bỏ đoạn JS pcx trùng lặp trong layout (`pcx-sold.js` đã có sẵn) | Bớt code trùng |
+| 4 | Ảnh sản phẩm dùng lazy-load gốc của trình duyệt thay vì ảnh chờ `loaders.svg` + JavaScript | Ảnh hiện nhanh hơn, Google Images đọc được ảnh thật |
+| 5 | Ảnh chính trang sản phẩm ưu tiên tải (`fetchpriority`) | Cải thiện LCP trang sản phẩm |
+| 6 | Slider trang chủ có `srcset` | Điện thoại màn hình thường tải ảnh 480px thay vì 1024px |
+| 7 | Facebook SDK (~200 KB) chỉ tải khi khách cuộn gần chân trang | Giảm JavaScript lúc mở trang |
+| 8 | `preconnect` tới CDN Sapo và Bootstrap; bỏ 3 thẻ `preload` trùng | Kết nối CDN sớm hơn |
+| 9 | CSS responsive cho nội dung soạn thảo: ảnh, bảng thông số, video YouTube | Không vỡ khung ngang trên điện thoại (đã kiểm tra ở 375px) |
+| 10 | Ô nhập 16px trên điện thoại | iPhone không tự phóng to khi khách điền form báo giá |
+| 11 | Schema bài viết: `BlogPosting`, ngày ISO, tác giả, đơn vị xuất bản là D&T (trước bị lấy nhầm tiêu đề bài) | Bài blog đủ điều kiện rich result, AI trích dẫn đúng nguồn D&T |
+| 12 | Escape mô tả sản phẩm trong schema | Tránh vỡ HTML khi mô tả có dấu ngoặc kép |
+| 13 | Tiêu đề trang lọc theo thẻ: bỏ chữ tiếng Anh "tagged" | Title tiếng Việt chuẩn |
+| 14 | Xóa 2 layout backup, template AMP, 13 snippet, 19 asset không dùng | Bớt ~700 KB mã chết, dễ bảo trì |
+
+**Còn lại (cần số liệu thật hoặc anh quyết định):**
+- Popup đăng ký hiện sau 15 giây và **lặp lại mỗi 5 phút** sau khi khách đóng. Với khách B2B, đề xuất chỉ hiện 1 lần mỗi phiên (đổi `repeatDelay` trong `snippets/popup-dang-ky.bwt`).
+- Gộp 3 file CSS chính (`base`, `ant-kitchen`, `edit`, ~240 KB) và nâng Bootstrap 3 → cần đo PageSpeed thật trước/sau, rủi ro vỡ giao diện cao.
+- Nội dung SEO B2B: H1 trang chủ hiển thị, trang ngành, bảng tiêu chuẩn EN/ANSI, FAQ schema.

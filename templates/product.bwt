@@ -16,7 +16,7 @@
 <section class="product" itemscope itemtype="https://schema.org/Product">	
 	{% if product.selected_or_first_available_variant.sku != blank %}<meta itemprop="mpn" content="{{ product.selected_or_first_available_variant.sku | escape }}" />{% endif %}
 	<meta itemprop="image" content="https:{{ product.featured_image.src | img_url: 'grande' }}">
-	<meta itemprop="description" content="{{ product.content | strip_html | truncate: 300 }}">
+	<meta itemprop="description" content="{{ product.content | strip_html | strip_newlines | truncate: 300 | escape }}">
 	<meta itemprop="name" content="{{ product.name | escape}}">
 	<div class="container">
 		<div class="row">
@@ -32,7 +32,7 @@
 									{% assign featured_image_alt = product.featured_image.alt%}
 									{%endif%}
 									<a rel="nofollow" {%if settings.product_lightbox_enable%}{%if product.images.size  > 0 %}href="{{ product.featured_image.src | img_url:'1024x1024' }}" data-rel="prettyPhoto[product-gallery]"{% endif %}{%endif %} class="large_image_url">
-										<img {%if product.images.size  > 0 %}id="zoom_01"{%endif%} src="{{ product.featured_image.src | img_url:'1024x1024' }}" alt="{{ product.name }}" class="img-responsive center-block">
+										<img {%if product.images.size  > 0 %}id="zoom_01"{%endif%} src="{{ product.featured_image.src | img_url:'1024x1024' }}" fetchpriority="high" decoding="async" alt="{{ product.name | escape }}" class="img-responsive center-block">
 									</a>							
 									<div class="hidden">
 										{% for image in product.images offset: 1 %}

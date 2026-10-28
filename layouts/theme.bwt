@@ -14,7 +14,7 @@
  <meta name="google-site-verification" content="_2VnVyJmUx0oZ193uFbebNyiEgKuQU1D8iYAy97LBHc" />
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">			
-		<title>{%if page_title == 'All'%}Tất cả sản phẩm{% elsif template == "search" %}Tìm kiếm sản phẩm{%else%}{{ page_title }}{%endif%}{% if current_tags %} tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} - Trang {{ current_page }}{% endif %}{% unless page_title contains store.name %} | {{ store.name }}{% endunless %}</title>		
+		<title>{%if page_title == 'All'%}Tất cả sản phẩm{% elsif template == "search" %}Tìm kiếm sản phẩm{%else%}{{ page_title }}{%endif%}{% if current_tags %} - {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} - Trang {{ current_page }}{% endif %}{% unless page_title contains store.name %} | {{ store.name }}{% endunless %}</title>		
 		{% if page_description != ""%}
 		<meta name="description" content="{{ page_description | escape }}">
 		{% endif %}
@@ -34,19 +34,19 @@
 {% endif %}
 		{%if settings.favicon_enable%}<link rel="icon" href="{{ 'favicon.png' | asset_url }}" type="image/x-icon" />{%endif%}
 		{% include 'fb-open-graph-tags' %}
+		<link rel="preconnect" href="https://bizweb.dktcdn.net">
+		<link rel="preconnect" href="https://maxcdn.bootstrapcdn.com" crossorigin>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		
-		<link rel="preload" as="style" type="text/css" href="{{ 'base.scss.css' | asset_url }}" />
 		{{ 'base.scss.css' | asset_url | stylesheet_tag }}	
 		
-		<link rel="preload" as="style" type="text/css" href="{{ 'ant-kitchen.scss.css' | asset_url }}" />
 		{{ 'ant-kitchen.scss.css' | asset_url | stylesheet_tag }}
 		
-		<link rel="preload" as="style" type="text/css" href="{{ 'edit.scss.css' | asset_url }}" />
 		{{ 'edit.scss.css' | asset_url | stylesheet_tag }}
 		
-		{% include 'jquery' %}
+		{% comment %}jQuery + Owl: file asset de trinh duyet cache (truoc day in thang vao HTML qua snippet 'jquery'){% endcomment %}
+		<script src="{{ 'ttb-vendor.js' | asset_url }}"></script>
 		{% if template contains 'customer' %}
 		{{ 'bizweb-api.js'  | bizweb_asset_url | script_tag }}
 		{{ 'common.js' | bizweb_asset_url | script_tag }}   
@@ -61,6 +61,8 @@
 {{ 'appbulk-selling-products.css' | asset_url | stylesheet_tag }}
 {{ 'appbulk-product-statistics.css' | asset_url | stylesheet_tag }}
 {{ 'pcx-grid.css' | asset_url | stylesheet_tag }}
+{{ 'ttb-pcx.css' | asset_url | stylesheet_tag }}
+{{ 'ttb-responsive.css' | asset_url | stylesheet_tag }}
 <style>
   /* Ẩn danh sách xổ xuống của menu "Thương hiệu" - bấm vào sẽ mở trang lưới logo */
   li:has(> a[href$="/thuong-hieu"]) > *:not(a) { display: none !important; }
@@ -139,53 +141,5 @@
 	{{ 'appbulk-product-statistics.js' | asset_url | script_tag }}
 	{% include 'popup-dang-ky' %}
 <script src="{{ 'pcx-sold.js' | asset_url }}" defer></script>
-<script>
-(function(){
-  if (window.__pcxInit) return; window.__pcxInit = true;
-
-  var css = '.pcx-meta,.pcx-countdown,.pcx-actions{text-align:left;font-size:13px;line-height:1.3}'
-  /* Hàng: ô đánh giá + đã bán */
-  + '.pcx-meta{display:flex;align-items:center;gap:8px;margin:4px 0 6px;min-height:20px;color:#555}'
-  + '.pcx-badge{display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 6px;border:1px solid #f5b301;background:#fffaf0;border-radius:3px;font-size:12px;font-weight:600;line-height:1;color:#333}'
-  + '.pcx-badge .pcx-star{color:#f5b301;font-size:12px}'
-  + '.pcx-badge--none{border-color:#ddd;background:#f7f7f7;color:#999}'
-  + '.pcx-badge--none .pcx-star{color:#ccc}'
-  + '.pcx-sold{color:#555;font-size:12px}'
-  + '.pcx-countdown{display:flex;gap:6px;margin:6px 0}'
-  + '.pcx-countdown div{background:#2c3e50;color:#fff;border-radius:3px;width:44px;padding:4px 2px;text-align:center}'
-  + '.pcx-countdown b{display:block;font-size:14px}.pcx-countdown span{font-size:10px;opacity:.85}'
-  /* Form: ô số lượng + nút, xếp dọc và cùng full chiều ngang */
-  + '.pcx-form{display:flex;flex-direction:column;gap:6px;margin:0}'
-  + '.pcx-qty{flex:none;display:flex;width:100%;border:1px solid #ddd;border-radius:3px;overflow:hidden;height:34px}'
-  + '.pcx-qty button{flex:0 0 40px;padding:0;background:#f7f7f7;border:0;cursor:pointer;font-size:16px;color:#666}'
-  + '.pcx-qty input{flex:1 1 auto;min-width:0;width:100%;height:100%;padding:0;margin:0;text-align:center;border:0;border-left:1px solid #ddd;border-right:1px solid #ddd;border-radius:0;box-shadow:none;font-size:13px;-moz-appearance:textfield}'
-  + '.pcx-qty input::-webkit-outer-spin-button,.pcx-qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}'
-  + '.pcx-btn{flex:1 1 118px;min-width:118px;display:flex;align-items:center;justify-content:center;height:34px;padding:0 4px;background:#bf2026;color:#fff;border:0;border-radius:3px;font-size:12px;font-weight:700;line-height:1.15;text-align:center;white-space:nowrap;cursor:pointer;text-decoration:none}'
-  + '.pcx-form .pcx-btn{flex:none;width:100%;min-width:0}'
-  + '.pcx-btn:hover{background:#a01a20;color:#fff}'
-  + '.pcx-btn--contact{background:#bf2026}.pcx-btn--contact:hover{background:#a01a20;color:#fff}';
-  var st = document.createElement('style'); st.appendChild(document.createTextNode(css)); document.head.appendChild(st);
-
-  document.addEventListener('click', function(e){
-    var m = e.target.closest('[data-pcx-minus]'), p = e.target.closest('[data-pcx-plus]');
-    if (!m && !p) return;
-    var input = e.target.closest('.pcx-qty').querySelector('input');
-    input.value = Math.max(1, (parseInt(input.value, 10) || 1) + (p ? 1 : -1));
-  });
-
-  function endTime(s){ if (s.indexOf('T') === -1) s += 'T23:59:59'; return new Date(s).getTime(); }
-  function tick(){
-    var now = Date.now();
-    document.querySelectorAll('.pcx-countdown').forEach(function(el){
-      var diff = Math.max(0, endTime(el.getAttribute('data-end')) - now);
-      if (diff === 0) { el.style.display = 'none'; return; }
-      el.querySelector('[data-d]').textContent = Math.floor(diff / 864e5);
-      el.querySelector('[data-h]').textContent = Math.floor(diff % 864e5 / 36e5);
-      el.querySelector('[data-m]').textContent = Math.floor(diff % 36e5 / 6e4);
-    });
-  }
-  tick(); setInterval(tick, 30000);
-})();
-</script>
 </body>
 </html>

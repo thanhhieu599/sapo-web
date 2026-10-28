@@ -15,6 +15,9 @@
 						<a href="{{ settings[url] }}" class="clearfix">
 							<img
 								src="{{ image | asset_url | img_url:'1024x1024' }}"
+								srcset="{{ image | asset_url | img_url:'large' }} 480w, {{ image | asset_url | img_url:'1024x1024' }} 1024w"
+								sizes="(max-width: 991px) 100vw, 75vw"
+								decoding="async"
 								alt="{{ settings[title1] | escape }}"
 								class="img-responsive center-block"
 								{% if first_enabled_slide %}

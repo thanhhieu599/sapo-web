@@ -4,19 +4,19 @@
 <div class="container article-wraper">
 	<div class="row">
 		<section class="right-content {%if settings.blog_layout == 'no'%}col-md-12{%else%}col-md-9{%endif%} {%if settings.blog_layout == 'left'%}col-md-push-3{%endif%}">
-			<article class="article-main art-article" itemscope itemtype="http://schema.org/Article">
+			<article class="article-main art-article" itemscope itemtype="https://schema.org/BlogPosting">
 				{% if article.image.src %}
 				{% assign featured_image = article.image.src %}
 				{% else %}
 				{% assign featured_image = 'logo.png' | asset_url %}
 				{% endif %}
-				<meta itemprop="mainEntityOfPage" content="{{ article.url }}">
-				<meta itemprop="description" content="{{ article.summary | strip_html }}">
-				<meta itemprop="author" content="{{ article.author }}">
-				<meta itemprop="headline" content="{{ article.title }}">
+				<meta itemprop="mainEntityOfPage" content="https:{{ store.url }}{{ article.url }}">
+				<meta itemprop="description" content="{{ article.summary | strip_html | strip_newlines | truncate: 300 | escape }}">
+				{% if article.author != blank %}<span class="hidden" itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="{{ article.author | escape }}"></span>{% else %}<span class="hidden" itemprop="author" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="{{ store.name | escape }}"><meta itemprop="url" content="https:{{ store.url }}"></span>{% endif %}
+				<meta itemprop="headline" content="{{ article.title | escape }}">
 				<meta itemprop="image" content="https:{{ featured_image }}">
-				<meta itemprop="datePublished" content="{{ article.published_on | date: 'dd-MM-yyyy' }}">
-				<meta itemprop="dateModified" content="{{ article.created_on | date: 'dd-MM-yyyy' }}">
+				<meta itemprop="datePublished" content="{{ article.published_on | date: 'yyyy-MM-dd' }}">
+				<meta itemprop="dateModified" content="{{ article.published_on | date: 'yyyy-MM-dd' }}">
 				<div class="hidden" itemprop="publisher" itemscope itemtype="https://schema.org/Organization">
 					<div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
 						<img src="{{'logo.png'|asset_url}}" alt="{{ store.name }}"/>
@@ -24,7 +24,7 @@
 						<meta itemprop="width" content="200">
 						<meta itemprop="height" content="49">
 					</div>
-					<meta itemprop="name" content="{{ article.title }}">
+					<meta itemprop="name" content="{% if settings.store_company != blank %}{{ settings.store_company | escape }}{% else %}{{ store.name | escape }}{% endif %}">
 				</div>
 
 				<!-- ===== Đầu bài ===== -->
