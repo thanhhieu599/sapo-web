@@ -1,0 +1,71 @@
+{% if settings.aside_banner_1_enable or settings.aside_banner_enable_2 or settings.aside_banner_enable_3 or settings.aside_banner_enable_4 or settings.aside_banner_enable_5 %}
+
+<aside class="aside-item banner hidden-xs hidden-sm">
+
+    <div class="aside-title">
+        <h3 class="title-head margin-top-0">
+            <span>{{ settings.aside_banner_title }}</span>
+        </h3>
+    </div>
+
+    <div class="aside-content">
+
+        {% if settings.aside_banner_1_enable %}
+        <div class="aside-banner-item">
+            <a href="{{ settings.aside_banner_url | escape }}">
+                <img
+                    src="{{ 'aside_banner.png' | asset_url }}"
+                    alt="{{ settings.aside_banner_title | escape }}"
+                    class="banner-img img-responsive">
+            </a>
+        </div>
+        {% endif %}
+
+        {% if settings.aside_banner_enable_2 %}
+        <div class="aside-banner-item">
+            <a href="{{ settings.aside_banner_url_2 | escape }}">
+                <img
+                    src="{{ 'aside_banner_2.png' | asset_url }}"
+                    alt="{{ settings.aside_banner_title_2 | escape }}"
+                    class="banner-img img-responsive">
+            </a>
+        </div>
+        {% endif %}
+
+        {% if settings.aside_banner_enable_3 %}
+        <div class="aside-banner-item">
+            <a href="{{ settings.aside_banner_url_3 | escape }}">
+                <img
+                    src="{{ 'aside_banner_3.png' | asset_url }}"
+                    alt="{{ settings.aside_banner_title_3 | escape }}"
+                    class="banner-img img-responsive">
+            </a>
+        </div>
+        {% endif %}
+
+        {% if settings.aside_banner_enable_4 %}
+        <div class="aside-banner-item">
+            <a href="{{ settings.aside_banner_url_4 | escape }}">
+                <img
+                    src="{{ 'aside_banner_4.png' | asset_url }}"
+                    alt="{{ settings.aside_banner_title_4 | escape }}"
+                    class="banner-img img-responsive">
+            </a>
+        </div>
+        {% endif %}
+
+        {% if settings.aside_banner_enable_5 %}
+        <div class="aside-banner-item">
+            <a href="{{ settings.aside_banner_url_5 | escape }}">
+                <img
+                    src="{{ 'aside_banner_5.png' | asset_url }}"
+                    alt="{{ settings.aside_banner_title_5 | escape }}"
+                    class="banner-img img-responsive">
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+
+</aside>
+{% endif %}

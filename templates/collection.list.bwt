@@ -1,0 +1,59 @@
+{% include 'breadcrumb' %}  
+
+<div class="container">
+	<div class="row">	
+		<aside class="sidebar left left-content col-lg-3">
+			{%include 'sidebar-collection'%}			
+		</aside>
+		<section class="right-content col-lg-9 {%if settings.collection_layout == 'right'%} col-lg-pull-3 {%endif%} collection">
+			<div class="category-products">
+				<h1 class="title-head">{%if page_title == 'All'%}Tất cả sản phẩm{%else%}{{ page_title }}{%endif%}</h1>				
+				{% paginate collection.products by settings.collection_number_product %}							
+				{%include 'collection-sortby'%}		
+				<section class="products-view products-view-list">
+					<div class="row row-noGutter">
+						{% for product in collection.products %}
+						{% assign on_sale = false %}
+						{% if product.compare_at_price_max > product.price_min %}
+						{% assign on_sale = true %}
+						{% endif %}
+						{% assign sold_out = true %}
+						{% if product.available  %}
+						{% assign sold_out = false %}
+						{% endif %} 
+						{% assign variantCount = product.variants | size %}
+						{% assign on_var = false %}
+						{% if product.price_max > product.price_min %}
+						{% assign on_var = true %}
+						{% endif %}
+						{% capture discount %} 
+						{{ product.selected_or_first_available_variant.compare_at_price | minus:product.selected_or_first_available_variant.price | times:100 | divided_by:product.selected_or_first_available_variant.compare_at_price | round }}% 
+						{% endcapture %}
+						{%assign check = false%}
+						{% for tag in product.tags %}
+						{%if tag == 'noo'%}
+						{%assign check = true%}
+						{%endif%}
+						{% endfor %}
+						{%if check == true%}
+						{%else%}
+						<div class="col-xs-12">
+							{%include 'product-list-item'%}
+						</div>
+						{%endif%}
+						{% endfor %}
+					</div>
+					<div class="text-xs-right">
+						{% if paginate.pages > 1 %}
+						{% include 'collection-paginate-pages' %}
+						{% endif %}
+					</div>
+				</section>
+				{% endpaginate %}
+			</div>
+		</section>
+
+	</div>
+</div>
+<script>
+</script>

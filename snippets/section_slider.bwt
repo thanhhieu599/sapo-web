@@ -1,0 +1,74 @@
+<div class="container">
+	<div class="col-md-3 no-padding"></div>
+	<div class="col-md-9 no-padding">
+		<div class="home-slider owl-carousel not-dqowl">
+			{% assign first_enabled_slide = true %}
+
+			{% for i in (1..5) %}
+				{% capture enable %}slider_{{i}}_enable{% endcapture %}
+				{% capture image %}slider_{{i}}.jpg{% endcapture %}
+				{% capture url %}slider_{{i}}_url{% endcapture %}
+				{% capture title1 %}slider_{{i}}_text_1{% endcapture %}
+
+				{% if settings[enable] %}
+					<div class="item">
+						<a href="{{ settings[url] }}" class="clearfix">
+							<img
+								src="{{ image | asset_url | img_url:'1024x1024' }}"
+								alt="{{ settings[title1] | escape }}"
+								class="img-responsive center-block"
+								{% if first_enabled_slide %}
+									loading="eager"
+									fetchpriority="high"
+								{% else %}
+									loading="lazy"
+								{% endif %}
+							/>
+						</a>
+					</div>
+
+					{% assign first_enabled_slide = false %}
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+<script>
+	$(".home-slider").owlCarousel({
+		nav: false,
+		slideSpeed: 600,
+		paginationSpeed: 400,
+		singleItem: true,
+		pagination: false,
+		dots: true,
+		autoplay: true,
+		autoplayTimeout: 4500,
+		autoplayHoverPause: false,
+		autoHeight: false,
+		loop: true,
+		responsive: {
+			0: {
+				items: 1
+			},
+			543: {
+				items: 1
+			},
+			768: {
+				items: 1
+			},
+			991: {
+				items: 1
+			},
+			992: {
+				items: 1
+			},
+			1300: {
+				items: 1
+			},
+			1590: {
+				items: 1
+			}
+		}
+	});
+</script>

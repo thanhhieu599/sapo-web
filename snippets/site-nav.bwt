@@ -1,0 +1,139 @@
+<nav class="hidden-sm hidden-xs">
+	<div class="col-md-3 no-padding">
+		<div class="mainmenu {% if template != 'index' %}mainmenu-other{% endif %}">
+			<div class="line"><i></i><i></i><i></i></div>
+			<span>{{ settings.index-cate-title }}</span>
+			<div class="nav-cate">
+				<ul id="menu2017">
+					{% if linklists[settings.menu-category].links.size > 0 %}
+					{% assign section_menu_alias = settings.menu-category %}
+					{% else %}
+					{% assign section_menu_alias = 'main-menu' %}
+					{% endif %}
+					{% for link in linklists[section_menu_alias].links %}
+					{% capture icon_cate %}index-cate-icon-{{ forloop.index }}.png{% endcapture %}
+					{% if linklists[link.alias] != null %}
+					<li class="dropdown menu-item-count">
+						<h3>
+							<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" />
+							<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+						</h3>
+						<div class="subcate gd-menu">
+							{% for childlink in linklists[link.alias].links %}
+							{% if linklists[childlink.alias] != null %}
+							<aside>
+								<strong>
+									<a href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+								</strong>
+								{% for childlink2 in linklists[childlink.alias].links limit: 9 %}
+								<a href="{{ childlink2.url }}" title="{{ childlink2.title }}">{{ childlink2.title }}</a>
+								{% endfor %}
+								<a href="{{ childlink.url }}" title="Xem tất cả {{ childlink.title }}">Xem tất cả {{ childlink.title }}</a>
+							</aside>
+							{% else %}
+							<aside>
+								<a href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+							</aside>
+							{% endif %}
+							{% endfor %}
+						</div>
+					</li>
+					{% else %}
+					<li class="menu-item-count">
+						<h3><img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" /><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></h3>
+					</li>
+					{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9 no-padding">
+		<ul id="nav" class="nav">
+			{% for link in linklists[settings.main_menu].links %}
+			{% if settings.display_megamenu %}
+			{% assign items_list = settings.megamenu_items | split:"," %}
+			{% endif %}
+			{% assign mega-title = link.title | downcase %}
+			{% if linklists[link.alias] %}
+			<li class="nav-item {% if link.active %}active{% endif %}{% if settings.display_megamenu and items_list contains mega-title %} has-mega{%endif%}">
+				<a href="{{ link.url }}" class="nav-link" title="{{ link.title }}">{{ link.title }} <i class="fa fa-angle-right" data-toggle="dropdown"></i></a>			
+				{% if settings.display_megamenu and items_list contains mega-title %}
+				{% include 'mega-menu' %}
+				{% else %}			
+				<ul class="dropdown-menu">
+					{% for childlink in linklists[link.alias].links %}
+					{% if linklists[childlink.alias] %}
+					<li class="dropdown-submenu nav-item-lv2">
+						<a class="nav-link" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }} <i class="fa fa-angle-right"></i></a>
+
+						<ul class="dropdown-menu">
+							{% for childlink2 in linklists[childlink.alias].links %}						
+							<li class="nav-item-lv3">
+								<a class="nav-link" href="{{ childlink2.url }}" title="{{ childlink2.title }}">{{ childlink2.title }}</a>
+							</li>						
+							{% endfor %}
+						</ul>                      
+					</li>
+					{% else %}
+					<li class="nav-item-lv2">
+						<a class="nav-link" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+					</li>
+					{% endif %}
+					{% endfor %}
+
+				</ul>
+				{% endif %}
+			</li>
+			{% else %}
+			<li class="nav-item {% if link.active %}active{% endif %}"><a class="nav-link" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+</nav>
+<script>
+	if ($(window).width() > 1100){
+		{% assign sidebar_list = settings.sidebar_list %}
+		{% if sidebar_list == null or sidebar_list == "" %}
+		{% assign sidebar_list = 10 %}
+		{% endif %}
+		var menu_limit = "{{ sidebar_list }}";
+		if (isNaN(menu_limit)){
+			menu_limit = 10;
+		} else {
+			menu_limit = {{ sidebar_list | minus: 1 }};
+		}
+	}else{
+		{% assign sidebar_list = settings.sidebar_list_1 %}
+		{% if sidebar_list == null or sidebar_list == "" %}
+		{% assign sidebar_list = 10 %}
+		{% endif %}
+		var menu_limit = "{{ sidebar_list }}";
+		if (isNaN(menu_limit)){
+			menu_limit = 8;
+		} else {
+			menu_limit = {{ sidebar_list | minus: 1 }};
+		}
+	}
+	var sidebar_length = $('.menu-item-count').length;
+	if (sidebar_length > (menu_limit + 1) ){
+		$('.nav-cate:not(.site-nav-mobile) > ul').each(function(){
+			$('.menu-item-count',this).eq(menu_limit).nextAll().hide().addClass('toggleable');
+			$(this).append('<li class="more"><h3><a title="Xem thêm..."><label>Xem thêm... </label></a></h3></li>');
+		});
+		$('.nav-cate > ul').on('click','.more', function(){
+			if($(this).hasClass('less')){
+				$(this).html('<h3><a title="Xem thêm..."><label>Xem thêm...</label></a></h3>').removeClass('less');
+			} else {
+				$(this).html('<h3><a title="Thu gọn..."><label>Thu gọn... </label></a></h3>').addClass('less');;
+			}
+			$(this).siblings('li.toggleable').slideToggle({
+				complete: function () {
+					var divHeight = $('#menu2017').height(); 
+					$('.subcate.gd-menu').css('min-height', divHeight+'px');
+				}
+			});
+		});
+	}
+</script>

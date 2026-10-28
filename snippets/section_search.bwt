@@ -1,0 +1,94 @@
+<div class="section_group_product section_group_product_1 search-group-new">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box-shock">
+					<div class="barbox">
+						<div class="header_search search_form">
+							<div class="input-group search-bar search_form">
+								<fieldset class="form-group">
+									<div class="col-lg-10 col-md-10 no-padding">
+										<div class="clearfix">
+											<div class="col-md-3 col-sm-6 col-xs-12">	
+												<div class="input_group group_a">
+													<input type="text" autocomplete="off" placeholder="Nhập tên sản phẩm" id="name" class="form-control form-hai form-control-lg" required="">
+												</div>
+											</div>
+											<div class="col-md-3 col-sm-6 col-xs-12">	
+												<div class="ab">
+													<select name="garden" class="tag-select" required>
+														<option value="">Sản phẩm</option>
+														{% for type in store.types%}
+														{%if type != ''%}
+														<option value="product_type:({{ type }})">{{ type }}</option>
+														{% endif %}
+														{% endfor %}
+													</select>
+												</div>	
+											</div>
+											<div class="col-md-3 col-sm-6 col-xs-12">
+												<div class="abs">
+													<select name="gender" class="tag-select option_vendor ui dropdown" id="select" required>
+														<option value="">Thương hiệu</option>
+														{% for vendor in store.vendors %}
+														{%if vendor != ''%}
+														<option class="item" value="vendor:({{ vendor }})">{{ vendor }}</option>
+														{% endif %}
+														{% endfor %}
+													</select>
+												</div>	
+											</div>
+											<div class="col-md-3 col-sm-6 col-xs-12">
+												<div class="abss">
+													<select class="tag-select option_vendor ui dropdown" required>
+														<option value="">Giá cả</option>
+														{% assign tags = settings.filter_price_node | split: ';' %}
+														{% for t in tags %}
+														{% assign tag = t | strip %}
+														{% assign tag_value = tag | handleize %}
+														{%if forloop.index == 1%}
+														<option class="item" value="price_min:(<{{ tag | replace: '.' | replace: 'đ' }})">Giá dưới {{tag}}</option>
+														{%elsif forloop.index == forloop.length%}
+														<option class="item" value="price_min:(>{{ tagold | replace: '.' | replace: 'đ' }} AND <{{ tag | replace: '.' | replace: 'đ' }})">{{tagold}} - {{tag}}</option>
+														<option class="item" value="price_min:(>{{ tag | replace: '.' | replace: 'đ' }})">Giá trên {{tag}}</option>
+														{%else%}
+														<option class="item" value="price_min:(>{{ tagold | replace: '.' | replace: 'đ' }} AND <{{ tag | replace: '.' | replace: 'đ' }})">{{tagold}} - {{tag}}</option>
+														{%endif%}
+														{% assign tagold = tag %}
+														{% endfor %}
+													</select>
+												</div>	
+											</div>
+										</div>
+									</div>
+									<div class="col-lg-2 col-md-2 no-padding">
+										<button class="hs-submit btn-style btn btn-default btn-blues">TÌM KIẾM</button>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	jQuery(".hs-submit").click(function(){
+		var selectTag = jQuery(".tag-select");
+		var tagArray = [];
+		for (var i = 0; i < selectTag.length ; i++) {
+			if (jQuery(selectTag[i]).val() != "") {
+				tagArray.push(jQuery(selectTag[i]).val());
+			}
+		}
+		var tag = tagArray.toString();
+		var a = $('.group_a input').val();
+		tag = tag.replace(/,/g, ')AND(');
+		if(tag != '' ){
+			location.href = "/search?query="+a+"("+tag +")";
+		}else{
+			location.href = "/search?query="+a;
+		}
+	});
+</script>

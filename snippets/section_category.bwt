@@ -1,0 +1,67 @@
+<div class="section_category">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="category-frame-border">									
+					<h2>Danh mục sản phẩm</h2>
+					<ul class="category-frame">
+						{% if linklists[settings.menu-category].links.size > 0 %}
+						{% assign section_menu_alias = settings.menu-category %}
+						{% else %}
+						{% assign section_menu_alias = 'main-menu' %}
+						{% endif %}
+						{% for link in linklists[section_menu_alias].links %}
+						{% capture icon_cate %}index-cate-icon-{{ forloop.index }}.png{% endcapture %}
+						{% if linklists[link.alias] != null %}
+						<li class="category-frame-item li-has-subs">
+							<h3>
+								<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" />
+								<a class="open-close" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+							</h3>				
+							<ul class="category-sub submenu">													
+								{% for childlink in linklists[link.alias].links %}
+								{% if linklists[childlink.alias] != null %}
+								<li class="category-sub-item">
+									<a href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+									<ul class="category-sub2">	
+										{% for childlink2 in linklists[childlink.alias].links %}
+										<li class="category-sub2-item">
+											<a href="{{ childlink2.url }}" title="{{ childlink2.title }}"><i class="fa fa-angle-right"></i> {{ childlink2.title }}</a>
+										</li>
+										{% endfor %}
+									</ul>
+								</li>															
+								{% else %}
+								<li class="category-sub-item">
+									<a href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+								</li>
+								{% endif %}
+								{% endfor %}
+							</ul>
+						</li>
+						{% else %}
+						<li class="category-frame-item">
+							<h3>
+								<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" />
+								<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+							</h3>
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function() {
+		$('.open-close').on('click', function(e){
+			e.preventDefault();
+			var $this = $(this);
+			$this.parents('.li-has-subs').find('.submenu').stop().slideToggle();
+			$(this).toggleClass('active')
+			return false;
+		});
+	});	
+</script>

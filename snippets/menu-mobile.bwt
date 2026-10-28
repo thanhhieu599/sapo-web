@@ -1,0 +1,84 @@
+<div id="menu-mobile">
+	<div class="clearfix">
+		<div class="account_mobile" style="">
+			<div class="text-center">
+				<img src="{{ 'user.svg' | asset_url }}" alt="Tài khoản" />
+			</div>
+			<ul class="account_text text-center">
+				{% if customer %}
+				<li><a class="register_account" href="/account" title="Tài khoản">Tài khoản</a></li>
+				<li>|</li>
+				<li><a class="login_account" href="/account/logout" title="Đăng xuất">Đăng xuất</a></li>
+				{% else %}
+				<li><a class="register_account" href="/account/register" title="Đăng ký">Đăng ký</a></li>
+				<li>|</li>
+				<li><a class="login_account" href="/account/login" title="Đăng nhập">Đăng nhập</a></li>
+				{% endif %}
+			</ul>
+		</div>
+		<ul class="menu-mobile">
+			{% for link in linklists[settings.menu-category].links %}
+			{% if linklists[link.alias] %}
+			<li class="{% if link.active %}current{% endif %}">
+				<a class="submenu-level1-children-a" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }} <i class="fa fa-angle-right"></i></a>
+				<ul class="dropdown-menu submenu-level1-children" role="menu">
+					{% for childlink in linklists[link.alias].links %}
+					{% if linklists[childlink.alias] %}
+					<li>
+						<a class="submenu-level2-children-a" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }} <i class="fa fa-angle-right"></i></a>
+						<ul class="dropdown-menu submenu-level2-children" role="menu">
+							{% for childlink2 in linklists[childlink.alias].links %}						
+							<li>
+								<a href="{{ childlink2.url }}">{{ childlink2.title }}</a>
+							</li>						
+							{% endfor %}
+						</ul>
+					</li>
+					{% else %}
+					<li>
+						<a href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+					</li>
+					{% endif %}
+					{% endfor %}
+				</ul>
+			</li>
+			{% else %}
+			<li class="{% if link.active %}current{% endif %}">
+				<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+			</li>
+			{% endif %}
+			{% endfor %}
+			{% for link in linklists[settings.main_menu].links %}
+			{% if linklists[link.alias] %}
+			<li class="{% if link.active %}current{% endif %}">
+				<a class="submenu-level1-children-a" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }} <i class="fa fa-angle-right"></i></a>
+				<ul class="dropdown-menu submenu-level1-children" role="menu">
+					{% for childlink in linklists[link.alias].links %}
+					{% if linklists[childlink.alias] %}
+					<li>
+						<a class="submenu-level2-children-a" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }} <i class="fa fa-angle-right"></i></a>
+						<ul class="dropdown-menu submenu-level2-children" role="menu">
+							{% for childlink2 in linklists[childlink.alias].links %}						
+							<li>
+								<a href="{{ childlink2.url }}">{{ childlink2.title }}</a>
+							</li>						
+							{% endfor %}
+						</ul>
+					</li>
+					{% else %}
+					<li>
+						<a href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+					</li>
+					{% endif %}
+					{% endfor %}
+				</ul>
+			</li>
+			{% else %}
+			<li class="{% if link.active %}current{% endif %}">
+				<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+			</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</div>	
+</div>

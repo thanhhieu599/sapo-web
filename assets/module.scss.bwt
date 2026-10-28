@@ -1,0 +1,291 @@
+/*============================================================================
+#Mixin
+==============================================================================*/
+@mixin clearfix() {
+	&:after {
+		content: "";
+		display: table;
+		clear: both; }
+	*zoom: 1;
+}
+@mixin transition($args...) {
+	-webkit-transition: $args;
+	-moz-transition: $args;
+	-ms-transition: $args;
+	-o-transition: $args;
+	transition: $args;
+}
+
+@mixin transform($transforms) {
+	-moz-transform: $transforms;
+	-o-transform: $transforms;
+	-ms-transform: $transforms;
+	-webkit-transform: $transforms;
+	transform: $transforms;
+}
+// rotate
+@mixin rotate ($deg) {
+	@include transform(rotate(#{$deg}deg));
+}
+
+// scale
+@mixin scale($scale) {
+	@include transform(scale($scale));
+} 
+// translate
+@mixin translate ($x, $y) {
+	@include transform(translate($x, $y));
+}
+// skew
+@mixin skew ($x, $y) {
+	@include transform(skew(#{$x}deg, #{$y}deg));
+}
+//transform origin
+@mixin transform-origin ($origin) {
+	moz-transform-origin: $origin;
+	-o-transform-origin: $origin;
+	-ms-transform-origin: $origin;
+	-webkit-transform-origin: $origin;
+	transform-origin: $origin;
+}
+
+@mixin prefix($property, $value) {
+	-webkit-#{$property}: #{$value};
+	-moz-#{$property}: #{$value};
+	-ms-#{$property}: #{$value};
+	-o-#{$property}: #{$value};
+	#{$property}: #{$value};
+}
+@mixin gradient($from, $to, $fallback) {
+	background: $fallback;
+	background: -moz-linear-gradient(top, $from 0%, $to 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to));
+	background: -webkit-linear-gradient(top, $from 0%, $to 100%);
+	background: -o-linear-gradient(top, $from 0%, $to 100%);
+	background: -ms-linear-gradient(top, $from 0%, $to 100%);
+	background: linear-gradient(top bottom, $from 0%, $to 100%);
+}
+@mixin backface($visibility: hidden) {
+	@include prefix('backface-visibility', #{$visibility});
+}
+@mixin box-sizing($box-sizing: border-box) {
+	-webkit-box-sizing: #{$box-sizing};
+	-moz-box-sizing: #{$box-sizing};
+	box-sizing: #{$box-sizing};
+}
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	border-radius: $radius;
+}
+
+/*============================================================================
+#Typography variables
+==============================================================================*/
+{% if settings.type_base_family contains 'Google' %}
+{% assign type_base_parts = settings.type_base_family | split: '_' %}
+{% assign type_base_name = type_base_parts[1] %}
+{% capture base_family %}"{{ type_base_name | split: ':' | first | replace: '+', ' ' }}"{% if type_base_parts.last == 'serif' %}, serif {% else %}, "HelveticaNeue", "Helvetica Neue", sans-serif{% endif %}{% endcapture %}
+{% else %}
+{% assign base_family = settings.type_base_family %}
+{% endif %}
+
+{% if settings.type_header_family contains 'Google' %}
+{% assign type_header_parts = settings.type_header_family | split: '_' %}
+{% assign type_header_name = type_header_parts[1] %}
+{% capture header_family %}"{{ type_header_name | split: ':' | first | replace: '+', ' ' }}"{% if type_header_parts.last == 'serif' %}, serif {% else %}, "HelveticaNeue", "Helvetica Neue", sans-serif{% endif %}{% endcapture %}
+{% assign header_weight = type_header_parts[2] %}
+{% else %}
+{% assign header_family = settings.type_header_family %}
+{% assign header_weight = 700 %}
+{% endif %}
+
+{% if settings.type_accent_family contains 'Google' %}
+{% assign type_accent_parts = settings.type_accent_family | split: '_' %}
+{% assign type_accent_name = type_accent_parts[1] %}
+{% capture accent_family %}"{{ type_accent_name | split: ':' | first | replace: '+', ' ' }}"{% if type_accent_parts.last == 'serif' %}, serif {% else %}, "HelveticaNeue", "Helvetica Neue", sans-serif{% endif %}{% endcapture %}
+{% assign accent_weight = type_accent_parts[2] %}
+{% else %}
+{% assign accent_family = settings.type_accent_family %}
+{% assign accent_weight = 400 %}
+{% endif %}
+
+
+/*============================================================================
+#Variable
+==============================================================================*/
+$gutter: 30px;
+$main-color: {{ settings.color_main }};
+$border-color: {{ settings.color_borders }};
+$font-base:  {{ base_family }};
+$font-header:  {{ header_family }};
+$font-nav:  {{ nav_family }};
+$baseFontSize: {{ settings.type_base_size }};
+$headingFontSize: {{settings.type_header_size}};
+$navFontSize: {{settings.type_nav_size}};
+$text-color: {{ settings.color_body_text }};
+$link-color: {{ settings.color_primary }};
+$disabledGrey: #ddd;
+$disabledBorder: #ddd;
+@function em($pixels, $context: $baseFontSize) {
+	@if (unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+	@if (unitless($context)) {
+		$context: $context * 1px;
+	}
+	@return $pixels / $context * 1em;
+}
+@function emh($pixels, $context: $baseFontSize) {
+	@if (unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+	@if (unitless($context)) {
+		$context: $context * 1px;
+	}
+	@return $pixels / $context * 1em;
+}
+@function emn($pixels, $context: $navFontSize) {
+	@if (unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+	@if (unitless($context)) {
+		$context: $context * 1px;
+	}
+	@return $pixels / $context * 1em;
+}
+
+
+/*Slider*/
+.home-slider, .section-blog-sliders{
+	overflow:hidden;
+	.item{
+		position: relative;		
+	}
+	&.owl-carousel .owl-nav {
+		@mixin owl{
+
+		}
+		.owl-next{
+			right: 15px!important;		
+			background: transparent;
+			top: 50%;
+		}
+		.owl-prev{
+			left: 15px!important;	
+			background: transparent;
+			top: 50%;
+		}
+	}
+	&.owl-carousel{
+		.owl-nav {
+			.owl-prev:before, .owl-next:before {
+				font-size: 20px;
+				background: #fff;
+				border: 1px solid #222;
+				color: #222;
+				height: 35px;
+				width: 35px;
+				text-align:center;
+				line-height: 32px;
+				border-radius: 50%;
+			}
+			.owl-prev, .owl-next{
+				&:hover{
+					&:before{
+						color: $main-color;
+						border-color: $main-color;
+					}
+				}
+			}
+		}
+		.owl-dots{
+			.owl-dot{
+				&.active{
+					width: 30px;
+					height: 10px;
+					background-color: #222;
+					border-radius: 6px;
+				}
+				height: 10px;
+				width: 10px;
+				background-color: rgba(0, 0, 0, 0.2);
+			}
+		}
+	}
+}
+.section-blog-sliders{
+	&.owl-carousel{
+		.owl-dots{
+			.owl-dot{
+				&.active{
+					background-color: #a8a8a8;
+				}
+			}
+		}
+	}
+}
+
+/*Tab products*/
+.section_tab_product{
+	h2{
+		font-size: em(25px);
+		line-height: 1.1;
+		margin: 0 0 20px 0;
+		color: #222;
+	}
+	.tabs-title{
+		margin-bottom: 30px;
+		border-radius: 0px;
+		overflow: hidden;
+		margin-top: 10px;
+		li{			
+			display: inline-block;
+			background: #fff;
+			height: 20px;
+			line-height: 20px;
+			margin: 0 10px;
+			font-size: 14px;
+			text-transform: uppercase;
+			position: relative;
+			color: #8c8c8c;
+			&.current{
+				color: #333;
+				background: #fff;
+			}
+			&:hover, &:focus{
+				color: #333;
+			}
+		}
+	}	
+	.tab-content{
+		clear: left;
+		.products{
+		}
+	}
+}
+
+@media(max-width: 767px){
+	.section_tab_product .tabs-title li {
+		width: 87px;
+	}
+}
+/*Blogs*/
+.section-news{
+	h2{
+		line-height: 60px;
+		position: relative;
+		margin: 0 0 10px 0;
+		font-size: 25px;
+		font-weight: normal;
+		a{
+			color: #222;
+			&:hover, &:focus{
+				color: $main-color;
+				text-decoration:none;
+			}
+		}
+	}
+	.blog-item{
+		background: #fff;
+	}		
+}

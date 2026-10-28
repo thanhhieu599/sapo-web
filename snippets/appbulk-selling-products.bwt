@@ -1,0 +1,19 @@
+﻿{% assign app_selling_product_collection_id = 0 %}
+{% assign app_selling_product_product_id = 0 %}
+{% assign app_selling_product_is_index = 0 %}
+{% if template contains 'collection' and collection.id %}
+		{% assign app_selling_product_collection_id = collection.id %}
+{% endif %}
+{% if template contains 'product' and product.id %}
+	{% assign app_selling_product_product_id = product.id %}
+{% endif %}
+{% if template contains 'index' %}
+	{% assign app_selling_product_is_index = 1 %}
+{% endif %}
+<div class="ab-selling-product-module ab-hide"
+	 data-ab-collection-id="{{ app_selling_product_collection_id }}"
+	 data-ab-product-id="{{ app_selling_product_product_id }}"
+	 data-ab-is-index="{{ app_selling_product_is_index }}">
+</div>
+<!--<link rel="stylesheet" href="//sellingproducts.dev/scripts/swiper/swiper.min.css">-->
+

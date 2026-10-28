@@ -1,0 +1,471 @@
+{% include 'breadcrumb' %}
+{% comment %}
+TRANGTHIETBI - thay the toan bo Templates/cart.bwt.
+CSS va JS da nam trong tep nay. Khong can them thu vien.
+Khoi uu dai chi hien thi thong tin, khong tu tao ma giam gia / mien phi van chuyen.
+{% endcomment %}
+
+<section class="ttb-cart" id="ttb-cart" data-original-note="{{ cart.note | escape }}">
+  <h1>Giỏ hàng <span class="ttb-count">({{ cart.item_count }} sản phẩm)</span></h1>
+  {% if cart.item_count > 0 %}
+  <form action="/cart" method="post" id="ttb-cart-form">
+    <div class="ttb-layout">
+      <div>
+        <div class="ttb-products">
+          <div class="ttb-table-head" aria-hidden="true"><span>Sản phẩm</span><span>Giá bán</span><span>Số lượng</span><span>Thành tiền</span><span></span></div>
+          {% for item in cart.items %}
+          {% assign ttb_image = item.variant.image %}
+          {% if ttb_image == null %}{% assign ttb_image = item.product.featured_image %}{% endif %}
+          {% assign ttb_price = item.price_final | default: item.price %}
+          {% assign ttb_line_price = item.line_price_final | default: item.line_price %}
+          <div class="ttb-item" data-line="{{ forloop.index }}" data-variant-id="{{ item.variant_id | default: item.variant.id }}" data-properties="{{ item.properties | json | escape }}" data-original-quantity="{{ item.quantity }}">
+            <div class="ttb-product">
+              <a class="ttb-image" href="{{ item.variant.url }}" tabindex="-1" aria-hidden="true">
+                {% if ttb_image != null %}
+                <img src="{{ ttb_image.src | img_url: 'medium' }}" width="88" height="88" alt="{{ item.product.name | escape }}" loading="lazy">
+                {% else %}<span class="ttb-image-empty">Chưa có ảnh</span>{% endif %}
+              </a>
+              <div>
+                <h2 class="ttb-name"><a href="{{ item.variant.url }}">{{ item.product.name | escape }}</a></h2>
+                {% if item.variant.title != 'Default Title' %}<p class="ttb-variant">{{ item.variant.title | escape }}</p>{% endif %}
+                {% for property in item.properties %}
+                {% assign ttb_first_character = property.first | slice: 0, 1 %}
+                {% if property.last != blank and ttb_first_character != '_' %}<p class="ttb-property">{{ property.first | escape }}: {{ property.last | escape }}</p>{% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="ttb-price"><span class="ttb-mobile-label">Giá bán</span><span data-unit-price>{{ ttb_price | money }}</span></div>
+            <div class="ttb-qty">
+              <button type="button" data-step="-1" aria-label="Giảm số lượng {{ item.product.name | escape }}">−</button>
+              <input id="ttb-quantity-{{ forloop.index }}" name="Lines" type="number" min="1" step="1" inputmode="numeric" value="{{ item.quantity }}" aria-label="Số lượng {{ item.product.name | escape }}" required>
+              <button type="button" data-step="1" aria-label="Tăng số lượng {{ item.product.name | escape }}">+</button>
+            </div>
+            <div class="ttb-line-price"><span class="ttb-mobile-label">Thành tiền</span><span data-line-price>{{ ttb_line_price | money }}</span></div>
+            <a class="ttb-remove" href="/cart/change?line={{ forloop.index }}&amp;quantity=0" data-remove="{{ forloop.index }}" aria-label="Xóa {{ item.product.name | escape }} khỏi giỏ hàng"><span class="ttb-remove-symbol" aria-hidden="true">×</span><span class="ttb-remove-label">Xóa</span></a>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="ttb-actions">
+          <a class="ttb-continue" href="/collections/all">← Tiếp tục mua hàng</a>
+          
+        </div>
+        <p class="ttb-status" id="ttb-cart-status" role="status" aria-live="polite">Số lượng và ghi chú được tự động lưu.</p>
+        <button class="ttb-button ttb-button-outline" type="button" id="ttb-cart-retry" hidden>Thử lưu lại</button>
+        <div class="ttb-note-block"><label for="ttb-cart-note">Ghi chú đơn hàng</label><textarea id="ttb-cart-note" name="note" rows="3" placeholder="Yêu cầu thêm về đơn hàng (nếu có)">{{ cart.note | escape }}</textarea><small>Ghi chú tự lưu khi bạn ngừng nhập.</small></div>
+        <noscript><p>Vui lòng bật JavaScript để tự động lưu giỏ hàng và ghi chú trước khi thanh toán.</p></noscript>
+      </div>
+      <aside>
+        {% assign ttb_promo_page = pages['uu-dai-gio-hang'] %}
+        {% if ttb_promo_page != null and ttb_promo_page.content != blank %}
+        <div class="ttb-panel ttb-promo">
+          <h2 class="ttb-promo-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 5h18v5a2 2 0 0 0 0 4v5H3v-5a2 2 0 0 0 0-4V5Z"/><path d="M15 5v3m0 2v4m0 2v3"/></svg>{{ ttb_promo_page.title | escape }}</h2>
+          <div class="ttb-promo-body">{{ ttb_promo_page.content }}</div>
+        </div>
+        {% endif %}
+        <div class="ttb-panel ttb-summary">
+          <h2>Tổng cộng</h2>
+          <p class="ttb-summary-line"><span>Tổng tiền hàng</span><span id="ttb-cart-subtotal">{{ cart.total_line_items_price | default: cart.total_price | money }}</span></p>
+          <p class="ttb-summary-line" id="ttb-cart-discount-row" {% if cart.total_discounts == 0 %}hidden{% endif %}><span>Giảm giá</span><span id="ttb-cart-discount">− {{ cart.total_discounts | money }}</span></p>
+          <p class="ttb-shipping-note">Chưa bao gồm phí vận chuyển. Phí được xác định ở bước thanh toán.</p>
+          <div class="ttb-summary-line ttb-total">
+            <span>Thành tiền</span>
+            <div class="ttb-total-amount"><strong id="ttb-cart-total">{{ cart.total_price | money }}</strong>
+              {% if cart.taxes_included == true %}
+              <small class="ttb-tax-note">(Đã bao gồm VAT)</small>
+              {% else %}
+              <small class="ttb-tax-note">Thuế được xác định ở bước thanh toán</small>
+              {% endif %}
+            </div>
+          </div>
+          <a class="ttb-button ttb-checkout" id="ttb-cart-checkout" href="/checkout">Tiến hành thanh toán</a>
+          <p class="ttb-summary-foot">Vui lòng kiểm tra số lượng và phân loại sản phẩm trước khi đặt hàng.</p>
+        </div>
+      </aside>
+    </div>
+  </form>
+  {% else %}
+  <div class="ttb-empty">
+    <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M8 14h10l8 38h35l9-27H21M29 52l-3 9h36"/><circle cx="31" cy="69" r="3"/><circle cx="59" cy="69" r="3"/></svg>
+    <h2>Giỏ hàng của bạn đang trống</h2><p>Chọn sản phẩm phù hợp để tiếp tục mua sắm.</p>
+    <a class="ttb-button" href="/collections/all">Tiếp tục mua hàng</a>
+  </div>
+  {% endif %}
+
+  <div class="ttb-modal" id="ttb-cart-modal" hidden>
+    <div class="ttb-dialog" role="dialog" aria-modal="true" aria-labelledby="ttb-modal-title" aria-describedby="ttb-modal-description" tabindex="-1">
+      <button class="ttb-close" type="button" id="ttb-modal-close" aria-label="Đóng hộp xác nhận">×</button>
+      <div class="ttb-question" aria-hidden="true">?</div>
+      <h2 id="ttb-modal-title">Xác nhận!</h2>
+      <p id="ttb-modal-description">Bạn thật sự muốn bỏ sản phẩm này khỏi giỏ hàng?</p>
+      <div class="ttb-dialog-actions"><button class="ttb-button ttb-button-outline" type="button" id="ttb-modal-cancel">Giữ lại</button><button class="ttb-button ttb-confirm" type="button" id="ttb-modal-confirm">Bỏ khỏi giỏ hàng</button></div>
+    </div>
+  </div>
+</section>
+
+<style>
+.ttb-cart{--ttb-accent:#bb2025;--ttb-ink:#38434d;--ttb-border:#e5e7eb;max-width:1250px;margin:0 auto;padding:18px 15px 56px;color:var(--ttb-ink);font-size:16px;line-height:1.55}
+.ttb-cart *{box-sizing:border-box}
+.ttb-cart [hidden]{display:none!important}
+.ttb-cart a{color:inherit;text-decoration:none}
+.ttb-cart a:hover{color:var(--ttb-accent)}
+.ttb-cart button,.ttb-cart input,.ttb-cart textarea{font:inherit}
+.ttb-cart button{cursor:pointer}
+.ttb-cart button:disabled{cursor:wait;opacity:.55}
+.ttb-cart :focus-visible{outline:3px solid #7ca7cc;outline-offset:3px}
+.ttb-cart h1{margin:0 0 28px;font-size:38px;font-weight:700;line-height:1.2;color:var(--ttb-ink)}
+.ttb-cart .ttb-count{font-size:15px;font-weight:400;color:#6c747d;white-space:nowrap}
+.ttb-cart .ttb-layout{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(300px,1fr);gap:32px;align-items:start}
+.ttb-cart .ttb-products{border:1px solid var(--ttb-border);border-radius:3px;overflow:hidden}
+.ttb-cart .ttb-table-head,.ttb-cart .ttb-item{display:grid;grid-template-columns:minmax(0,1fr) 110px 110px 120px 28px;gap:12px;align-items:center}
+.ttb-cart .ttb-table-head{background:#f7f7f7;padding:15px 18px;font-size:14px;font-weight:600;text-align:center}
+.ttb-cart .ttb-table-head span:first-child{text-align:left;padding-left:104px}
+.ttb-cart .ttb-item{padding:22px 18px;border-top:1px solid var(--ttb-border)}
+.ttb-cart .ttb-product{display:flex;gap:16px;align-items:center;min-width:0}
+.ttb-cart .ttb-image{flex:0 0 88px;width:88px;height:88px;display:flex;align-items:center;justify-content:center;background:#fff}
+.ttb-cart .ttb-image img{width:100%;height:100%;object-fit:contain;display:block}
+.ttb-cart .ttb-image-empty{font-size:11px;text-align:center;color:#7a838b;background:#f7f7f7}
+.ttb-cart .ttb-name{font-size:15px;line-height:1.55;font-weight:500;margin:0;overflow-wrap:anywhere}
+.ttb-cart .ttb-variant,.ttb-cart .ttb-property{font-size:12px;color:#6e7680;margin:4px 0 0;overflow-wrap:anywhere}
+.ttb-cart .ttb-price,.ttb-cart .ttb-line-price{text-align:center;white-space:nowrap;font-size:14px}
+.ttb-cart .ttb-line-price{font-weight:600}
+.ttb-cart .ttb-mobile-label{display:none}
+.ttb-cart .ttb-qty{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;height:40px;border:1px solid #cfd5dc;max-width:110px;margin:0 auto}
+.ttb-cart .ttb-qty button{border:0;background:#fff;color:#69727c;padding:0;font-size:19px}
+.ttb-cart .ttb-qty button:hover{background:#f3f4f6;color:var(--ttb-accent)}
+.ttb-cart .ttb-qty input{min-width:0;width:100%;height:38px;text-align:center;border:0;border-radius:0;padding:0;color:var(--ttb-ink);background:#fff;-moz-appearance:textfield}
+.ttb-cart .ttb-qty input::-webkit-inner-spin-button,.ttb-cart .ttb-qty input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ttb-cart .ttb-remove{font-size:25px;color:#90969d;text-align:center;line-height:1;display:block}
+.ttb-cart .ttb-remove:hover{color:var(--ttb-accent)}
+.ttb-cart .ttb-remove-label{display:none}
+.ttb-cart .ttb-actions{display:flex;gap:16px;justify-content:flex-end;align-items:center;margin-top:24px;flex-wrap:wrap}
+.ttb-cart .ttb-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 22px;border:1px solid var(--ttb-accent);border-radius:3px;background:var(--ttb-accent);color:#fff;font-weight:600;font-size:15px;text-align:center;line-height:1.4}
+.ttb-cart .ttb-button:hover{background:#96191d;border-color:#96191d;color:#fff}
+.ttb-cart .ttb-button-outline{background:#fff;color:var(--ttb-ink);border-color:#ccd0d5}
+.ttb-cart .ttb-button-outline:hover{background:#f7f7f7;color:var(--ttb-ink);border-color:#a8afb8}
+.ttb-cart .ttb-continue{font-size:15px;font-weight:600}
+.ttb-cart .ttb-note-block{margin-top:28px}
+.ttb-cart .ttb-note-block label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}
+.ttb-cart .ttb-note-block textarea{display:block;width:100%;min-height:90px;padding:12px;border:1px solid #cfd5dc;border-radius:3px;resize:vertical;background:#fff;color:var(--ttb-ink)}
+.ttb-cart .ttb-panel{border:1px solid var(--ttb-border);border-radius:3px;padding:22px;background:#fff}
+.ttb-cart .ttb-panel+.ttb-panel{margin-top:24px}
+.ttb-cart .ttb-promo-title{display:flex;align-items:center;gap:8px;margin:0 0 16px;padding-bottom:16px;border-bottom:1px solid var(--ttb-border);color:var(--ttb-accent);font-size:15px;font-weight:700}
+.ttb-cart .ttb-promo-title svg{width:23px;height:23px;flex-shrink:0}
+.ttb-cart .ttb-promo p{margin:0 0 10px;font-size:14px}
+.ttb-cart .ttb-promo p:last-child{margin-bottom:0}
+.ttb-cart .ttb-promo a{color:var(--ttb-accent);text-decoration:underline;text-underline-offset:3px}
+.ttb-cart .ttb-promo-body{overflow-wrap:anywhere;font-size:14px}
+.ttb-cart .ttb-promo-body img,.ttb-cart .ttb-promo-body video{display:block;max-width:100%!important;height:auto!important;margin:12px auto}
+.ttb-cart .ttb-promo-body iframe{max-width:100%}
+.ttb-cart .ttb-promo-body ul,.ttb-cart .ttb-promo-body ol{padding-left:20px;margin:8px 0 12px}
+.ttb-cart .ttb-promo-body table{width:100%;max-width:100%;table-layout:fixed}
+.ttb-cart .ttb-promo-body h1,.ttb-cart .ttb-promo-body h2,.ttb-cart .ttb-promo-body h3{font-size:16px;line-height:1.5;margin:12px 0 8px}
+.ttb-cart .ttb-summary h2{margin:0 0 22px;font-size:28px;line-height:1.3;font-weight:700;color:var(--ttb-ink)}
+.ttb-cart .ttb-summary-line{display:flex;gap:12px;justify-content:space-between;align-items:baseline;font-size:14px;margin:0 0 14px}
+.ttb-cart .ttb-summary-line span:last-child{white-space:nowrap}
+.ttb-cart .ttb-shipping-note{color:var(--ttb-accent);font-size:13px;margin:0 0 22px;line-height:1.5}
+.ttb-cart .ttb-total{border-top:1px solid var(--ttb-border);padding-top:18px;font-size:16px;font-weight:600}
+.ttb-cart .ttb-total strong{font-size:22px;color:var(--ttb-accent)}
+.ttb-cart .ttb-total-amount{text-align:right;min-width:0}
+.ttb-cart .ttb-tax-note{display:block;font-size:12px;font-weight:400;color:#616d78;margin-top:2px;white-space:normal}
+.ttb-cart .ttb-checkout{width:100%;margin-top:10px}
+.ttb-cart .ttb-summary-foot{margin:12px 0 0;color:#707982;font-size:12px}
+.ttb-cart .ttb-status{font-size:14px;margin:14px 0 0;color:#516373;min-height:22px}
+.ttb-cart .ttb-status-error{color:#b42318}
+.ttb-cart .ttb-empty{padding:56px 20px;text-align:center;border:1px solid var(--ttb-border);background:#fafafa}
+.ttb-cart .ttb-empty svg{width:72px;height:72px;color:#9aa6b1;margin-bottom:12px}
+.ttb-cart .ttb-empty h2{font-size:24px;margin:0 0 12px;color:var(--ttb-ink)}
+.ttb-cart .ttb-empty p{margin:0 0 24px;color:#737b84}
+.ttb-cart .ttb-modal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:20px}
+.ttb-cart .ttb-dialog{position:relative;width:100%;max-width:576px;max-height:calc(100dvh - 40px);overflow:auto;background:#fff;border-radius:5px;text-align:center;padding:42px 32px 28px;box-shadow:0 18px 60px rgba(0,0,0,.18)}
+.ttb-cart .ttb-close{position:absolute;top:10px;right:14px;border:0;background:transparent;color:#9ca3aa;font-size:32px;line-height:1;padding:4px}
+.ttb-cart .ttb-question{width:92px;height:92px;border:4px solid #cedfe6;border-radius:50%;color:#87aebb;display:flex;align-items:center;justify-content:center;margin:0 auto 26px;font-size:58px;font-weight:400;line-height:1}
+.ttb-cart .ttb-dialog h2{font-size:30px;font-weight:700;margin:0 0 16px;color:#555}
+.ttb-cart .ttb-dialog p{font-size:16px;margin:0 0 26px;color:#62676d}
+.ttb-cart .ttb-dialog-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ttb-cart .ttb-confirm{background:#e13232;border-color:#e13232}
+@media(min-width:992px) and (max-width:1100px){.ttb-cart .ttb-layout{grid-template-columns:minmax(0,1fr) 300px;gap:20px}.ttb-cart .ttb-table-head,.ttb-cart .ttb-item{grid-template-columns:minmax(0,1fr) 85px 100px 96px 22px;gap:7px}.ttb-cart .ttb-image{flex-basis:60px;width:60px;height:70px}.ttb-cart .ttb-product{gap:10px}.ttb-cart .ttb-table-head span:first-child{padding-left:70px}.ttb-cart .ttb-item{padding:18px 12px}.ttb-cart .ttb-panel{padding:18px}}
+@media(max-width:991px){.ttb-cart{padding:16px 15px 36px;font-size:14px}.ttb-cart h1{font-size:28px;margin-bottom:20px}.ttb-cart .ttb-count{font-size:13px}.ttb-cart .ttb-layout{grid-template-columns:minmax(0,1fr);gap:24px}.ttb-cart .ttb-table-head{display:none}.ttb-cart .ttb-item{grid-template-columns:minmax(0,1fr) 116px;gap:14px;padding:18px 14px}.ttb-cart .ttb-item:first-of-type{border-top:0}.ttb-cart .ttb-product{grid-column:1/-1;gap:14px}.ttb-cart .ttb-image{width:76px;height:84px;flex-basis:76px}.ttb-cart .ttb-name{font-size:14px}.ttb-cart .ttb-price{text-align:left;align-self:center}.ttb-cart .ttb-mobile-label{display:block;font-size:11px;color:#7b838c;font-weight:400;margin-bottom:3px}.ttb-cart .ttb-qty{margin:0 0 0 auto;width:110px}.ttb-cart .ttb-line-price{text-align:left}.ttb-cart .ttb-remove{text-align:right;font-size:13px}.ttb-cart .ttb-remove-symbol{display:none}.ttb-cart .ttb-remove-label{display:inline;text-decoration:underline}.ttb-cart .ttb-actions{justify-content:space-between;gap:10px;margin-top:18px}.ttb-cart .ttb-button{padding:10px 14px;font-size:14px}.ttb-cart .ttb-continue{font-size:13px}.ttb-cart .ttb-panel{padding:20px}.ttb-cart .ttb-summary h2{font-size:24px}.ttb-cart .ttb-dialog{padding:36px 20px 24px}.ttb-cart .ttb-question{width:76px;height:76px;font-size:48px;margin-bottom:22px}.ttb-cart .ttb-dialog h2{font-size:26px}.ttb-cart .ttb-dialog p{font-size:14px}}
+.ttb-cart .ttb-note-block small{display:block;margin-top:6px;font-size:12px;color:#707982}
+</style>
+
+
+<script>
+(function () {
+  'use strict';
+  var root = document.getElementById('ttb-cart');
+  var form = document.getElementById('ttb-cart-form');
+  if (!root || !form || root.dataset.initialized) return;
+  root.dataset.initialized = 'true';
+  var rows = Array.from(root.querySelectorAll('.ttb-item'));
+  var inputs = rows.map(function (row) { return row.querySelector('input[name="Lines"]'); });
+  var note = document.getElementById('ttb-cart-note');
+  var status = document.getElementById('ttb-cart-status');
+  var retry = document.getElementById('ttb-cart-retry');
+  var checkout = document.getElementById('ttb-cart-checkout');
+  var modal = document.getElementById('ttb-cart-modal');
+  var cancel = document.getElementById('ttb-modal-cancel');
+  var savedQuantities = inputs.map(function (input) { return Number(input.value); });
+  var savedNote = note.value;
+  var running = false, timer, destination = '', pendingRemove = null, quantityRevision = 0;
+  var confirmIndex = null, idleWaiters = [];
+  var returnFocus = null, oldOverflow = '';
+  var money = new Intl.NumberFormat('vi-VN', {style:'currency', currency:'VND', maximumFractionDigits:0});
+
+  function tell(message, error) {
+    status.textContent = message;
+    status.classList.toggle('ttb-status-error', !!error);
+    if (window.TTBCartBridge) window.TTBCartBridge.status(message, error);
+  }
+  function lock(value) {
+    root.querySelectorAll('button,input,textarea').forEach(function (el) { el.disabled = value; });
+    checkout.setAttribute('aria-disabled', String(value));
+  }
+  function quantities() { return inputs.map(function (input) { return Number(input.value); }); }
+  function quantityChanged() { return quantities().some(function (n, i) { return n !== savedQuantities[i]; }); }
+  function props(value) {
+    if (!value) return '[]';
+    if (typeof value === 'string') { try { value = JSON.parse(value); } catch (error) { value = {}; } }
+    if (Array.isArray(value)) {
+      var object = {};
+      value.forEach(function (pair) {
+        if (Array.isArray(pair)) object[pair[0]] = pair[1];
+        else if (pair && pair.name != null) object[pair.name] = pair.value;
+      });
+      value = object;
+    }
+    return JSON.stringify(Object.keys(value).sort().map(function (key) { return [key, String(value[key])]; }));
+  }
+  function itemIndex(cart, row) {
+    var variant = row.dataset.variantId;
+    var candidates = cart.items.map(function (item, i) { return {item:item, index:i}; }).filter(function (entry) {
+      return String(entry.item.variant_id != null ? entry.item.variant_id : entry.item.id) === variant;
+    });
+    var exact = candidates.filter(function (entry) { return props(entry.item.properties) === props(row.dataset.properties); });
+    return exact.length === 1 ? exact[0].index : (candidates.length === 1 ? candidates[0].index : -1);
+  }
+  function orderedItems(cart) { return rows.map(function (row) { return cart.items[itemIndex(cart, row)]; }); }
+  async function readCart() {
+    var response = await fetch('/cart.js', {credentials:'same-origin', cache:'no-store', headers:{Accept:'application/json'}});
+    var cart = await response.json();
+    if (!response.ok || !cart || !Array.isArray(cart.items)) throw new Error('Không đọc được giỏ hiện tại. Vui lòng thử lại.');
+    return cart;
+  }
+  function schedule(isQuantity) {
+    if (isQuantity) quantityRevision++;
+    clearTimeout(timer);
+    retry.hidden = true;
+    tell('Đang chờ lưu thay đổi…');
+    timer = setTimeout(save, isQuantity ? 400 : 700);
+  }
+  function showPrices(cart, applyQuantities) {
+    orderedItems(cart).forEach(function (item, i) {
+      if (applyQuantities === true || (Array.isArray(applyQuantities) && applyQuantities[i])) inputs[i].value = item.quantity;
+      var price = item.price_final != null ? item.price_final : item.price;
+      var linePrice = item.line_price_final != null ? item.line_price_final : item.line_price;
+      rows[i].querySelector('[data-unit-price]').textContent = money.format(price);
+      rows[i].querySelector('[data-line-price]').textContent = money.format(linePrice);
+    });
+    document.getElementById('ttb-cart-subtotal').textContent = money.format(cart.total_line_items_price != null ? cart.total_line_items_price : cart.total_price);
+    document.getElementById('ttb-cart-total').textContent = money.format(cart.total_price);
+    document.getElementById('ttb-cart-discount').textContent = '− ' + money.format(cart.total_discounts || 0);
+    document.getElementById('ttb-cart-discount-row').hidden = !(Number(cart.total_discounts) > 0);
+    root.querySelector('.ttb-count').textContent = '(' + cart.item_count + ' sản phẩm)';
+    document.querySelectorAll('.count_item_pr, .cart-popup-count').forEach(function (el) { el.textContent = cart.item_count; });
+  }
+  async function save() {
+    clearTimeout(timer);
+    if (running) return;
+    running = true;
+    form.setAttribute('aria-busy', 'true');
+    retry.hidden = true;
+    try {
+      do {
+        var values = quantities(), deleted = pendingRemove;
+        if (deleted !== null) values[deleted] = 0;
+        var invalid = values.findIndex(function (n, i) { return i !== deleted && (!Number.isSafeInteger(n) || n < 1); });
+        if (invalid !== -1) {
+          if (destination) inputs[invalid].focus();
+          throw new Error('Số lượng phải là số nguyên từ 1 trở lên. Dùng nút Xóa để bỏ sản phẩm.');
+        }
+        var sendQuantities = deleted !== null || quantityChanged();
+        var sentNote = note.value, revision = quantityRevision;
+        if (!sendQuantities && sentNote === savedNote) break;
+        var body = new URLSearchParams();
+        // Neu chi sua ghi chu, khong gui lai so luong cu cua popup.
+        if (sendQuantities) {
+          // API va Liquid khong bat buoc co cung thu tu. Chi sua dung dong da thay doi.
+          var current = await readCart();
+          var serverValues = current.items.map(function (item) { return Number(item.quantity); });
+          rows.forEach(function (row, i) {
+            if (values[i] === savedQuantities[i] && i !== deleted) return;
+            var index = itemIndex(current, row);
+            if (index === -1) throw new Error('Sản phẩm trong giỏ đã thay đổi. Vui lòng tải lại trang để kiểm tra.');
+            serverValues[index] = values[i];
+          });
+          serverValues.forEach(function (n) { body.append('lines[]', String(n)); });
+        }
+        body.append('note', sentNote);
+        tell('Đang lưu giỏ hàng…');
+        var response = await fetch('/cart/update.js', {
+          method:'POST', credentials:'same-origin',
+          headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8', 'Accept':'application/json'},
+          body:body.toString()
+        });
+        var cart = await response.json();
+        if (!response.ok || !cart || Number(cart.status) >= 400) throw new Error(cart && (cart.description || cart.message) || 'Không thể lưu giỏ hàng.');
+        if (!Array.isArray(cart.items)) throw new Error('Chưa xác nhận được cập nhật. Vui lòng thử lưu lại.');
+        if (Object.prototype.hasOwnProperty.call(cart, 'note') && (cart.note || '').replace(/\r\n/g, '\n') !== sentNote.replace(/\r\n/g, '\n')) {
+          throw new Error('Sapo chưa xác nhận ghi chú mới. Vui lòng thử lưu lại.');
+        }
+        savedNote = sentNote;
+        if (deleted !== null) {
+          if (window.TTBCartBridge) window.TTBCartBridge.render(cart);
+          window.location.assign('/cart');
+          return;
+        }
+        var ordered = orderedItems(cart);
+        if (cart.items.length !== rows.length || ordered.some(function (item) { return !item; })) {
+          // Giu ghi chu moi nhat truoc khi tai lai danh sach da doi o popup.
+          savedQuantities = quantities();
+          destination = '/cart';
+          lock(true);
+          if (note.value !== savedNote) continue;
+          break;
+        }
+        var latestUnchanged = quantityRevision === revision;
+        savedQuantities = ordered.map(function (item) { return Number(item.quantity); });
+        showPrices(cart, latestUnchanged);
+        if (latestUnchanged && window.TTBCartBridge) window.TTBCartBridge.render(cart);
+        var clamped = sendQuantities && values.some(function (n, i) { return n !== savedQuantities[i]; });
+        if (clamped && destination === '/checkout') {
+          window.alert('Sapo đã điều chỉnh số lượng. Vui lòng kiểm tra giỏ hàng trước khi thanh toán.');
+          destination = '/cart';
+        }
+      } while (quantityChanged() || note.value !== savedNote || pendingRemove !== null);
+      tell('Đã lưu giỏ hàng.');
+      if (destination) window.location.assign(destination);
+    } catch (error) {
+      destination = '';
+      pendingRemove = null;
+      retry.hidden = false;
+      tell(error instanceof SyntaxError ? 'Phản hồi chưa hợp lệ. Vui lòng thử lưu lại.' : (error.message || 'Mất kết nối. Vui lòng thử lưu lại.'), true);
+    } finally {
+      running = false;
+      form.setAttribute('aria-busy', 'false');
+      lock(false);
+      idleWaiters.splice(0).forEach(function (resolve) { resolve(); });
+    }
+  }
+  function navigate(url) { destination = url; lock(true); save(); }
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = oldOverflow;
+    if (returnFocus && document.contains(returnFocus)) returnFocus.focus();
+    confirmIndex = null;
+    if (quantityChanged() || note.value !== savedNote) timer = setTimeout(save, 0);
+  }
+  function requestRemove(index, trigger) {
+    if (running) { tell('Đang lưu thay đổi. Vui lòng chờ một chút rồi xóa sản phẩm.'); return; }
+    clearTimeout(timer);
+    confirmIndex = index;
+    returnFocus = trigger;
+    oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    modal.hidden = false;
+    cancel.focus();
+  }
+  function rowForPopup(context) {
+    var matches = rows.map(function (row, i) { return {row:row, index:i}; }).filter(function (entry) {
+      return entry.row.dataset.variantId === String(context.variantId);
+    });
+    var exact = matches.filter(function (entry) { return props(entry.row.dataset.properties) === props(context.properties); });
+    return exact.length === 1 ? exact[0].index : (matches.length === 1 ? matches[0].index : -1);
+  }
+  window.TTBCartPage = {
+    quantity:function (context, value) {
+      var i = rowForPopup(context);
+      if (i === -1) { tell('Danh sách sản phẩm đã đổi. Vui lòng tải lại giỏ hàng.', true); return; }
+      if (destination || pendingRemove !== null) return;
+      inputs[i].value = value;
+      schedule(true);
+    },
+    remove:function (context, trigger) {
+      var i = rowForPopup(context);
+      if (i === -1) { tell('Danh sách sản phẩm đã đổi. Vui lòng tải lại giỏ hàng.', true); return; }
+      requestRemove(i, trigger);
+    },
+    sync:async function () {
+      await save();
+      if (running) await new Promise(function (resolve) { idleWaiters.push(resolve); });
+      if (quantityChanged() || note.value !== savedNote) return false;
+      var cart = await readCart();
+      if (window.TTBCartBridge) window.TTBCartBridge.render(cart);
+      return true;
+    }
+  };
+  window.addEventListener('ttb:cart-sync', function (event) {
+    if (running || pendingRemove !== null) return;
+    var cart = event.detail;
+    if (!cart || !Array.isArray(cart.items)) return;
+    var ordered = orderedItems(cart);
+    if (cart.items.length !== rows.length || ordered.some(function (item) { return !item; })) { navigate('/cart'); return; }
+    var clean = quantities().map(function (n, i) { return n === savedQuantities[i]; });
+    savedQuantities = ordered.map(function (item) { return Number(item.quantity); });
+    if (note.value === savedNote && Object.prototype.hasOwnProperty.call(cart, 'note')) note.value = savedNote = cart.note || '';
+    showPrices(cart, clean);
+  });
+  root.addEventListener('click', function (event) {
+    var step = event.target.closest('[data-step]');
+    if (step) {
+      event.preventDefault();
+      if (destination || pendingRemove !== null) return;
+      var input = step.parentNode.querySelector('input'), n = Number(input.value);
+      input.value = Math.max(1, (Number.isSafeInteger(n) && n > 0 ? n : 1) + Number(step.dataset.step));
+      schedule(true);
+    }
+    var remove = event.target.closest('[data-remove]');
+    if (remove) {
+      event.preventDefault();
+      requestRemove(Number(remove.dataset.remove) - 1, remove);
+    }
+  });
+  inputs.forEach(function (input) {
+    input.addEventListener('input', function () { schedule(true); });
+    input.addEventListener('change', function () { if (!running) save(); });
+  });
+  note.addEventListener('input', function () { schedule(false); });
+  note.addEventListener('blur', function () { if (note.value !== savedNote) save(); });
+  retry.addEventListener('click', save);
+  form.addEventListener('submit', function (event) { event.preventDefault(); save(); });
+  document.getElementById('ttb-modal-close').addEventListener('click', closeModal);
+  cancel.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (event) { if (event.target === modal) closeModal(); });
+  document.getElementById('ttb-modal-confirm').addEventListener('click', function () {
+    if (running || confirmIndex === null) return;
+    pendingRemove = confirmIndex;
+    closeModal();
+    lock(true);
+    save();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (modal.hidden) return;
+    if (event.key === 'Escape') { event.preventDefault(); closeModal(); }
+    if (event.key === 'Tab') {
+      var buttons = modal.querySelectorAll('button:not(:disabled)'), first = buttons[0], last = buttons[buttons.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+  // Bat truoc onclick cua nut checkout cu trong popup de khong bo qua ghi chu chua luu.
+  document.addEventListener('click', function (event) {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    var button = event.target.closest('#ttb-cart-checkout, #cart-sidebars #btn-proceed-checkout, #cart-sidebars a[href="/checkout"], #cart-sidebars a[href="/cart"], .ttb-cart .ttb-continue');
+    if (!button) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var href = button.getAttribute('href');
+    navigate(href || '/checkout');
+  }, true);
+})();
+
+</script>

@@ -1,0 +1,22 @@
+{% assign blog_prefix = settings.pd_related_blogs_prefix %}
+{%for tag in article.tags %}
+{%if tag contains blog_prefix %} 
+{%assign blogName =  tag | split: '_' | last | handleize %} 
+{% endif %}
+{% endfor %}
+{% if collections[blogName].products.size > 0 %}
+<div id="RelatedProducts">
+	<div class="related-product collections-container">
+		<div class="feature_category_title text-center">
+			<h2 class="title-head text-center">{{ settings.pd_related_blogs_title }}</h2>
+		</div>
+		<div class="products clearfix">
+			{% for product in collections[blogName].products limit: 8 %}
+			<div class="col-md-3 col-sm-6 col-xs-6 no-padding">
+				{%include 'product-grid-item'%}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endif %}

@@ -1,0 +1,634 @@
+{% assign variantCount = product.variants | size %}
+{% assign on_var = false %}
+{% if variantCount > 1 %}
+{% assign on_var = true %}
+{% endif %}
+{%assign contact = false%}
+{%if product.price == 0 %}
+{%assign contact = true%}
+{%endif%}
+{% include 'breadcrumb' %}
+<section class="product" itemscope itemtype="http://schema.org/Product">	
+	<meta itemprop="url" content="{{ store.url }}{{ product.url }}">
+	<meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+	<meta itemprop="description" content="{{ product.summary_or_content | strip_html | truncate: 300 }}">
+	<meta itemprop="name" content="{{ product.name }}">
+	<div class="container">
+		<div class="row">
+			<div class="details-product clearfix">
+				<div class="col-lg-9 col-md-9 col-xs-12">
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-6">
+							<div id="product">
+								<div class="large-image">
+									{%if product.featured_image.alt ==""%}
+									{% assign featured_image_alt = product.name %}
+									{%else%}
+									{% assign featured_image_alt = product.featured_image.alt%}
+									{%endif%}
+									<a rel="nofollow" href="{{ product.featured_image.src }}" data-rel="prettyPhoto[product-gallery]">
+										<img {%if product.images.size > 0 %}id="zoom_01"{% endif %} src="{{ product.featured_image.src }}" alt="{{ featured_image_alt }}" class="img-responsive center-block" />
+									</a>							
+									<div class="hidden">
+										{% for image in product.images %}
+										{%if image.alt ==""%}
+										{% assign alt = product.name %}
+										{%else%}
+										{% assign alt = image.alt %}
+										{%endif%}
+										<div class="item">
+											<a rel="nofollow" href="{{ image.src }}" data-image="{{ image.src }}" data-zoom-image="{{ image.src }}" data-rel="prettyPhoto[product-gallery]">										
+											</a>
+										</div>	
+										{% endfor %}
+									</div>
+								</div>
+								{% if product.images.size  > 1 and settings.product_thumb_enable %}
+								{% if product.variants.size > 1 %}
+
+								{% for option in product.options %}
+								{% if option == 'Màu sắc' or option == 'Màu' or option == 'màu sắc' or option == 'màu' %}
+								{% assign check = 1 %}
+								{% break %}
+								{% else %}
+								{% assign check = 0 %}
+								{% endif %}
+								{% endfor %}
+
+								{% if check == 1 %}
+
+								{% for option in product.options %}
+								{% if option == 'Màu sắc' or option == 'Màu' or option =='màu sắc' or option == 'màu' %}
+								{% assign featured_alts = forloop.index %}
+								{% if featured_alts == 1 %}
+								{% assign featured_alt = product.selected_or_first_available_variant.option1 %}
+								{% elsif featured_alts == 2 %}
+								{% assign featured_alt = product.selected_or_first_available_variant.option2 %}
+								{% elsif featured_alts == 3 %}
+								{% assign featured_alt = product.selected_or_first_available_variant.option3 %}
+								{% else %}
+								{% assign featured_alt = product.selected_or_first_available_variant.option4 %}
+								{% endif %}
+								{% endif %}
+								{% endfor %}
+								<div id="gallery_01" class="ababcbc owl-carousel owl-theme thumbnail-product a">
+									{% for image in product.images %}
+									{% if image.alt == featured_alt or image == featured_image %}
+									<div class="item">
+										<a href="javascript:void(0);" data-image="{{ image.src }}" data-zoom-image="{{ image.src | img_url:'1024x1024' }}"><img  src="{{ image.src | img_url:'medium' }}" alt="{{ image.alt }}"></a>
+									</div>
+									{% endif %}
+									{% endfor %}
+								</div>
+								{% else %}
+								<div id="gallery_01" class="owl-carousel owl-theme thumbnail-product abc a1 {{ check }} {{ featured_alts }}">
+									{% for image in product.images %}
+									<div class="item">
+										<a href="javascript:void(0);" data-image="{{ image.src }}" data-zoom-image="{{ image.src | img_url:'1024x1024' }}"><img  src="{{ image.src | img_url:'medium' }}" alt="{{ image.alt }}"></a>
+									</div>
+									{% endfor %}
+								</div>
+								{% endif %}
+								{% else %}
+								<div id="gallery_01" class="owl-carousel owl-theme thumbnail-product abc a2">
+									{% for image in product.images %}
+									<div class="item">
+										<a href="javascript:void(0);" data-image="{{ image.src }}" data-zoom-image="{{ image.src | img_url:'1024x1024' }}"><img  src="{{ image.src | img_url:'medium' }}" alt="{{ image.alt }}"></a>
+									</div>
+									{% endfor %}
+								</div>
+								{%endif%}
+								{% endif %}
+							</div>
+							{%if settings.product_social_enable %}
+							<div class="social-sharing">
+								{%include 'social-sharing'%}
+							</div>
+							{%endif%}
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-6 details-pro">
+							<h1 class="title-head" itemprop="name">{{ product.name }}</h1>
+							<div class="item-brand">
+								<div class="bizweb-product-reviews-badge" data-id="{{ product.id }}"></div>
+							</div>
+							<div class="stock-brand">
+								<ul>
+									<li class="inventory_quantity">
+										<span class="stock-brand-title">Tình trạng:</span>
+										{% if product.available %} 
+										{%if product.selected_or_first_available_variant.inventory_quantity == 0%}
+										<span class="a-stock">Hết hàng</span>
+										{%else%}
+										{%if product.selected_or_first_available_variant.inventory_management ==""%}
+										<span class="a-stock">Còn hàng</span>
+										{%else%}
+										<span class="a-stock">Chỉ còn {{product.selected_or_first_available_variant.inventory_quantity}} sản phẩm</span>
+										{%endif%}
+										{%endif%}
+										{%else%}
+										<span class="a-stock a-stock-out">Hết hàng</span>
+										{%endif%}
+									</li>
+									<li>
+										{% if product.vendor == null or product.vendor == '' %}
+										<span class="stock-brand-title">Thương hiệu:</span>
+										<span class="a-brand">Đang cập nhật</span>
+										{% else %}
+										<span class="stock-brand-title">Thương hiệu:</span>
+										<span class="a-brand">{{product.vendor}}</span>
+										{% endif %}
+									</li>
+								</ul>
+							</div>
+							<div class="price-box" itemscope itemtype="http://schema.org/Offer">
+								{%if on_var%}
+								<span class="special-price"><span class="price product-price" itemprop="price" itemprop="priceCurrency" content="{{ store.currency }}"></span> </span> <!-- Giá Khuyến mại -->
+								<span class="old-price">Giá thị trường:  <del class="price product-price-old" itemprop="priceCurrency" content="{{ store.currency }}"></del> </span> <!-- Giá gốca -->
+								<span class="save-price">Tiết kiệm:  <span class="price product-price-save" itemprop="priceCurrency" content="{{ store.currency }}"></span> </span> <!-- Tiết kiệm -->
+								{%elseif contact%}
+								<div class="special-price"><span class="price product-price">Liên hệ </span> </div> <!-- Hết hàng -->
+								{%elseif product.variants[0].compare_at_price > product.variants[0].price%}
+								<span class="special-price"><span class="price product-price" itemprop="price" itemprop="priceCurrency" content="{{ store.currency }}">{{ product.variants[0].price | money }}</span> </span> <!-- Giá Khuyến mại -->
+								<span class="old-price">Giá thị trường:  <del class="price product-price-old" itemprop="priceCurrency" content="{{ store.currency }}">{{ product.variants[0].compare_at_price | money }}</del> </span> <!-- Giás gốc -->
+								<span class="save-price">Tiết kiệm:  <span class="price product-price-save" itemprop="priceCurrency" content="{{ store.currency }}">{{ product.variants[0].compare_at_price | minus: product.variants[0].price | money }}</span> </span> <!-- Tiết kiệm -->
+								{% else %}
+								<div class="special-price"><span class="price product-price" itemprop="price" itemprop="priceCurrency" content="{{ store.currency }}">{{ product.variants[0].price | money }}</span> </div> <!-- Giá -->
+								{% endif %}
+							</div>
+							<div class="form-product">
+								<form enctype="multipart/form-data" id="add-to-cart-form" action="/cart/add" method="post" class="form-inline">
+									{% if settings.product_swatch_enable and product.variants.size > 1 %}
+									{% for option in product.options %}
+									{% include 'swatch' with option %}
+									{% endfor %}
+									{% endif %}
+									<div class="box-variant clearfix {% if settings.product_swatch_enable%} hidden {%endif%}">
+										{% if variantCount > 1 %} 
+										<fieldset class="form-group">
+											<select id="product-selectors" class="form-control form-control-lg" name="variantId" style="display:none">
+												{% for variant in product.variants %}
+												<option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money }}</option>
+												{% endfor %}
+											</select>
+										</fieldset>
+										{% else %}
+										<input type="hidden" name="variantId" value="{{ product.variants[0].id }}" />
+										{% endif %}
+									</div>
+									<div class="form-group {%if contact%}hidden{%endif%}">
+										<div class="custom custom-btn-number form-control">									
+											<input type="text" class="input-text qty" data-field='quantity' title="Số lượng" value="1" id="qty" name="quantity" />
+											<div class="gp-btn">
+												<button onclick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN(qty)) result.value++;return false;" class="btn-plus btn-cts" type="button">+</button>
+												<button onclick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN(qty) & qty > 1 ) result.value--;return false;" class="btn-minus btn-cts" type="button">–</button>
+											</div>
+										</div>
+										{% if product.available %}									
+										<button type="submit" class="btn btn-lg btn-gray btn-cart add_to_cart btn_buy add_to_cart" title="Mua ngay">
+											<span>Mua ngay</span>
+										</button>									
+										{% else %}
+										<button class="btn btn-lg btn-style btn-style-active btn-cart" title="Hết hàng" disabled="disabled" ><span>Hết hàng</span></button>
+										{% endif %}								
+									</div>
+								</form>
+								<div class="clearfix"></div>
+								{%if product.tags.size > 0 and settings.product_tag_enable%}
+								<div class="tag-product">
+									<label class="inline">Tags: </label>
+									{% for tag in product.tags %}
+									<a href="/collections/all/{{tag|handle}}">{{tag}}</a>{% if forloop.last == true %}{% else%}, {% endif %}						
+									{% endfor %}
+								</div>
+								{%endif%}
+							</div>
+							{%if settings.product_sumary_enable%}					
+							<div class="product-summary product_description {% if product.available %}margin-bottom-15{%endif%}">
+								<div class="rte description">
+									{%if product.summary != null and product.summary != '' %}
+									{{product.summary}}
+									{%else%}
+									{{ product.content | strip_html | truncatewords: 40 }}
+									{%endif%}
+								</div>
+							</div>
+							{%endif%}
+							<div class="product-sidebar-ant-fashion hidden-lg hidden-md">
+								{% include 'product_promotion_mobile' %}
+								{% if settings.product_hotline_enable %}
+								<div class="box-hotlines clearfix">
+									<div class="box-hotlines-left">
+										<h3>{{ settings.product_hotline_title }}</h3>
+										<p>{{ settings.product_hotline_title_1 }}</p>
+										{% if settings.store_edit %}
+										<h2><a href="tel:{{ settings.store_phone| remove: ' ' }}" title="{{ settings.store_phone }}">{{ settings.store_phone }}</a></h2>
+										{% else %}
+										<h2><a href="tel:{{ store.phone_number| remove: ' ' }}" title="{{store.phone_number }}">{{store.phone_number }}</a></h2>
+										{% endif %}
+										<div class="link-contact">
+											<a href="{{ settings.product_hotline_title_5 }}" title="{{ settings.product_hotline_title_4 }}">{{ settings.product_hotline_title_4 }}</a>
+										</div>
+									</div>
+									<div class="box-hotlines-right">
+										{% if settings.store_edit %}
+										<a href="tel:{{ settings.store_phone | remove: ' ' }}">
+											<i class="fa fa-phone" aria-hidden="true"></i>
+										</a>
+										{% else %}
+										<a href="tel:{{ store.phone_number | remove: ' ' }}">
+											<i class="fa fa-phone" aria-hidden="true"></i>
+										</a>
+										{% endif %}
+									</div>
+								</div>
+								{% endif %}
+							</div>
+						</div>
+						{%if settings.product_tab_enable %}
+						<div class="col-xs-12 col-sm-12 col-md-12 margin-top-15 margin-bottom-10">
+							<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+								<ul id="myTab" class="nav nav-tabs nav-tabs-responsive" role="tablist">
+									<li role="presentation" class="active">
+										<a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">
+											<span class="text">{{settings.product_tab1_title}}</span>
+										</a>
+									</li>
+									{%if settings.product_tab2_enable%}
+									<li role="presentation" class="next">
+										<a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">
+											<span class="text">{{ pages[settings.index_blog_intro_title].title }}</span>
+										</a>
+									</li>
+									{%endif%}
+									{%if settings.product_tab3_enable%}
+									<li role="presentation">
+										<a href="#samsa" role="tab" id="samsa-tab" data-toggle="tab" aria-controls="samsa">
+											<span class="text">{{ pages[settings.index_blog_intro_title_1].title }}</span>
+										</a>
+									</li>
+									{%endif%}
+								</ul>
+								<div id="myTabContent" class="tab-content">
+									<div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+										{% assign mycontent = product.content | split:'<h6>' %}
+										{{ mycontent[0] }}
+										</div>
+										{%if settings.product_tab2_enable%}
+										<div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+											{{ pages[settings.index_blog_intro_title].content }}
+										</div>
+										{%endif%}
+										{%if settings.product_tab3_enable%}
+										<div role="tabpanel" class="tab-pane fade" id="samsa" aria-labelledby="samsa-tab">
+											{{ pages[settings.index_blog_intro_title_1].content }}
+										</div>
+										{%endif%}
+									</div>
+								</div>
+							</div>
+							{%endif%}
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-3 col-xs-12">
+						<div class="product-sidebar-ant-fashion">
+							{% if settings.product_hotline_enable %}
+							<div class="box-hotlines clearfix hidden-sm hidden-xs">
+								<div class="box-hotlines-left">
+									<h3>{{ settings.product_hotline_title }}</h3>
+									<p>{{ settings.product_hotline_title_1 }}</p>
+									<h2><a href="tel:{{ settings.product_hotline_title_3 | default: store.phone_number }}">{{ settings.product_hotline_title_3 | default: store.phone_number }}</a></h2>
+									<div class="link-contact">
+										<a href="{{ settings.product_hotline_title_5 }}">{{ settings.product_hotline_title_4 }}</a>
+									</div>
+								</div>
+								<div class="box-hotlines-right">
+									<a href="tel:{{ settings.product_hotline_title_3 | default: store.phone_number }}">
+										<i class="fa fa-phone" aria-hidden="true"></i>
+									</a>
+								</div>
+							</div>
+							{% endif %}
+							{% include 'product_promotion' %}
+							{% if settings.product_recent_enable %}
+							{% include 'product_recently' %}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% assign check11 = product.url %}
+		{% assign productRelate = product.collections.first.alias %}
+		{% assign productRelateCheck = product.collections.size %}
+		{% if productRelateCheck > 0 and settings.product_upsell_enable %}
+		{% for product in collections[productRelate]products limit: 9%}
+		{% unless check11 == product.url %}
+		{% assign a = forloop.length %}
+		{% endunless %}
+		{% endfor %}
+		{% if a > 0 %}
+		<div class="product-page-relative">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="related-product collections-container">
+							<div class="feature_category_title text-center">
+								<h2 class="title-head text-center">Sản phẩm cùng loại</h2>
+							</div>
+							<div class="products  owl-carousel owl-theme products-view-grid" data-md-items="4" data-sm-items="3" data-xs-items="2" data-margin="30">
+								{% for product in collections[productRelate]products limit: 7%}
+								{% unless check11 == product.url %}
+								{%include 'product-grid-item'%}
+								{% endunless %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</section>
+	{% endif %}
+	{% endif %}	
+	<script>  
+		var selectCallback = function(variant, selector) {
+			if (variant) {
+
+				var form = jQuery('#' + selector.domIdPrefix).closest('form');
+
+				for (var i=0,length=variant.options.length; i<length; i++) {
+
+					var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+					//console.log(radioButton);
+					if (radioButton.size()) {
+						radioButton.get(0).checked = true;
+					}
+				}
+			}
+			var addToCart = jQuery('.form-product .btn-cart'),
+				form = jQuery('.form-product .form-group'),
+				productPrice = jQuery('.details-pro .special-price .product-price'),
+				qty = jQuery('.inventory_quantity .a-stock'),
+				comparePrice = jQuery('.details-pro .old-price .product-price-old'),
+				comparePriceText = jQuery('.details-pro .old-price'),
+				savePrice = jQuery('.details-pro .save-price .product-price-save'),
+				savePriceText = jQuery('.details-pro .save-price'),
+				qtyBtn = jQuery('.form-product .form-group .custom-btn-number');
+
+			if (variant && variant.available) {
+				if(variant.inventory_management == "bizweb"){
+					qty.html('<span class="a-stock">Chỉ còn ' + variant.inventory_quantity +' sản phẩm</span>');
+				}else{
+					qty.html('<span class="a-stock">Còn hàng</span>');
+				}
+				addToCart.text('Mua ngay').removeAttr('disabled');	
+				qtyBtn.removeClass('hidden');
+				if(variant.price == 0){
+					productPrice.html('Liên hệ');	
+					comparePrice.hide();
+					savePrice.hide();
+					comparePriceText.hide();
+					savePriceText.hide();
+					form.addClass('hidden');
+				}else{
+					form.removeClass('hidden');
+					productPrice.html(Bizweb.formatMoney(variant.price, "{{ store.money_format }}"));
+					// Also update and show the product's compare price if necessary
+					if ( variant.compare_at_price > variant.price ) {
+						comparePrice.html(Bizweb.formatMoney(variant.compare_at_price, "{{ store.money_format }}")).show();
+						savePrice.html(Bizweb.formatMoney(variant.compare_at_price - variant.price, "{{ store.money_format }}")).show();
+						comparePriceText.show();
+						savePriceText.show();
+					} else {
+						comparePrice.hide();   
+						savePrice.hide();
+						comparePriceText.hide();
+						savePriceText.hide();
+					}       										
+				}
+
+			} else {	
+				qty.html('<span class="a-stock a-stock-out">Hết hàng</span>');
+				addToCart.text('Hết hàng').attr('disabled', 'disabled');
+				qtyBtn.addClass('hidden');
+				if(variant){
+					if(variant.price != 0){
+						form.removeClass('hidden');
+						productPrice.html(Bizweb.formatMoney(variant.price, "{{ store.money_format }}"));
+						// Also update and show the product's compare price if necessary
+						if ( variant.compare_at_price > variant.price ) {
+							comparePrice.html(Bizweb.formatMoney(variant.compare_at_price, "{{ store.money_format }}")).show();
+							savePrice.html(Bizweb.formatMoney(variant.compare_at_price - variant.price, "{{ store.money_format }}")).show();
+							comparePriceText.show();
+							savePriceText.show();
+						} else {
+							comparePrice.hide();  
+							savePrice.hide();
+							comparePriceText.hide();
+							savePriceText.hide();
+						}     
+					}else{
+						productPrice.html('Liên hệ');	
+						comparePrice.hide();
+						savePrice.hide();
+						comparePriceText.hide();
+						savePriceText.hide();
+						form.addClass('hidden');									
+					}
+				}else{
+					productPrice.html('Liên hệ');	
+					comparePrice.hide();
+					savePrice.hide();
+					comparePriceText.hide();
+					savePriceText.hide();
+					form.addClass('hidden');	
+				}
+
+			}
+			/*begin variant image*/
+			if (variant && variant.image) {  
+				var originalImage = jQuery(".large-image img"); 
+				var newImage = variant.image;
+				var element = originalImage[0];
+				Bizweb.Image.switchImage(newImage, element, function (newImageSizedSrc, newImage, element) {
+					jQuery(element).parents('a').attr('href', newImageSizedSrc);
+					jQuery(element).attr('src', newImageSizedSrc);
+				});
+
+				$('.checkurl').attr('href',$(this).attr('src'));
+				$('.zoomContainer').remove();
+				$('#zoom_01').removeData('elevateZoom');
+				setTimeout(function(){
+					$('.zoomContainer').remove();	
+					$('#zoom_01').removeData('elevateZoom');
+					$('#zoom_01').elevateZoom({
+						gallery:'gallery_01', 
+						zoomWindowWidth:420,
+						zoomWindowHeight:500,
+						zoomWindowOffetx: 10,
+						easing : true,
+						scrollZoom : true,
+						cursor: 'pointer', 
+						galleryActiveClass: 'active', 
+						imageCrossfade: true
+					});
+				},300);
+			}
+
+			/*end of variant image*/
+		};
+		jQuery(function($) {
+			{% if  product.variants.size > 1 %}
+			new Bizweb.OptionSelectors('product-selectors', {
+				product: {{ product | json }},
+									   onVariantSelected: selectCallback, 
+									   enableHistoryState: true
+									   });      
+
+			 {% endif %}
+
+			 // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+			 {% if product.options.size == 1 and product.options.first != 'Title' %}
+			 $('.selector-wrapper:eq(0)').prepend('<label>{{ product.options.first }}</label>');
+			  {% endif %}
+
+			  // Hide selectors if we only have 1 variant and its title contains 'Default'.
+			  {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+			  $('.selector-wrapper').hide();
+			   {% endif %} 
+			   $('.selector-wrapper').css({
+				   'text-align':'left',
+				   'margin-bottom':'15px'
+			   });
+			   });
+			   jQuery('.swatch :radio').change(function() {
+				   var optionIndex = jQuery(this).closest('.swatch').attr('data-option-index');
+				   var optionValue = jQuery(this).val();
+				   jQuery(this)
+					   .closest('form')
+					   .find('.single-option-selector')
+					   .eq(optionIndex)
+					   .val(optionValue)
+					   .trigger('change');
+			   });
+			   $(document).ready(function() {
+				   setTimeout(function(){
+					   $('#zoom_01').removeData('elevateZoom');
+					   $('#zoom_01').elevateZoom({
+						   gallery:'gallery_01', 
+						   zoomWindowWidth:420,
+						   zoomWindowHeight:500,
+						   zoomWindowOffetx: 10,
+						   easing : true,
+						   scrollZoom : true,
+						   cursor: 'pointer', 
+						   galleryActiveClass: 'active', 
+						   imageCrossfade: true
+
+					   });
+				   },500);
+				   jQuery('.thumb-link').on('click', function(event) {
+					   var largeImage = jQuery(this).attr('data-image');
+					   var smallImage = jQuery(this).find('img', 0).attr('src');
+
+					   var ez = jQuery('#zoom_01').data('elevateZoom');
+					   ez.swaptheimage(largeImage, largeImage);
+
+					   jQuery('.large-image > .zoomWrapper > img').attr('data-zoom-image', jQuery(this).attr('data-lightbox-image'));
+
+					   event.stopPropagation();
+					   event.preventDefault();
+				   });
+				   jQuery("#gallery_01").owlCarousel({
+					   loop:false,
+					   margin:10,
+					   responsiveClass:true,
+					   dots:false,
+					   nav:true,
+					   items: 4,
+					   responsive:{
+						   0:{
+							   items:4		
+						   },
+						   600:{
+							   items:4	
+						   },
+						   1000:{
+							   items:4	
+						   }
+					   }
+				   });
+			   });
+			   $('#gallery_01 img, .swatch-element label').click(function(e){
+				   $('.checkurl').attr('href',$(this).attr('src'));
+				   setTimeout(function(){
+					   $('.zoomContainer').remove();	
+					   $('#zoom_01').removeData('elevateZoom');
+					   $('#zoom_01').elevateZoom({
+						   gallery:'gallery_01', 
+						   zoomWindowWidth:420,
+						   zoomWindowHeight:500,
+						   zoomWindowOffetx: 10,
+						   easing : true,
+						   scrollZoom : true,
+						   cursor: 'pointer', 
+						   galleryActiveClass: 'active', 
+						   imageCrossfade: true
+					   });
+				   },400);
+			   })
+	</script>
+	{% if  product.variants.size > 1 %}
+	<script>
+		jQuery(document).ready(function($){
+			var images = [];
+			{% for image in product.images %}
+			images.push({url: "{{ image.src | product_img_url: 'grande'  }}", alt: "{{ image.alt }}"});
+			 {% endfor %}
+			 var thumbnails = $(".thumbnail-product");
+			  {% for option in product.options %}
+			  {% if option == 'Màu sắc' or option == 'Màu' or option =='màu sắc' or option == 'màu' %}
+			  {% assign featured_alts = forloop.index0 %}
+			  {% endif %}
+			  {% endfor %}
+			  $('#product-selectors-option-{{ featured_alts }}').change(function() {
+				  var selected = $(this).val(), mainImage = jQuery('.large-image img').attr('src').replace('_2048x2048', '_grande');
+				  thumbnails.hide().html("");
+				  arr = [];
+				  var addImage = $.each( images, function( i, image ) {
+					  var alt = images[i].alt, url = images[i].url;   
+					  if (alt == selected) {
+						  thumbnails.append('<div class="item"><a href="javascript:void(0);" data-image="' + url + '" data-zoom-image="' + url.replace('_medium', '_1024x1024') + '"><img  src="' + Bizweb.resizeImage(url, 'compact') + '" alt="'+ alt +'"></a></div>');
+					  }
+				  });
+				  arr.push(addImage);
+				  $.when.apply($, arr).done(function () {
+					  $('#gallery_01').trigger('destroy.owl.carousel');
+					  $('#gallery_01').removeAttr("style");
+					  jQuery("#gallery_01").owlCarousel({
+						  loop:false,
+						  margin:10,
+						  responsiveClass:true,
+						  dots:false,
+						  nav:true,
+						  responsive:{
+							  0:{
+								  items:4		
+							  },
+							  600:{
+								  items:4	
+							  },
+							  1000:{
+								  items:4	
+							  }
+						  }
+					  });
+					  thumbnails.fadeIn();
+					  $('#gallery_01 .item a').on('click', function(e) { 
+						  e.preventDefault();
+					  });
+				  });
+			  });
+			  });
+	</script>
+	{% endif %}

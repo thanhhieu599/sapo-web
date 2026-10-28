@@ -1,0 +1,13 @@
+{% assign variant = product.variants[0] %}
+<div class="inventory_quantity hidden">
+	<span class="stock-brand-title">Tình trạng:</span>
+	{% if variant.inventory_management == 'bizweb' %}
+	{% if variant.inventory_quantity <= 0 and variant.inventory_policy == 'deny' %}
+	<span class="a-stock a0"><link itemprop="availability" href="http://schema.org/OutOfStock" />Hết hàng</span>
+	{% elsif variant.inventory_quantity <= 0 and variant.inventory_policy == 'continue' %}
+	<span class="a-stock a1"><link itemprop="availability" href="http://schema.org/InStock" />Còn hàng</span>
+	{% endif %}
+	{% else %}
+	<span class="a-stock a2"><link itemprop="availability" href="http://schema.org/InStock" />Còn hàng</span>
+	{% endif %}
+</div>

@@ -1,0 +1,24 @@
+<div class="aside-item">
+	<div class="heading">
+		<h2 class="title-head">{{ settings.bogs_aside_recent_title }}</h2>
+	</div>
+	<div class="list-blogs">
+		<div class="row">
+			{% for article in blogs[settings.sidebar_blog].articles  limit : settings.bogs_aside_recent_limit%}									
+			<article class="blog-item blog-item-list col-md-12">
+				<a href="{{ article.url }}" class="panel-box-media">
+					{% if article.image == null %}
+					<img src="{{ 'no-image.jpg' | asset_url }}" width="70" height="70" alt="{{ article.title }}" />
+					{%else%}
+					<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ article.image.src | img_url:'medium' }}" width="70" height="70" alt="{{ article.title }}" />
+					{%endif%}
+				</a>
+				<div class="blogs-rights">
+					<h3 class="blog-item-name"><a href="{{ article.url }}" title="{{ article.title }}">{{ article.title | truncatewords: 20 }}</a></h3>
+					<div class="post-time">{{ article.created_on | date:'dd/MM/yyyy'}}</div>
+				</div>
+			</article>			
+			{% endfor %}
+		</div>
+	</div>
+</div>

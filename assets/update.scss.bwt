@@ -1,0 +1,150 @@
+/*============================================================================
+#Mixin
+==============================================================================*/
+@mixin clearfix() {
+	&:after {
+		content: "";
+		display: table;
+		clear: both; }
+	*zoom: 1;
+}
+@mixin transition($args...) {
+	-webkit-transition: $args;
+	-moz-transition: $args;
+	-ms-transition: $args;
+	-o-transition: $args;
+	transition: $args;
+}
+@mixin transform($transforms) {
+	-moz-transform: $transforms;
+	-o-transform: $transforms;
+	-ms-transform: $transforms;
+	-webkit-transform: $transforms;
+	transform: $transforms;
+}
+// rotate
+@mixin rotate ($deg) {
+	@include transform(rotate(#{$deg}deg));
+}
+
+// scale
+@mixin scale($scale) {
+	@include transform(scale($scale));
+} 
+// translate
+@mixin translate ($x, $y) {
+	@include transform(translate($x, $y));
+}
+// skew
+@mixin skew ($x, $y) {
+	@include transform(skew(#{$x}deg, #{$y}deg));
+}
+//transform origin
+@mixin transform-origin ($origin) {
+	moz-transform-origin: $origin;
+	-o-transform-origin: $origin;
+	-ms-transform-origin: $origin;
+	-webkit-transform-origin: $origin;
+	transform-origin: $origin;
+}
+
+@mixin prefix($property, $value) {
+	-webkit-#{$property}: #{$value};
+	-moz-#{$property}: #{$value};
+	-ms-#{$property}: #{$value};
+	-o-#{$property}: #{$value};
+	#{$property}: #{$value};
+}
+@mixin gradient($from, $to, $fallback) {
+	background: $fallback;
+	background: -moz-linear-gradient(top, $from 0%, $to 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to));
+	background: -webkit-linear-gradient(top, $from 0%, $to 100%);
+	background: -o-linear-gradient(top, $from 0%, $to 100%);
+	background: -ms-linear-gradient(top, $from 0%, $to 100%);
+	background: linear-gradient(top bottom, $from 0%, $to 100%);
+}
+@mixin backface($visibility: hidden) {
+	@include prefix('backface-visibility', #{$visibility});
+}
+@mixin box-sizing($box-sizing: border-box) {
+	-webkit-box-sizing: #{$box-sizing};
+	-moz-box-sizing: #{$box-sizing};
+	box-sizing: #{$box-sizing};
+}
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	border-radius: $radius;
+}
+/*============================================================================
+#Variable
+==============================================================================*/
+$gutter: 30px;
+$main-color: {{ settings.color_main }};
+$border-color: {{ settings.color_borders }};
+$font-base:  {{ base_family }};
+$font-header:  {{ header_family }};
+$font-accent:  {{ accent_family }};
+$baseFontSize: {{ settings.type_base_size }};
+$text-color: {{ settings.color_body_text }};
+$header-bg-color: {{ settings.color_body_text }};
+$footer-bg-color: {{ settings.color_body_text }};
+$disabledGrey: #ddd;
+$disabledBorder: #ddd;
+@function em($pixels, $context: $baseFontSize) {
+	@if (unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+	@if (unitless($context)) {
+		$context: $context * 1px;
+	}
+	@return $pixels / $context * 1em;
+}
+
+
+
+/*Update*/
+$sale : {{settings.color_sale}};
+$date : {{settings.color_date}};
+$btn2 : {{settings.color_btn2}};
+$btn-viewdesktop : {{settings.color_footer_desktop}};
+$btt : {{settings.color_footer_btt}};
+$hotline : {{settings.color_footer_hotline}};
+
+footer .footer-info-widget p.hotline a{
+	color: $hotline;
+}
+.product-box .sale-flash{
+	display: inline-block;
+	padding: 4px 10px;
+	color: #fff;
+	background-color: #fe9931;
+	text-transform: uppercase;
+	-webkit-box-shadow: 2px 2px 0px 0px rgba(218,218,218,0.3);
+	-moz-box-shadow: 2px 2px 0px 0px rgba(218,218,218,0.3);
+	box-shadow: 2px 2px 0px 0px rgba(218,218,218,0.3);
+}
+.product-box .sale-flash:before{
+	border-top: 10px solid $sale;;
+}
+.blog-item .date{
+	background: $date;
+}
+.off-canvas-menu .action .btn-primary.btn-50:last-child{
+	background: $btn2;
+	&:hover{
+		background: lighten($btn2, 5%)
+	}
+}
+.details-product form button.btn-primary2{
+	background: $btn2;
+	&:hover{
+		background: lighten($btn2, 5%)
+	}
+}
+.view-desktop a.btn.btn-primary.btn-full{
+	background: $btn-viewdesktop;
+	&:hover{
+		background: lighten($btn-viewdesktop, 5%)
+	}
+}

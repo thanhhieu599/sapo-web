@@ -1,0 +1,67 @@
+<div class="product_preview">
+	<div class="recently-viewed-products">
+		<div class="title_section_center">
+			<h2 class="title">{{settings.product_recent_title}}</h2>
+		</div>
+		<div class="clearfix list-border clone-item" id="owl-demo-daxem">
+			<div class="product-item style-list-review" id="recently-viewed-products"></div>
+		</div>
+	</div>
+</div>
+<script>
+	var name_pro = '{{ product.name }}';
+	var alias_pro = '{{ product.alias }}';
+	var featured_image_pro = '{{ product.featured_image.src }}';
+	var url_pro = '{{ product.url }}';
+	var variant_id_pro = '{{ product.variants[0].id }}';
+	{% if product.price > 0 %}
+	var price_pro = '{{ product.price | money }}';
+	 {% else %}
+	 var price_pro = 'Liên hệ';
+	  {% endif %}
+	  {% if product.selected_or_first_available_variant.compare_at_price > product.price %}
+	  var price_sale_pro = '{{ product.selected_or_first_available_variant.compare_at_price | money }}';
+	   var hasSale_pro = 'true';
+	   var percent_sale_pro = '{{ product.price | times : 100 | divided_by : product.selected_or_first_available_variant.compare_at_price | minus : 100 | times : -1 | ceil}}';
+	   {% else %}
+	   var price_sale_pro = '';
+		var hasSale_pro = 'false';
+		var percent_sale_pro = '';
+		{% endif %}
+		var array_list = [{
+			'name':name_pro,'alias':alias_pro,'featured_image':featured_image_pro,'url':url_pro,'variant_id':variant_id_pro,'price':price_pro,'compare_at_price':price_sale_pro,'hasSale':hasSale_pro,'percent_sale':percent_sale_pro
+		}];
+		 var list_viewed_pro_old = localStorage.getItem('last_viewed_products');
+		 var last_viewed_pro_new = "";
+		 if(list_viewed_pro_old == null || list_viewed_pro_old == '')
+			 last_viewed_pro_new = array_list;
+		 else{
+			 var list_viewed_pro_old = JSON.parse(localStorage.last_viewed_products);
+			 list_viewed_pro_old.splice(20, 1);
+			 for (i = 0; i < list_viewed_pro_old.length; i++) {
+				 if ( list_viewed_pro_old[i].alias == alias_pro ) {
+					 list_viewed_pro_old.splice(i,1);
+					 break;
+				 }
+			 }
+			 list_viewed_pro_old.unshift(array_list[0]);
+			 last_viewed_pro_new = list_viewed_pro_old;
+		 }
+		 localStorage.setItem('last_viewed_products',JSON.stringify(last_viewed_pro_new));
+		 var last_viewd_pro_array = JSON.parse(localStorage.last_viewed_products);
+
+		 var size_pro_review = last_viewd_pro_array.length;
+		 if ( size_pro_review >= 5 ) {
+			 size_pro_review = 5;
+		 } else {
+			 size_pro_review = last_viewd_pro_array.length;
+		 }
+		 $(document).ready(function(){
+			 if ( size_pro_review > 0 ) {
+				 for (i = 0; i < size_pro_review; i++){
+					 var alias_product = last_viewd_pro_array[i];
+					 Ant.clone_item_view(alias_product);
+				 }
+			 }
+		 });
+</script>

@@ -1,0 +1,22 @@
+{% assign token_public = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYXBvLWxveWFsdHktc3BlY2lhbCIsInJvbGUiOiJPUEVOX0ZMT0FUSU5HIn0.UWkThCDpyIoGL8bjOwonqakzGcDt1kkj-_8RYJUaGC8" %}
+{% if customer %}
+	{% assign loyalty_key_secret = store.metafields['loyalty'].secret_key %}
+	{% assign timestamp = 'now' | date: "%s" %}
+	{% assign timestampHmac =  "&timestamp=" | append: timestamp %}
+	{% assign phone =  customer.phone | replace: "+", "" %}
+
+	{% assign phoneHmac =  "phone=" | append: customer.phone | replace: "+", "" %}
+	{% assign phoneAndTimeForHmac =  phoneHmac | append: timestampHmac %}
+	{% assign auth_token = phoneAndTimeForHmac | hmac_sha256: loyalty_key_secret %}
+{% endif %}
+<div id='sapo-loyalty-rewards-init' class='sapo-loyalty-init'
+	{% if customer %}
+	data-hmac='{{ auth_token }}'
+	data-phone='{{ phone }}'
+	data-timestamp='{{ timestamp }}'
+	{% endif %}
+	data-domain='{{ store.domain }}'
+	data-token-public='{{ token_public }}'
+><div class="sapo-rewards-base" style="left: 55px; bottom: 55px;"></div></div>
+<script src="https://loyalty.sapocorp.net/api/loyalty.js?alias={{ store.domain }}"></script>
+

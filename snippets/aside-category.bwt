@@ -1,0 +1,87 @@
+<aside class="aside-item collection-category hidden-xs hidden-sm">
+	<div class="aside-title">
+		<h3 class="title-head margin-top-0"><span>{{ settings.aside_category_title }}</span></h3>
+	</div>
+	<div class="aside-content">
+		<nav class="nav-category navbar-toggleable-md">
+			<ul class="{% if page_title == "Tất cả sản phẩm" %}nav navbar-pills{% else %}nav navbar-pills hidden{% endif %}">
+				{% for link in linklists[settings.aside_category_menu].links %}
+				{% if linklists[link.alias] %}
+				{% if link.active %}
+				{% assign link_alias = link.alias %}
+				{% assign link_title = link.title %}
+				{% endif %}
+				<li class="nav-item {% if link.active %}active{% endif %}">
+					<a href="{{ link.url }}" class="nav-link" title="{{ link.title }}">{{ link.title }}</a>
+					<i class="fa fa-angle-down"></i>
+					<ul class="dropdown-menu">
+						{% for childlink in linklists[link.alias].links %}
+						{% if linklists[childlink.alias] %}
+						{% if childlink.active %}
+						{% assign link_alias = childlink.alias %}
+						{% assign link_title = childlink.title %}
+						{% endif %}
+						<li class="dropdown-submenu nav-item">
+							<a class="nav-link" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+							<i class="fa fa-angle-down"></i>
+							<ul class="dropdown-menu">
+								{% for childlink2 in linklists[childlink.alias].links %}
+								{% if linklists[childlink2.alias] %}
+								<li class="dropdown-submenu nav-item">
+									<a class="nav-link" href="{{ childlink2.url }}" title="{{ childlink2.title }}">{{ childlink2.title }}</a>
+									{% if childlink2.active %}
+									{% assign link_alias = childlink2.alias %}
+									{% assign link_title = childlink2.title %}
+									{% endif %}
+									<i class="fa fa-angle-down"></i>
+									<ul class="dropdown-menu">
+										{% for childlink3 in linklists[childlink2.alias].links %}
+										{% if childlink3.active %}
+										{% assign link_alias = childlink2.alias %}
+										{% assign link_title = childlink2.title %}
+										{% endif %}
+										<li class="dropdown-submenu nav-item">
+											<a class="nav-link" href="{{ childlink3.url }}" title="{{ childlink3.title }}">{{ childlink3.title }}</a>
+										</li>
+										{% endfor %}
+									</ul>
+								</li>
+								{% else %}
+								{% if childlink2.active %}
+								{% assign link_alias = childlink.alias %}
+								{% assign link_title = childlink.title %}
+								{% endif %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{ childlink2.url }}" title="{{ childlink2.title }}">{{ childlink2.title }}</a>
+								</li>
+								{% endif %}
+								{% endfor %}
+							</ul>                      
+						</li>
+						{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+						</li>
+						{% endif %}
+						{% endfor %}
+						{% if childlink.active %}
+						{% assign link_alias = link.alias %}
+						{% assign link_title = link.title %}
+						{% endif %}
+					</ul>
+				</li>
+				{% else %}
+				{% if link.active %}
+				{% assign link_alias = settings.aside_category_menu %}
+				{% assign link_title = settings.aside_category_menu %}
+				{% endif %}
+				<li class="nav-item {% if link.active %}active{% endif %}"><a class="nav-link" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+			{% if page_title != "Tất cả sản phẩm" %}
+			{% include 'cate_follow_link' %}
+			{% endif %}
+		</nav>
+	</div>
+</aside>

@@ -1,0 +1,42 @@
+{% comment %}
+  NHÓM SẢN PHẨM THEO THƯƠNG HIỆU (giống trang hãng của I.T.C Vietnam)
+  - Dữ liệu lấy từ menu có mã: nhom-<mã danh mục hãng>  (vd: nhom-3m)
+  - Mỗi mục menu trỏ tới 1 danh mục con (vd: Găng tay 3M, Băng keo 3M)
+  - Ảnh: ảnh danh mục con; nếu chưa có thì lấy ảnh sản phẩm đầu tiên
+{% endcomment %}
+{% assign group_key = 'nhom-' | append: collection.handle %}
+{% assign group_links = linklists[group_key].links %}
+<div class="brand-groups">
+  {% for link in group_links %}
+    {% assign g = link.object %}
+    {% assign g_img = '' %}
+    {% if g.image %}
+      {% assign g_img = g.image.src | img_url: 'large' %}
+    {% elsif g.products.first.featured_image %}
+      {% assign g_img = g.products.first.featured_image.src | img_url: 'large' %}
+    {% endif %}
+    <a class="bg-item" href="{{ link.url }}" title="{{ link.title | escape }}">
+      <h2 class="bg-title">{{ link.title }}</h2>
+      {% if g.products_count > 0 %}<span class="bg-count">({{ g.products_count }} sản phẩm)</span>{% endif %}
+      <span class="bg-img">
+        {% if g_img != '' %}
+          <img src="{{ g_img }}" alt="{{ link.title | escape }} chính hãng - trangthietbi.vn" loading="lazy">
+        {% else %}
+          <img src="{{ 'no-image.jpg' | asset_url }}" alt="{{ link.title | escape }}" loading="lazy">
+        {% endif %}
+      </span>
+    </a>
+  {% endfor %}
+</div>
+<style>
+  .brand-groups{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:15px 0 30px}
+  .bg-item{display:flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:6px;padding:12px;text-align:center;transition:all .25s ease}
+  .bg-item:hover{border-color:#c62828;box-shadow:0 6px 16px rgba(0,0,0,.08);transform:translateY(-3px)}
+  .bg-title{font-size:15px;font-weight:600;color:#222;margin:0 0 4px;min-height:40px;display:flex;align-items:center;justify-content:center;line-height:1.35}
+  .bg-item:hover .bg-title{color:#c62828}
+  .bg-count{font-size:13px;color:#777;margin-bottom:8px}
+  .bg-img{display:flex;align-items:center;justify-content:center;width:100%;height:160px}
+  .bg-img img{max-width:100%;max-height:160px;object-fit:contain}
+  @media (max-width:991px){.brand-groups{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:575px){.brand-groups{grid-template-columns:repeat(2,1fr);gap:10px}.bg-img{height:120px}.bg-img img{max-height:120px}.bg-title{font-size:14px}}
+</style>

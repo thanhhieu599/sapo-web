@@ -1,0 +1,188 @@
+<div class="ajax-error-modal modal">
+	<div class="modal-inner">
+		<div class="ajax-error-title">Lỗi</div>
+		<div class="ajax-error-message"></div>
+	</div>
+</div>
+<div class="ajax-success-modal modal">
+	<div class="overlay"></div>
+	<div class="content">
+		<div class="ajax-left">
+			<img class="ajax-product-image" alt="&nbsp;" src="" style="max-width:65px; max-height:100px"/>
+		</div>
+		<div class="ajax-right">
+			<p class="ajax-product-title"></p>
+			<p class="success-message btn-go-to-cart"><span style="color:#000">&#10004;</span> Đã được thêm vào giỏ hàng.</p>
+
+			<div class="actions">          
+				<button onclick="window.location='/cart'" class="btn btn-red-popup">Giỏ hàng</button>
+				<button onclick="window.location='/checkout'" class="btn btn-red-popup">Thanh toán</button>
+			</div>
+		</div>
+		<a href="javascript:void(0)" class="close-modal"><i class="fa fa-times"></i></a>
+	</div>    
+</div>
+<style>
+	/*css_9997_ajax_cart_modal*/
+	@media (max-width: 767px) {
+		.modal {
+			z-index: 1050 !important;
+		}
+	}
+
+	.modal {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 99999;
+		display: none;
+		overflow: hidden;
+		-webkit-overflow-scrolling: touch;
+		outline: 0;
+	}
+
+	.ajax-success-modal .overlay {
+		background: rgba(20, 20, 20, 0.75);
+		height: 100%;
+		width: 100%;
+		position: fixed;
+	}
+
+	.ajax-success-modal .content {
+		background: #fff;
+		bottom: auto;
+		left: 50%;
+		margin-left: -270px;
+		margin-top: -100px;
+		min-height: 200px;
+		padding: 30px;
+		position: fixed;
+		right: auto;
+		top: 50% !important;
+		width: 540px;
+	}
+
+	.ajax-success-modal .content .button {
+		padding: 10px 15px;
+	}
+
+	.ajax-success-modal .ajax-left {
+		float: left;
+		margin-right: 30px;
+	}
+
+	.ajax-success-modal .ajax-right {
+		margin-left: 93px;
+	}
+
+	.success-message {
+		background: #f9f9f9;
+		height: 40px;
+		line-height: 40px;
+		color: #000;
+		padding: 0 10px 0 20px;
+		margin-bottom: 20px;
+	}
+
+	.ajax-product-title {
+		text-align: left;
+		margin-bottom: 20px;
+		font-weight: 700;
+		font-family: "Roboto Slab",sans-serif;
+		line-height: 14px;
+		color: #4A3730;
+	}
+
+	.ajax-success-modal .close-modal {
+		position: absolute;
+		right: 0px;
+		top: 0;
+		height: 34px;
+		width: 34px;
+		background: #000;
+		color: #fff;
+		padding: 5px;
+		text-align: center;
+		font-size: 18px;
+		line-height: 22px;
+	}
+
+	.ajax-success-modal .close-modal:hover {
+		background: #4A3730;
+		color: #eee;
+	}
+	.ajax-success-modal .close-modal i{
+		padding-top: 3px;
+	}
+	.rte img {
+		max-width: 100%;
+	}
+
+	button.btn.btn-red-popup {
+		background: #000;
+		color: #fff;
+		text-transform: uppercase;
+		border-radius: 0px;
+		padding: 10px 20px;
+	}
+
+	button.btn.btn-red-popup:nth-of-type(2) {
+		margin-left: 20px;
+		background: #ffd401;
+		color: #fff;
+	}
+
+	button.btn.btn-red-popup:nth-of-type(2):hover {
+		background: #F4AE00;
+	}
+	@media only screen and (max-width: 767px) {
+		/* ajaxcart */
+
+		.ajax-success-modal .btn-secondary {
+			font-size: 11px!important;
+			height: 34px;
+			line-height: 30px;
+			padding: 0 8px;
+		}
+		.ajax-success-modal .content {
+			width: 100%;
+			margin-left: 0;
+			margin-top: 0;
+			left: 0;
+			top: 60px !important;
+			padding: 20px 10px;
+			min-height: 180px;
+		}
+		.ajax-success-modal .close-modal {
+			right: 5px;
+			top: -40px;
+		}
+		.ajax-success-modal .ajax-right {
+			margin-left: 75px;
+		}
+		.ajax-success-modal .ajax-left {
+			margin-right: 10px;
+		}
+		.ajax-success-modal .continue-shopping {
+			margin-right: 5px;
+		}
+		.success-message {
+			background-position: 10px -1476px;
+			padding: 0 0 0 30px;
+		}
+	}
+</style>
+
+{{ 'components.js' | asset_url | script_tag }}
+{{ 'app.js'| asset_url | script_tag }}
+
+{{ 'api.jquery.js' | bizweb_asset_url | script_tag }}
+{{ 'ajax-cart.js' | asset_url | script_tag }}
+
+<script>
+	$(document).ready(function() {
+		App.init(); // init core    
+	});		
+</script>

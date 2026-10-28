@@ -1,0 +1,356 @@
+{% assign brand_menu = 'thuong-hieu' %}
+{% assign brand_links = linklists[brand_menu].links %}
+
+{% include 'breadcrumb' %}
+
+<section class="brd-page">
+
+	<!-- ===== Banner ===== -->
+	<div class="brd-hero">
+		<div class="container">
+			<span class="brd-eyebrow">Đối tác</span>
+			<h1>{{ collection.title }}</h1>
+			<p>Phân phối chính hãng các thương hiệu thiết bị bảo hộ lao động và vật tư công nghiệp uy tín.{% if brand_links.size > 0 %} Hiện có <b>{{ brand_links.size }}</b> thương hiệu.{% endif %}</p>
+		</div>
+	</div>
+
+	<div class="container">
+
+		{% if collection.description != blank %}
+		<div class="brd-intro rte">{{ collection.description }}</div>
+		{% endif %}
+
+		{% if brand_links.size > 0 %}
+
+		{% if brand_links.size > 8 %}
+		<div class="brd-toolbar">
+			<div class="brd-search">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input type="text" id="brdSearch" placeholder="Tìm thương hiệu..." autocomplete="off" aria-label="Tìm thương hiệu">
+			</div>
+			<span class="brd-count" id="brdCount">{{ brand_links.size }} thương hiệu</span>
+		</div>
+		{% endif %}
+
+		<div class="brd-grid" id="brdGrid">
+			{% for link in brand_links %}
+				{% assign brand_img = '' %}
+				{% if link.object.image %}
+					{% assign brand_img = link.object.image.src | img_url: 'large' %}
+				{% elsif link.object.featured_image %}
+					{% assign brand_img = link.object.featured_image.src | img_url: 'large' %}
+				{% endif %}
+				<a class="brd-item" href="{{ link.url }}" data-name="{{ link.title | downcase | escape }}" title="Sản phẩm {{ link.title | escape }} chính hãng">
+					<span class="brd-logo">
+						{% if brand_img != '' %}
+							<img src="{{ brand_img }}" alt="Thương hiệu {{ link.title | escape }} - nhà phân phối trangthietbi.vn" loading="lazy">
+						{% else %}
+							<span class="brd-text">{{ link.title }}</span>
+						{% endif %}
+					</span>
+					<span class="brd-name">{{ link.title }}</span>
+					<span class="brd-more">Xem sản phẩm <i class="fa fa-long-arrow-right" aria-hidden="true"></i></span>
+				</a>
+			{% endfor %}
+		</div>
+
+		<div class="brd-noresult" id="brdNoResult" style="display:none;">
+			<h2>Không tìm thấy thương hiệu phù hợp</h2>
+			<p>Bạn thử gõ từ khóa khác, hoặc liên hệ để chúng tôi tư vấn thương hiệu phù hợp nhu cầu.</p>
+		</div>
+
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "ItemList",
+			"name": "Thương hiệu phân phối tại trangthietbi.vn",
+			"itemListElement": [
+				{% for link in brand_links %}
+				{
+					"@type": "ListItem",
+					"position": {{ forloop.index }},
+					"name": {{ link.title | json }},
+					"url": "https://trangthietbi.vn{{ link.url }}"
+				}{% unless forloop.last %},{% endunless %}
+				{% endfor %}
+			]
+		}
+		</script>
+
+		{% else %}
+		<p class="brd-empty">Chưa có thương hiệu. Vào Website &gt; Menu, tạo/kiểm tra menu có mã "{{ brand_menu }}".</p>
+		{% endif %}
+
+		<!-- ===== Kêu gọi hành động ===== -->
+		<div class="brd-cta">
+			<div>
+				<h2>Chưa thấy thương hiệu bạn cần?</h2>
+				<p>Gửi tên thương hiệu hoặc nhu cầu của doanh nghiệp, D&amp;T sẽ tìm nguồn hàng và báo giá nhanh.</p>
+			</div>
+			<div class="brd-cta-actions">
+				<a href="/lien-he" class="brd-btn brd-btn-primary">Liên hệ ngay</a>
+				<a href="/collections/all" class="brd-btn brd-btn-ghost">Xem tất cả sản phẩm</a>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<style>
+/* ===== Banner ===== */
+.brd-hero {
+	margin-bottom: 34px;
+	padding: 40px 0 36px;
+	background: linear-gradient(135deg, #1f1f1f 0%, #3b1315 100%);
+	color: #fff;
+}
+.brd-eyebrow {
+	display: inline-block;
+	margin-bottom: 14px;
+	padding: 4px 12px;
+	border-radius: 20px;
+	background: #bf2026;
+	font-size: 12px;
+	font-weight: 600;
+}
+.brd-hero h1 {
+	margin: 0 0 10px;
+	font-size: 34px;
+	font-weight: 700;
+	line-height: 1.28;
+	color: #fff;
+	text-transform: none;
+}
+.brd-hero p {
+	max-width: 900px;
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, .82);
+}
+.brd-hero p b { color: #fff; }
+
+.brd-intro {
+	max-width: 900px;
+	margin-bottom: 28px;
+	font-size: 16px;
+	line-height: 1.75;
+	color: #444;
+}
+
+/* ===== Thanh tìm kiếm ===== */
+.brd-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 22px;
+}
+.brd-search { position: relative; flex: 0 1 420px; width: 100%; }
+.brd-search .fa {
+	position: absolute;
+	top: 50%;
+	left: 16px;
+	transform: translateY(-50%);
+	color: #999;
+}
+.brd-search input {
+	width: 100%;
+	height: 46px;
+	padding: 0 16px 0 42px;
+	border: 1px solid #dcdcdc;
+	border-radius: 8px;
+	background: #fafafa;
+	font-size: 14px;
+	box-shadow: none;
+	transition: border-color .2s, background .2s, box-shadow .2s;
+}
+.brd-search input:focus {
+	border-color: #bf2026;
+	background: #fff;
+	box-shadow: 0 0 0 3px rgba(191, 32, 38, .12);
+	outline: none;
+}
+.brd-count { flex: 0 0 auto; font-size: 14px; color: #888; }
+
+/* ===== Lưới thương hiệu ===== */
+.brd-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 22px;
+}
+.brd-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 18px 18px 20px;
+	background: #fff;
+	border: 1px solid #eee;
+	border-radius: 14px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
+	text-align: center;
+	text-decoration: none;
+	transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+.brd-item:hover {
+	transform: translateY(-4px);
+	border-color: #f1c4c6;
+	box-shadow: 0 14px 32px rgba(0, 0, 0, .12);
+}
+.brd-logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 120px;
+	margin-bottom: 14px;
+	padding: 14px;
+	border-radius: 10px;
+	background: #fafafa;
+}
+.brd-logo img {
+	max-width: 100%;
+	max-height: 90px;
+	object-fit: contain;
+	transition: transform .3s, filter .3s, opacity .3s;
+}
+.brd-item:hover .brd-logo img { transform: scale(1.06); }
+.brd-text {
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.3;
+	color: #333;
+	text-transform: uppercase;
+}
+.brd-name {
+	display: block;
+	margin-bottom: 6px;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.4;
+	color: #222;
+}
+.brd-item:hover .brd-name { color: #bf2026; }
+.brd-more {
+	font-size: 13px;
+	font-weight: 600;
+	color: #bf2026;
+	opacity: .85;
+}
+.brd-more .fa { margin-left: 4px; transition: margin-left .2s; }
+.brd-item:hover .brd-more .fa { margin-left: 9px; }
+
+/* Logo tông xám, rê chuột thì lên màu (chỉ trên thiết bị có chuột) */
+@media (hover: hover) {
+	.brd-logo img { filter: grayscale(1); opacity: .8; }
+	.brd-item:hover .brd-logo img { filter: none; opacity: 1; }
+}
+
+/* ===== Trạng thái trống / không tìm thấy ===== */
+.brd-noresult {
+	padding: 50px 20px;
+	border: 1px dashed #ddd;
+	border-radius: 14px;
+	text-align: center;
+}
+.brd-noresult h2 { margin: 0 0 8px; font-size: 20px; font-weight: 700; color: #222; text-transform: none; }
+.brd-noresult p { margin: 0; color: #777; }
+.brd-empty {
+	padding: 30px;
+	background: #fff8e1;
+	border: 1px dashed #f0b400;
+	border-radius: 10px;
+}
+
+/* ===== Kêu gọi hành động ===== */
+.brd-cta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	margin: 40px 0 50px;
+	padding: 28px 30px;
+	border-radius: 14px;
+	background: linear-gradient(135deg, #1f1f1f 0%, #3b1315 100%);
+	color: #fff;
+}
+.brd-cta h2 { margin: 0 0 6px; font-size: 22px; font-weight: 700; color: #fff; text-transform: none; }
+.brd-cta p { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, .8); }
+.brd-cta-actions { display: flex; flex: 0 0 auto; gap: 10px; }
+.brd-btn {
+	display: inline-block;
+	padding: 12px 24px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	white-space: nowrap;
+	text-decoration: none;
+	transition: background .2s, color .2s;
+}
+.brd-btn-primary { background: #bf2026; color: #fff; }
+.brd-btn-primary:hover { background: #a01a20; color: #fff; }
+.brd-btn-ghost { border: 1px solid rgba(255, 255, 255, .5); color: #fff; }
+.brd-btn-ghost:hover { background: #fff; color: #1f1f1f; }
+
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+	.brd-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+}
+@media (max-width: 767px) {
+	.brd-hero { margin-bottom: 24px; padding: 30px 0 26px; }
+	.brd-hero h1 { font-size: 26px; }
+	.brd-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
+	.brd-search { flex-basis: auto; }
+	.brd-cta { flex-direction: column; align-items: flex-start; padding: 24px 20px; }
+}
+@media (max-width: 575px) {
+	.brd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+	.brd-item { padding: 12px 10px 14px; }
+	.brd-logo { height: 90px; padding: 10px; margin-bottom: 10px; }
+	.brd-logo img { max-height: 64px; }
+	.brd-text { font-size: 15px; }
+	.brd-name { font-size: 14px; }
+	.brd-cta-actions { flex-wrap: wrap; }
+}
+</style>
+
+<script type="text/javascript">
+(function () {
+	var input = document.getElementById('brdSearch');
+	var grid = document.getElementById('brdGrid');
+	if (!input || !grid) return;
+
+	var items = grid.querySelectorAll('.brd-item');
+	var count = document.getElementById('brdCount');
+	var empty = document.getElementById('brdNoResult');
+	var total = items.length;
+
+	// Bỏ dấu tiếng Việt để gõ "giay" vẫn ra "giày"
+	function normalize(s) {
+		return (s || '')
+			.toLowerCase()
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.replace(/đ/g, 'd')
+			.trim();
+	}
+
+	var names = [];
+	for (var i = 0; i < items.length; i++) {
+		names.push(normalize(items[i].getAttribute('data-name')));
+	}
+
+	input.addEventListener('input', function () {
+		var q = normalize(input.value);
+		var shown = 0;
+		for (var j = 0; j < items.length; j++) {
+			var ok = !q || names[j].indexOf(q) !== -1;
+			items[j].style.display = ok ? '' : 'none';
+			if (ok) shown++;
+		}
+		if (count) count.textContent = (q ? shown + '/' + total : total) + ' thương hiệu';
+		if (empty) empty.style.display = shown ? 'none' : '';
+		grid.style.display = shown ? '' : 'none';
+	});
+})();
+</script>

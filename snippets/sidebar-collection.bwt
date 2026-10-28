@@ -1,0 +1,9 @@
+{% if settings.aside_filter_enable %}	
+{%include 'aside-filter'%}	
+{% endif %}
+{% if settings.aside_category_enable %}	
+{%include 'aside-category'%}
+{% endif %}
+{% if settings.aside_banner_enable %}	
+{%include 'aside-banner'%}
+{% endif %}

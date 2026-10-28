@@ -1,0 +1,11 @@
+<h1 class="hidden">{{store.name}} - {{store.description}}</h1>
+{%for i in (1..16)%}
+{%capture enable%}home_section_{{i}}{%endcapture%}
+{% if settings[enable] != 'none' %}
+<section class="awe-section-{{forloop.index}}">	
+	{% include settings[enable] %}
+</section>
+{% endif %}
+{%endfor%}
+{% include 'appbulk-selling-products' %}
+<div class="ab-most-view-product-module ab-hide"></div>

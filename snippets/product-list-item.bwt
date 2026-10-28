@@ -1,0 +1,96 @@
+{% assign sold_out = true %}
+{% if product.available  %}
+{% assign sold_out = false %}
+{% assign awe-price = product.selected_or_first_available_variant.price %}
+{% assign awe-compare-price = product.selected_or_first_available_variant.compare_at_price %}
+{%else%}
+{% assign awe-price = product.variants[0].price %}
+{% assign awe-compare-price = product.variants[0].compare_at_price %}
+{% endif %} 
+{%assign contact = false%}
+{%if awe-price == 0 %}
+{%assign contact = true%}
+{%endif%}
+{% assign on_sale = false %}
+{% if awe-compare-price > awe-price %}
+{% assign on_sale = true %}
+{% endif %}
+{% assign variantCount = product.variants | size %}
+{% assign on_var = false %}
+{% if variantCount > 1 %}
+{% assign on_var = true %}
+{% endif %}
+
+{%if product.featured_image.alt ==""%}
+{% assign featured_image_alt = product.name %}
+{%else%}
+{% assign featured_image_alt = product.featured_image.alt%}
+{%endif%}
+
+<div class="product-box">															
+	<div class="product-thumbnail f-left">
+		{% if on_sale %}
+		<div class="sale-flash">SALE</div>
+		{% endif %}
+		<a href="{{ product.url }}" title="{{ product.name }}">
+			<img src="{{ product.featured_image.src | img_url:'large' }}" alt="{{ featured_image_alt }}">
+		</a>		
+	</div>
+	<div class="product-info f-left">
+		<h3 class="product-name"><a href="{{ product.url }}" title="{{ product.name }}">{{ product.name }}</a></h3>
+		{%if contact %}
+		<div class="price-box clearfix">
+			<div class="special-price clearfix">
+				<span class="price product-price">Liên hệ</span>
+			</div>
+		</div>
+		{%else%}
+		{% if on_sale %}
+		<div class="price-box clearfix">			
+			<div class="special-price f-left">
+				<span class="price product-price">{{ awe-price | money }}</span>
+			</div>
+			{% if awe-compare-price > awe-price %}
+			<div class="old-price">															 
+				<span class="price product-price-old">
+					{{ awe-compare-price | money }}			
+				</span>
+			</div>
+			{% endif %}			
+		</div>		
+		{% else %}
+		<div class="price-box clearfix">
+
+			<div class="special-price f-left">
+				<span class="price product-price">{{ awe-price | money }}</span>
+			</div>											
+		</div>
+		{% endif %}
+		{% endif %}
+		<div class="product-summary">
+			{%if product.summary != null and product.summary != '' %}
+			{{product.summary}}
+			{%else%}
+			{{ product.content | truncatewords: 20 | strip_html}}
+			{%endif%}
+		</div>
+		<form action="/cart/add" method="post" class="variants pro-action-btn margin-top-15" data-id="product-actions-{{ product.id }}" enctype="multipart/form-data">
+			{%if variantCount > 1 %}
+			<input class="hidden" type="hidden" name="variantId" value="{{ product.variants[0].id }}" />
+			<button class="btn-cart btn btn-gray  left-to" title="Chọn sản phẩm"  type="button" onclick="window.location.href='{{product.url}}'" >
+				Tùy chọn</button>
+			{% elseif sold_out %}
+			<button disabled="disabled" class="btn-cart btn btn-gray   left-to" title="Cho vào giỏ hàng">Hết hàng</button>
+			{% else %}
+			<input type="hidden" name="variantId" value="{{ product.variants[0].id }}" />
+			<button class="btn-buy btn-cart btn btn-gray   left-to add_to_cart" title="Cho vào giỏ hàng"><span><!--<i class="fa fa-cart-plus" aria-hidden="true"></i>-->
+				Mua hàng</span>
+			</button>
+			{% endif %}
+			{%if settings.quickview_enable%}
+			<a href="{{ product.url }}" data-handle="{{ product.alias }}" class="btn-white btn_view btn right-to quick-view">Xem nhanh</a>
+			{%endif%}
+		</form> 
+	</div>
+
+</div>

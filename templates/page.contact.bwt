@@ -1,0 +1,405 @@
+{% include 'breadcrumb' %}
+
+{% if settings.store_edit %}
+	{% assign c_company = settings.store_company %}
+	{% assign c_phone = settings.store_phone %}
+	{% assign c_email = settings.store_email %}
+	{% assign c_address = settings.store_address %}
+{% else %}
+	{% assign c_company = store.name %}
+	{% assign c_phone = store.phone_number %}
+	{% assign c_email = store.customer_email %}
+	{% assign c_address = store.address | append: ', ' | append: store.province %}
+{% endif %}
+{% assign c_phone_raw = c_phone | remove: ' ' | remove: '.' %}
+
+<section class="ct-page">
+
+	<!-- ===== Banner ===== -->
+	<div class="ct-hero">
+		<div class="container">
+			<span class="ct-eyebrow">Liên hệ</span>
+			<h1>Liên hệ với chúng tôi</h1>
+			<p>{{ page_title }}</p>
+		</div>
+	</div>
+
+	<div class="container">
+
+		<!-- ===== 3 thẻ liên hệ nhanh ===== -->
+		<div class="ct-quick">
+			<a class="ct-quick-item" href="tel:{{ c_phone_raw }}">
+				<span class="ct-quick-icon"><i class="fa fa-phone" aria-hidden="true"></i></span>
+				<span class="ct-quick-text">
+					<small>Hotline</small>
+					<b>{{ c_phone }}</b>
+				</span>
+			</a>
+			<a class="ct-quick-item" href="mailto:{{ c_email }}">
+				<span class="ct-quick-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
+				<span class="ct-quick-text">
+					<small>Email</small>
+					<b>{{ c_email }}</b>
+				</span>
+			</a>
+			<div class="ct-quick-item">
+				<span class="ct-quick-icon"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+				<span class="ct-quick-text">
+					<small>Địa chỉ</small>
+					<b>{{ c_address }}</b>
+				</span>
+			</div>
+		</div>
+
+		<!-- ===== Form + Thông tin công ty ===== -->
+		<div class="ct-main">
+
+			<div class="ct-form-card">
+				<h2>Gửi yêu cầu cho chúng tôi</h2>
+				<p class="ct-lead">Bạn hãy điền nội dung tin nhắn vào form dưới đây và gửi cho chúng tôi. Chúng tôi sẽ trả lời bạn sau khi nhận được.</p>
+
+				{% form 'contact' %}
+					{% if form.posted_successfully %}
+					<div class="ct-alert ct-alert-success" role="alert">
+						Cảm ơn bạn đã liên hệ với chúng tôi. Chúng tôi sẽ trả lời bạn sớm nhất có thể.
+					</div>
+					{% endif %}
+
+					<div class="ct-errors">
+						{% include 'form-errors-custom' %}
+					</div>
+
+					<div class="ct-label-title">Bạn cần hỗ trợ về</div>
+					<div class="ct-chips" id="ctChips">
+						<button type="button" class="ct-chip" data-topic="Yêu cầu báo giá">Yêu cầu báo giá</button>
+						<button type="button" class="ct-chip" data-topic="Tư vấn sản phẩm">Tư vấn sản phẩm</button>
+						<button type="button" class="ct-chip" data-topic="Hợp tác doanh nghiệp">Hợp tác doanh nghiệp</button>
+						<button type="button" class="ct-chip" data-topic="Hỗ trợ đơn hàng">Hỗ trợ đơn hàng</button>
+					</div>
+
+					<div class="ct-row">
+						<div class="ct-field">
+							<label for="name">Họ tên <span class="required">*</span></label>
+							<input type="text" name="contact[name]" id="name" class="form-control" placeholder="Nguyễn Văn A" data-validation="required" data-validation-error-msg="Không được để trống" required />
+						</div>
+						<div class="ct-field">
+							<label for="tel">Điện thoại <span class="required">*</span></label>
+							<input type="tel" name="contact[tel]" id="tel" class="form-control" placeholder="09xx xxx xxx" data-validation="tel" data-validation-error-msg="Không được để trống" required />
+						</div>
+					</div>
+
+					<div class="ct-field">
+						<label for="email">Email <span class="required">*</span></label>
+						<input type="email" name="contact[email]" id="email" class="form-control" placeholder="ten@congty.com" data-validation="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$" data-validation-error-msg="Email sai định dạng" required />
+					</div>
+
+					<div class="ct-field">
+						<label for="comment">Nội dung <span class="required">*</span></label>
+						<textarea name="contact[body]" id="comment" class="form-control" rows="5" placeholder="Mô tả nhu cầu của bạn: sản phẩm, số lượng, thời gian cần hàng..." data-validation="required" data-validation-error-msg="Không được để trống" required></textarea>
+					</div>
+
+					<button type="submit" class="ct-submit">Gửi tin nhắn <i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+					<p class="ct-note">Thông tin của bạn chỉ được dùng để phản hồi yêu cầu liên hệ.</p>
+				{% endform %}
+			</div>
+
+			<aside class="ct-info-card">
+				<div class="ct-logo">
+					{% if settings.logo_use_image %}
+					<a href="/" class="logo-wrapper">
+						<img src="{{ 'logo-contact.png' | asset_url }}" alt="logo {{ store.name }}" class="img-responsive" />
+					</a>
+					{% else %}
+					<a href="/">{{ store.name }}</a>
+					{% endif %}
+				</div>
+
+				{% if settings.contact_contact_info != blank %}
+				<p class="ct-info-intro">{{ settings.contact_contact_info }}</p>
+				{% endif %}
+
+				<ul class="ct-info-list">
+					{% if settings.store_edit %}
+					<li><i class="fa fa-building-o" aria-hidden="true"></i><span>{{ settings.store_company }}</span></li>
+					<li><i class="fa fa-map-marker" aria-hidden="true"></i><span>{{ settings.store_address }}</span></li>
+					{% if settings.store_address_2_show %}
+					<li><i class="fa fa-map-marker" aria-hidden="true"></i><span>{{ settings.store_address_2 }}</span></li>
+					{% endif %}
+					{% if settings.store_address_3_show %}
+					<li><i class="fa fa-user-o" aria-hidden="true"></i><span>{{ settings.store_address_3 }}</span></li>
+					{% endif %}
+					{% else %}
+					<li><i class="fa fa-map-marker" aria-hidden="true"></i><span>{{ c_address }}</span></li>
+					{% endif %}
+					<li><i class="fa fa-phone" aria-hidden="true"></i><a href="tel:{{ c_phone_raw }}">{{ c_phone }}</a></li>
+					<li><i class="fa fa-envelope-o" aria-hidden="true"></i><a href="mailto:{{ c_email }}">{{ c_email }}</a></li>
+				</ul>
+
+				<div class="ct-actions">
+					<a href="tel:{{ c_phone_raw }}" class="ct-btn ct-btn-primary"><i class="fa fa-phone" aria-hidden="true"></i> Gọi ngay</a>
+					<a href="https://zalo.me/{{ c_phone_raw }}" target="_blank" rel="noopener" class="ct-btn ct-btn-outline">Chat Zalo</a>
+				</div>
+			</aside>
+
+		</div>
+
+		<!-- ===== Bản đồ ===== -->
+		{% if settings.contactr_contact_maps != blank %}
+		<div class="ct-map">
+			{{ settings.contactr_contact_maps }}
+		</div>
+		{% endif %}
+
+	</div>
+</section>
+
+<style>
+/* ===== Banner ===== */
+.ct-hero {
+	padding: 44px 0 80px;
+	background: linear-gradient(135deg, #1f1f1f 0%, #3b1315 100%);
+	color: #fff;
+}
+.ct-eyebrow {
+	display: inline-block;
+	margin-bottom: 14px;
+	padding: 4px 12px;
+	border-radius: 20px;
+	background: #bf2026;
+	font-size: 12px;
+	font-weight: 600;
+}
+.ct-hero h1 {
+	margin: 0 0 10px;
+	font-size: 34px;
+	font-weight: 700;
+	line-height: 1.28;
+	color: #fff;
+	text-transform: none;
+}
+.ct-hero p {
+	max-width: 900px;
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, .82);
+}
+
+/* ===== 3 thẻ liên hệ nhanh ===== */
+.ct-quick {
+	position: relative;
+	z-index: 2;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 18px;
+	margin-top: -48px;
+}
+.ct-quick-item {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 18px 20px;
+	background: #fff;
+	border: 1px solid #eee;
+	border-radius: 12px;
+	box-shadow: 0 8px 28px rgba(0, 0, 0, .08);
+	color: #222;
+	text-decoration: none;
+	transition: transform .2s, box-shadow .2s;
+}
+a.ct-quick-item:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 12px 32px rgba(0, 0, 0, .12);
+	color: #222;
+}
+.ct-quick-icon {
+	flex: 0 0 46px;
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	background: #fdecec;
+	color: #bf2026;
+	font-size: 20px;
+	line-height: 46px;
+	text-align: center;
+}
+.ct-quick-text { min-width: 0; }
+.ct-quick-text small { display: block; font-size: 12px; color: #888; }
+.ct-quick-text b { display: block; font-size: 15px; font-weight: 600; line-height: 1.4; word-break: break-word; }
+
+/* ===== Form + thông tin ===== */
+.ct-main {
+	display: grid;
+	grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+	gap: 28px;
+	align-items: start;
+	margin: 32px 0;
+}
+.ct-form-card,
+.ct-info-card {
+	padding: 32px;
+	background: #fff;
+	border: 1px solid #eee;
+	border-radius: 14px;
+	box-shadow: 0 8px 28px rgba(0, 0, 0, .06);
+}
+.ct-form-card h2 {
+	margin: 0 0 8px;
+	font-size: 24px;
+	font-weight: 700;
+	color: #222;
+}
+.ct-lead { margin: 0 0 22px; font-size: 14px; line-height: 1.6; color: #777; }
+.ct-label-title { margin-bottom: 10px; font-size: 13px; font-weight: 600; color: #333; }
+
+.ct-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.ct-chip {
+	padding: 8px 16px;
+	border: 1px solid #dcdcdc;
+	border-radius: 20px;
+	background: #fff;
+	font-size: 13px;
+	color: #555;
+	cursor: pointer;
+	transition: all .2s;
+}
+.ct-chip:hover { border-color: #bf2026; color: #bf2026; }
+.ct-chip.active { border-color: #bf2026; background: #bf2026; color: #fff; }
+
+.ct-row { display: flex; gap: 16px; }
+.ct-row .ct-field { flex: 1; min-width: 0; }
+.ct-field { margin-bottom: 16px; }
+.ct-field label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #333; }
+.ct-field .required { color: #bf2026; }
+.ct-page .form-control {
+	width: 100%;
+	height: 46px;
+	padding: 0 14px;
+	border: 1px solid #dcdcdc;
+	border-radius: 8px;
+	background: #fafafa;
+	font-size: 14px;
+	box-shadow: none;
+	transition: border-color .2s, background .2s, box-shadow .2s;
+}
+.ct-page textarea.form-control { height: auto; padding: 12px 14px; resize: vertical; }
+.ct-page .form-control:focus {
+	border-color: #bf2026;
+	background: #fff;
+	box-shadow: 0 0 0 3px rgba(191, 32, 38, .12);
+	outline: none;
+}
+
+.ct-submit {
+	display: inline-block;
+	height: 48px;
+	padding: 0 32px;
+	border: 0;
+	border-radius: 8px;
+	background: #bf2026;
+	color: #fff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background .2s, transform .1s;
+}
+.ct-submit:hover { background: #a01a20; }
+.ct-submit:active { transform: translateY(1px); }
+.ct-submit .fa { margin-left: 6px; }
+.ct-note { margin: 12px 0 0; font-size: 12px; color: #999; }
+
+/* Thông báo */
+.ct-alert { margin-bottom: 16px; padding: 12px 14px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+.ct-alert-success { background: #e8f6ee; color: #1b6b3a; border: 1px solid #bfe3cd; }
+.ct-errors .alert,
+.ct-errors ul { margin: 0 0 16px; padding: 11px 14px; border-radius: 8px; background: #fdecec; color: #b42318; border: 1px solid #f7c9c9; font-size: 13px; list-style: none; }
+.ct-errors:empty { display: none; }
+
+/* ===== Thẻ thông tin công ty ===== */
+.ct-logo { margin-bottom: 16px; }
+.ct-logo img { max-width: 220px; height: auto; }
+.ct-info-intro { margin: 0 0 16px; font-size: 14px; line-height: 1.6; color: #666; }
+.ct-info-list { margin: 0 0 22px; padding: 0; list-style: none; }
+.ct-info-list li {
+	display: flex;
+	gap: 12px;
+	padding: 11px 0;
+	border-bottom: 1px dashed #eee;
+	font-size: 14px;
+	line-height: 1.55;
+	color: #444;
+}
+.ct-info-list li:last-child { border-bottom: 0; }
+.ct-info-list .fa { flex: 0 0 18px; margin-top: 3px; color: #bf2026; text-align: center; }
+.ct-info-list a { color: #444; text-decoration: none; }
+.ct-info-list a:hover { color: #bf2026; }
+
+.ct-actions { display: flex; gap: 10px; }
+.ct-btn {
+	flex: 1;
+	padding: 12px 10px;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	text-align: center;
+	text-decoration: none;
+	transition: background .2s, color .2s;
+}
+.ct-btn-primary { background: #bf2026; color: #fff; }
+.ct-btn-primary:hover { background: #a01a20; color: #fff; }
+.ct-btn-outline { border: 1px solid #0068ff; color: #0068ff; }
+.ct-btn-outline:hover { background: #0068ff; color: #fff; }
+
+/* ===== Bản đồ ===== */
+.ct-map {
+	margin-bottom: 50px;
+	overflow: hidden;
+	border-radius: 14px;
+	box-shadow: 0 8px 28px rgba(0, 0, 0, .08);
+	line-height: 0;
+}
+.ct-map iframe { display: block; width: 100% !important; height: 420px !important; border: 0; }
+
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+	.ct-quick { grid-template-columns: 1fr; margin-top: -40px; }
+	.ct-main { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+	.ct-hero { padding: 32px 0 70px; }
+	.ct-hero h1 { font-size: 26px; }
+	.ct-form-card, .ct-info-card { padding: 22px 18px; }
+	.ct-row { flex-direction: column; gap: 0; }
+	.ct-submit { width: 100%; }
+	.ct-map iframe { height: 320px !important; }
+}
+</style>
+
+<script type="text/javascript">
+(function () {
+	var chips = document.querySelectorAll('#ctChips .ct-chip');
+	var box = document.getElementById('comment');
+	if (!chips.length || !box) return;
+	var prefix = '';
+
+	for (var i = 0; i < chips.length; i++) {
+		chips[i].addEventListener('click', function () {
+			var topic = this.getAttribute('data-topic');
+			var body = box.value;
+			if (prefix && body.indexOf(prefix) === 0) body = body.slice(prefix.length);
+
+			var wasActive = this.classList.contains('active');
+			for (var j = 0; j < chips.length; j++) chips[j].classList.remove('active');
+
+			if (wasActive) {
+				prefix = '';
+			} else {
+				this.classList.add('active');
+				prefix = '[' + topic + '] ';
+			}
+			box.value = prefix + body;
+			box.focus();
+		});
+	}
+})();
+</script>

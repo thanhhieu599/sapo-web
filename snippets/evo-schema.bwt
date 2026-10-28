@@ -1,0 +1,31 @@
+<script type="application/ld+json">
+{
+	"@context" : "http://schema.org",
+  	"@type" : "Organization",
+  	"legalName" : "{{ store.name }}",
+  	"url" : "https:{{ store.url }}",
+  	"contactPoint":[{
+    	"@type" : "ContactPoint",
+    	"telephone" : "+84 {{ store.phone_number}}",
+    	"contactType" : "customer service"
+  	}],
+  	"logo":"{{ 'logo.png' | asset_url }}",
+  	"sameAs":[
+  	"{{ settings.social_facebook_link }}",
+    "{{ settings.social_twitter_link }}"
+	]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context" : "http://schema.org",
+  "@type" : "WebSite", 
+  "name" : "{{ store.name }}",
+  "url" : "https:{{ store.url }}",
+  "potentialAction":{
+    	"@type" : "SearchAction",
+    	"target" : "https:{{ store.url}}/search?query={search_term}",
+    	"query-input" : "required name=search_term"
+  	}                     
+}
+</script>

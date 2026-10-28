@@ -1,0 +1,36 @@
+{% include 'breadcrumb' %}
+{%assign sb = settings.collection_layout%}
+{% assign group_key = 'nhom-' | append: collection.handle %}
+<div class="container">
+	<div class="row">
+		<aside class="sidebar {{sb}} left-content col-md-3 col-sm-12 col-xs-12">
+			{%include 'sidebar-collection'%}
+		</aside>
+		<section class="main_container collection col-md-9 col-sm-12 col-xs-12">
+			{% include 'gallery_collections' %}
+			<div class="pottion">
+				<h1 class="title-head margin-top-0">{%if page_title == 'All'%}Tất cả sản phẩm{%else%}{{ page_title }}{%endif%}</h1>
+				{% if linklists[group_key].links.size > 0 %}
+				{% include 'brand-subcategories' %}
+				{% else %}
+				<div class="category-products products clearfix">
+					{% paginate collection.products by settings.collection_number_product %}
+					{%include 'collection-sortby'%}
+					{% if collection.products.size > 0 %}
+					{%include 'products-grid-item'%}
+					{% else %}
+					<div class="alert alert-warning alert-dismissible fade in" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						Sản phẩm đang được cập nhật. Vui lòng quay lại sau.
+					</div>
+					{% endif %}
+					{% endpaginate %}
+				</div>
+				{% endif %}
+				{% include 'collections_des_and_menu' %}
+			</div>
+		</section>
+	</div>
+</div>
+{% include 'appbulk-selling-products' %}
+<div class="ab-most-view-product-module ab-hide"></div>

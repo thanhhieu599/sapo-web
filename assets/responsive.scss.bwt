@@ -1,0 +1,395 @@
+/*============================================================================
+#Mixin
+==============================================================================*/
+@mixin clearfix() {
+	&:after {
+		content: "";
+		display: table;
+		clear: both; }
+	*zoom: 1;
+}
+@mixin transition($args...) {
+	-webkit-transition: $args;
+	-moz-transition: $args;
+	-ms-transition: $args;
+	-o-transition: $args;
+	transition: $args;
+}
+@mixin transform($transforms) {
+	-moz-transform: $transforms;
+	-o-transform: $transforms;
+	-ms-transform: $transforms;
+	-webkit-transform: $transforms;
+	transform: $transforms;
+}
+// rotate
+@mixin rotate ($deg) {
+	@include transform(rotate(#{$deg}deg));
+}
+
+// scale
+@mixin scale($scale) {
+	@include transform(scale($scale));
+} 
+// translate
+@mixin translate ($x, $y) {
+	@include transform(translate($x, $y));
+}
+// skew
+@mixin skew ($x, $y) {
+	@include transform(skew(#{$x}deg, #{$y}deg));
+}
+//transform origin
+@mixin transform-origin ($origin) {
+	moz-transform-origin: $origin;
+	-o-transform-origin: $origin;
+	-ms-transform-origin: $origin;
+	-webkit-transform-origin: $origin;
+	transform-origin: $origin;
+}
+
+@mixin prefix($property, $value) {
+	-webkit-#{$property}: #{$value};
+	-moz-#{$property}: #{$value};
+	-ms-#{$property}: #{$value};
+	-o-#{$property}: #{$value};
+	#{$property}: #{$value};
+}
+@mixin gradient($from, $to, $fallback) {
+	background: $fallback;
+	background: -moz-linear-gradient(top, $from 0%, $to 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to));
+	background: -webkit-linear-gradient(top, $from 0%, $to 100%);
+	background: -o-linear-gradient(top, $from 0%, $to 100%);
+	background: -ms-linear-gradient(top, $from 0%, $to 100%);
+	background: linear-gradient(top bottom, $from 0%, $to 100%);
+}
+@mixin backface($visibility: hidden) {
+	@include prefix('backface-visibility', #{$visibility});
+}
+@mixin box-sizing($box-sizing: border-box) {
+	-webkit-box-sizing: #{$box-sizing};
+	-moz-box-sizing: #{$box-sizing};
+	box-sizing: #{$box-sizing};
+}
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	border-radius: $radius;
+}
+/*============================================================================
+#Variable
+==============================================================================*/
+$gutter: 30px;
+$main-color: {{ settings.color_main }};
+$border-color: {{ settings.color_borders }};
+$font-base:  {{ base_family }};
+$font-header:  {{ header_family }};
+$font-accent:  {{ accent_family }};
+$baseFontSize: {{ settings.type_base_size }};
+$text-color: {{ settings.color_body_text }};
+$link-color: {{ settings.color_primary }};
+$disabledGrey: #ddd;
+$disabledBorder: #ddd;
+@function em($pixels, $context: $baseFontSize) {
+	@if (unitless($pixels)) {
+		$pixels: $pixels * 1px;
+	}
+	@if (unitless($context)) {
+		$context: $context * 1px;
+	}
+	@return $pixels / $context * 1em;
+}
+
+
+/*Table*/
+.table-responsive-block{
+	@media 
+		only screen and (max-width: 760px),
+		(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+			/* Force table to not be like tables anymore */
+			table, thead, tbody, th, td, tr { 
+				display: block; 
+			}
+
+			/* Hide table headers (but not display: none;, for accessibility) */
+			thead tr { 
+				position: absolute;
+				top: -9999px;
+				left: -9999px;
+			}
+
+			tr {
+				background: #fff;
+				line-height: 20px;
+				margin-bottom: 10px;
+			}
+
+			td { 
+				/* Behave  like a "row" */
+				border: none;     
+				position: relative;
+				padding-left: 40%; 
+				text-align: right;
+				font-weight: 700;
+				&.last{
+					padding: 0;
+					line-height: 50px;
+					a{
+						color: $main-color;
+					}
+				}
+			}
+
+			td:before { 
+				/* Now like a table header */
+				position: absolute;
+				/* Top/left values mimic padding */
+				top: 8px;
+				left: 10px;
+				width: 45%; 
+				padding-right: 10px; 
+				text-align: left;
+				white-space: nowrap;
+				font-weight: 400;
+			}
+
+			/*
+			Label the data
+			*/
+			.table-order{
+				td:nth-of-type(1):before { content: "Đơn hàng"; }
+				td:nth-of-type(2):before { content: "Ngày"; }
+				td:nth-of-type(3):before { content: "Chuyển đến"; }
+				td:nth-of-type(4):before { content: "Địa chỉ"; }
+				td:nth-of-type(5):before { content: "Giá trị"; }
+				td:nth-of-type(6):before { content: "Tình trạng"; }
+
+			}
+			#order_details{
+				td:nth-of-type(1):before { content: "Sản phẩm"; }
+				td:nth-of-type(2):before { content: "Mã sản phẩm"; }
+				td:nth-of-type(3):before { content: "Giá"; }
+				td:nth-of-type(4):before { content: "Số lượng"; }
+				td:nth-of-type(5):before { content: "Tổng"; }
+				td:nth-of-type(6):before { content: "Tình trạng"; }
+			}
+			.totalorders{
+				td:nth-of-type(1):before { content: "Tạm tính"; }
+				td:nth-of-type(2):before { content: "Phí vận chuyển"; }
+				td:nth-of-type(3):before { content: "Tổng tiền"; }
+				td:nth-of-type(4):before { content: "Số lượng"; }
+				td:nth-of-type(5):before { content: "Tổng"; }
+				td:nth-of-type(6):before { content: "Tình trạng"; }
+			}
+		}
+}
+
+/*=========Filter===============*/
+@media(max-width: 543px){
+	section.sidebar.left-content.col-lg-12{
+		padding: 0;
+	}
+	.products .col-xs-6,
+	.category-products .col-xs-6{
+		
+
+	}
+}
+/*========Menu============*/
+@media(max-width:1199px){
+	header nav .mega-content{
+		width: 940px;
+	}
+	header nav .mega-content .level1.item{
+		text-align: left;
+	}
+}
+@media(max-width: 991px) and (min-width: 768px){
+	.search.f-right {
+		margin-right: 50px;
+	}
+}
+@media(max-width: 991px){
+	header >.container{
+		position: relative;
+	}
+	.menu-bar.hidden-md.hidden-lg {
+		position: absolute;
+		top: 40px;
+		right: 15px;
+		transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		z-index: 1000;
+
+	}
+	header .logo a {
+		display: inline-block;
+		/* width: 100%; */
+		text-align: left;
+	}
+	.header-main{
+
+	}
+	header nav .nav-item{
+		display: block;
+		width: 100%;
+		text-align: left;
+		margin: 0;
+		.dropdown-menu{
+			display: none!important;
+			position: static;
+			border: none;
+		}
+		&.open{
+			a{
+				background: none!important;
+			}
+			>.dropdown-menu{
+				display: block!important;
+				margin: 0;
+				padding: 0;
+			}
+		}
+	}
+	header nav li.menu-line{
+		display: none;
+		border: none;
+	}
+	header nav .nav-item>a{
+		line-height: 20px;
+		padding: 5px 15px 3px;
+	}
+	header nav #nav-mobile .nav-item>.dropdown-menu{
+		padding: 0 0 0 15px;
+		position: static;
+		width: 100%;
+		float: none;
+		border: none;
+		padding-right: 7px;
+	}
+	header nav .nav-item:hover>.dropdown-menu li.open{
+		>.dropdown-menu{
+			display: block!important;
+		}
+	}
+	.header-main {
+		padding: 10px 0;
+	}
+	#nav{
+		padding-right: 0;		
+		display: none;
+		padding-right: 0;
+		padding: 10px 0;
+		border: 1px solid #ebebeb;
+		margin-bottom: 15px;
+		&.open{
+			display: block;
+		}
+		.nav-link{
+			> .fa{
+				float: right;
+				line-height: 22px;
+				margin-right: -15px;
+				width: 40px;
+				text-align: center;
+				transform: translateY(-5px);
+				-webkit-transform: translateY(-5px);
+				-moz-transform: translateY(-5px);
+			}
+		}
+
+	}
+}
+/*========Header============*/
+@media(max-width: 991px){
+	.logo {
+		display: inline-block;
+		font-size: 30px;
+		line-height: 65px;
+	}
+}
+@media(max-width: 543px){
+	.topbar{
+		.a-left{
+			display: none;
+		}
+		ul.list-inline.f-right {
+			float: left!important;
+		}
+	}
+	.logo {
+		display: block;
+		font-size: 20px;
+	}
+
+	.search.f-right {
+		float: none;
+		width: 100%;
+	}
+}
+
+@media(max-width: 320px){
+
+}
+
+
+/*========Footer============*/
+@media(max-width: 420px){
+	.col-xs-6.footer-header {
+		width: 100%;
+	}
+}
+
+
+/*=============Product===========*/
+@media(max-width: 543px){
+	.product-box .product-thumbnail>a{
+		max-height: 1000px;
+		height: auto;
+		img{
+			width: 100%!important;;
+			height: auto!important;
+		}
+	}
+}
+/*=============Collection===========*/
+@media(max-width: 430px){
+	.collection {
+		p.title-head-info {
+			position: static;
+		}
+		h1.title-head {
+			margin-bottom: 5px;
+		}
+	}
+}
+
+/*Product*/
+@media(max-width:480px){
+	.product-tab .tab-link {
+		margin-right: 10px;
+	}
+}
+
+/*Address*/
+@media(max-width:375px){
+	.sodiachi{
+		.btn.btn-50{
+			width: 100%;
+			margin-bottom: 10px;
+		}
+	}
+}
+
+/*Product grrid*/
+
+@media(max-width: 768px){
+	.quick-view{
+		display: none!important;
+	}
+}
+span.hidden-f {
+    color: #000;
+}

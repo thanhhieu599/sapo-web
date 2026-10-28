@@ -1,0 +1,17 @@
+{% if iwish == 'iwishhead' %}
+	<script>
+	  var iwish_template='{{template}}';
+	  var iwish_cid=parseInt('{% if customer %}{{ customer.id }}{% else %}0{% endif %}',10);
+	</script>
+	{{ 'iwishHeader.js' | asset_url | script_tag }}
+{% elsif iwish == 'iwishlink' %}
+	<a class="iWishView" href="javascript:;" data-customer-id="{% if customer %}{{ customer.id }}{% else %}0{% endif %}">Danh sách mong muốn</a>
+{% elsif iwish == 'iwishproduct' %}
+	<a class="iWishAdd iwishAddWrapper" href="javascript:;" data-customer-id="{% if customer %}{{ customer.id }}{% else %}0{% endif %}" data-product="{{ product.id }}"><span class="iwishAddChild iwishAddBorder"><img class="iWishImg" src="http://wishlists.sapoapps.vn/content/images/iwish_add.png" /></span><span class="iwishAddChild">Thêm vào yêu thích</span></a>
+	<a class="iWishAdded iwishAddWrapper iWishHidden" href="javascript:;" data-customer-id="{% if customer %}{{ customer.id }}{% else %}0{% endif %}" data-product="{{ product.id }}"><span class="iwishAddChild iwishAddBorder"><img class="iWishImg" src="http://wishlists.sapoapps.vn/content/images/iwish_added.png" /></span><span class="iwishAddChild">Đã yêu thích</span></a>
+{% elsif iwish == 'iwishcollection' %}
+	<a class="iWishAdd iwishAddWrapper" href="javascript:;" data-customer-id="{% if customer %}{{ customer.id }}{% else %}0{% endif %}" data-product="{{ product.id }}" data-variant="{{ product.variants[0].id }}"><span class="iwishAddChild iwishAddBorder"><img class="iWishImg" src="http://wishlists.sapoapps.vn/content/images/iwish_add.png" /></span><span class="iwishAddChild">Thêm vào yêu thích</span></a>
+	<a class="iWishAdded iwishAddWrapper iWishHidden" href="javascript:;" data-customer-id="{% if customer %}{{ customer.id }}{% else %}0{% endif %}" data-product="{{ product.id }}" data-variant="{{ product.variants[0].id }}"><span class="iwishAddChild iwishAddBorder"><img class="iWishImg" src="http://wishlists.sapoapps.vn/content/images/iwish_added.png" /></span><span class="iwishAddChild">Đã yêu thích</span></a>
+{% elsif iwish == 'iwishfooter' %}
+	{{ 'iwish.js' | asset_url | script_tag }}
+{% endif %}

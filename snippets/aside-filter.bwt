@@ -1,0 +1,288 @@
+{{ 'search_filter.js'  | asset_url | script_tag }}
+<div class="aside-filter">
+	<h2 class="fiter-title">{{ settings.aside_filter_title }}</h2>
+	<div class="aside-hidden-mobile">
+		<div class="filter-container">
+			<div class="filter-containers">	
+				<div class="filter-container__selected-filter" style="display: none;">
+					<div class="filter-container__selected-filter-header clearfix">
+						<span class="filter-container__selected-filter-header-title">Bạn chọn</span>
+						<a href="javascript:void(0)" onclick="clearAllFiltered()" class="filter-container__clear-all">Bỏ hết <i class="fa fa-angle-right"></i></a>
+					</div>
+					<div class="filter-container__selected-filter-list">
+						<ul></ul>
+					</div>
+				</div>
+			</div>
+			{% if settings.filter_type %}
+			<aside class="aside-item filter-type">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_type_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group">
+					<div class="field-search input-group">
+						<input type="text" placeholder = "Tìm Loại" class="form-control filter-type-list" onkeyup="filterItemInList(jQuery('.filter-type-list'))">
+						<span class="input-group-btn">
+							<button class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button>
+						</span>
+					</div>
+					<ul class="filter-type">
+						{% for type in collection.all_types limit: settings.shop_by_vendor_number %}
+						{%if type != ''%}
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<label data-filter="{{ type | downcase }}" for="filter-{{ type | handleize }}" class="{{ type | handleize }}">
+								<input type="checkbox" id="filter-{{ type | handleize }}" onchange="toggleFilter(this)"  data-group="Loại" data-field="product_type" data-text="{{ type }}" value="({{ type }})" data-operator="OR">
+								<i class="fa"></i>
+								{{ type }}
+							</label>
+						</li>
+						{%endif%}
+						{% endfor %}
+					</ul>
+				</div>
+			</aside>
+			{%endif%}
+			{% if settings.filter_vendor %}
+			<aside class="aside-item filter-vendor">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_vendor_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group">
+					<div class="field-search input-group">
+						<input type="text" placeholder = "Tìm Thương hiệu" class="form-control filter-vendor-list" onkeyup="filterItemInList(jQuery('.filter-vendor-list'))">
+						<span class="input-group-btn">
+							<button class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button>
+						</span>
+					</div>
+					<ul class="filter-vendor">
+						{% for vendor in collection.all_vendors %}
+						{%if vendor != ''%}
+						<li class="filter-item filter-item--check-box filter-item--green ">
+							<label data-filter="{{ vendor | downcase }}" for="filter-{{ vendor | handleize }}" class="{{ vendor | handleize }}">
+								<input type="checkbox" id="filter-{{ vendor | handleize }}" onchange="toggleFilter(this)"  data-group="Hãng" data-field="vendor" data-text="{{ vendor }}" value="({{ vendor }})" data-operator="OR">
+								<i class="fa"></i>
+								{{ vendor }}
+								{% comment %}
+								{% assign v-brand = vendor | handleize %}
+								{% capture article_img %}{{ v-brand | append: '.png' }}{% endcapture %}
+								<img src="{{article_img | asset_url}}" alt="{{ vendor }}" /> 
+								{% endcomment %}
+							</label>
+						</li>
+						{%endif%}
+						{% endfor %}
+					</ul>
+				</div>
+			</aside>
+			{%endif%}
+			{% if settings.filter_price %}
+			{%if settings.filter_style == 'slider'%}
+			{{ 'jquery-ui.min.css' | asset_url | stylesheet_tag }}
+			{{ 'jquery-ui.min.js' | asset_url | script_tag }}
+			{{ '//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js' | script_tag }}
+			<aside class="aside-item filter-price">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_price_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group">			
+					<div id='slider'></div>
+					<div id='start'><input value="0"></div>
+					<div id='stop'><input value="{{settings.filter_price_max}}"></div>
+					<div class="clearfix"></div>
+					<a id="old-value" href="javascript:;"></a>
+					<a id="filter-value" class="btn btn-gray" href="javascript:;" onclick="_toggleFilterdqdt(this);"  data-value="(>-1 AND <{{settings.filter_price_max | plus:1}})" >Lọc giá</a>
+
+					<script>
+						var maxx = {{settings.filter_price_max}}/10;
+						$('#slider').slider({
+							min: '0',
+							max: maxx,
+							range: true,
+							values: [0,{{settings.filter_price_max}}],
+							slide: function(event, ui) {
+								if(ui.values[0] >= ui.values[1]) {
+									if(ui.handle == $("#slider a")[0]) {
+										$("#slider").slider("values", 1, ui.value);
+										ui.values[0] = ui.value;
+										ui.values[1] = ui.value;
+									} else {
+										$("#slider").slider("values", 0, ui.value);
+										ui.values[0] = ui.value;
+										ui.values[1] = ui.value;
+									}
+								}			
+								var uimax =ui.values[1]+1;					
+								$('#start input').val(ui.values[0]);
+								$('#stop input').val(ui.values[1]+1);
+								var uimin =ui.values[0]-1;
+								var uimax =ui.values[1]+2;
+								$('#filter-value').attr('data-value','(>'+uimin+' AND <'+uimax+')');
+							}
+						});
+						$(document).on('change','#start',function(e){
+							var val = parseInt($('#start input').val())-1;
+							var val2 = parseInt($('#stop input').val())+1;
+
+							$("#slider").slider("values",0,parseInt(val));
+							$('#filter-value').attr('data-value','(>'+val+' AND <'+val2+')');
+						});
+						$(document).on('change','#stop',function(e){
+							var val = parseInt($('#start input').val())-1;
+							var val2 = parseInt($('#stop input').val())+1;
+
+							$("#slider").slider("values",1,parseInt(val2));
+							$('#filter-value').attr('data-value','(>'+val+' AND <'+val2+')');
+						});
+
+					</script>
+				</div>
+			</aside>
+			{%else%}
+			<aside class="aside-item filter-price">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_price_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group">
+					<ul>
+						{% assign tags = settings.filter_price_node | split: ';' %} 
+						{% for t in tags %}
+						{% assign tag = t | strip %}
+						{% assign tag_value = tag | handleize %}
+						{%if forloop.index == 1%}
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-duoi-{{tag | handleize }}">
+									<input type="checkbox" id="filter-duoi-{{tag | handleize }}" onchange="toggleFilter(this);" data-group="Khoảng giá" data-field="price_min" data-text="Dưới {{tag}}" value="(<{{ tag | replace: '.' | replace: 'đ' }})" data-operator="OR">
+									<i class="fa"></i>
+									Giá dưới {{tag}}
+								</label>
+							</span>
+						</li>
+
+						{%elsif forloop.index == forloop.length%}
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-{{ tagold | handleize }}-{{ tag | handleize }}">
+									<input type="checkbox" id="filter-{{ tagold | handleize }}-{{ tag | handleize }}" onchange="toggleFilter(this)" data-group="Khoảng giá" data-field="price_min" data-text="{{tagold}} - {{tag}}" value="(>{{ tagold | replace: '.' | replace: 'đ' }} AND <{{ tag | replace: '.' | replace: 'đ' }})" data-operator="OR">
+									<i class="fa"></i>
+									{{tagold}} - {{tag}}							
+								</label>
+							</span>
+						</li>	
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-tren{{ tag | handleize }}">
+									<input type="checkbox" id="filter-tren{{ tag | handleize }}" onchange="toggleFilter(this)" data-group="Khoảng giá" data-field="price_min" data-text="Trên {{tag}}" value="(>{{ tag | replace: '.' | replace: 'đ' }})" data-operator="OR">
+									<i class="fa"></i>
+									Giá trên {{tag}}
+								</label>
+							</span>
+						</li>
+						{%else%}
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-{{ tagold | handleize }}-{{ tag | handleize }}">
+									<input type="checkbox" id="filter-{{ tagold | handleize }}-{{ tag | handleize }}" onchange="toggleFilter(this)" data-group="Khoảng giá" data-field="price_min" data-text="{{tagold}} - {{tag}}" value="(>{{ tagold | replace: '.' | replace: 'đ' }} AND <{{ tag | replace: '.' | replace: 'đ' }})" data-operator="OR">
+									<i class="fa"></i>
+									{{tagold}} - {{tag}}							
+								</label>
+							</span>
+						</li>	
+						{%endif%}											
+						{% assign tagold = tag %}
+						{%endfor%}								
+					</ul>
+				</div>
+			</aside>
+			{%endif%}
+			{%endif%}
+			{% if settings.filter_tag1 %}
+			{%if settings.filter_tag1_style == 'input'%}
+			<aside class="aside-item filter-tag-style-1">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_tag1_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group">
+					<ul>
+						{% assign tags = settings.filter_tag1_list | split: ';' %} 
+						{% for t in tags %}
+						{% assign tag = t | strip %}
+						{% assign tag_value = tag | handleize %}
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-{{ tag | handleize }}">
+									<input type="checkbox" id="filter-{{ tag | handleize }}" onchange="toggleFilter(this)" data-group="tag1" data-field="tags" data-text="{{tag}}" value="({{tag}})" data-operator="OR">
+									<i class="fa"></i>
+									{{tag}}
+								</label>
+							</span>
+						</li>	
+						{%endfor%}
+
+					</ul>
+				</div>
+			</aside>
+			{%else%}
+			<aside class="aside-item filter-tag-style-1">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_tag1_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group clearfix">
+					<ul style="overflow: visible;">
+						{% assign tags = settings.filter_tag1_list | split: ';' %} 
+						{% assign color_list = settings.filter_tag1_list_color | split:";" %}
+
+						{% for t in tags %}
+						{%assign fl1 = forloop.index%}
+						{%for color in color_list%}
+						{%if forloop.index == fl1%}
+						{%assign cl = color%}
+						{%endif%}
+						{%endfor%}
+						{% assign tag = t | strip %}
+						{% assign tag_value = tag | handleize %}
+						<li class="filter-item color filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-{{ tag | handleize }}">
+									<input type="checkbox" id="filter-{{ tag | handleize }}" onchange="toggleFilter(this)" data-group="tag1" data-field="tags" data-text="{{tag}}" value="({{tag}})" data-operator="OR">
+									<i class="fa {{ tag | handleize }}" style="background-color:{{cl}};{%if tag_value == 'trang'%}border:1px solid #ebebeb;{%endif%}"></i>
+									{{tag}}
+								</label>
+							</span>
+						</li>	
+						{%endfor%}
+
+					</ul>
+				</div>
+			</aside>
+			{%endif%}
+			{%endif%}
+			{% if settings.filter_tag2 %}
+			<aside class="aside-item filter-tag-style-1 tag-filtster">
+				<div class="aside-title">
+					<h2 class="title-head margin-top-0"><span>{{settings.filter_tag2_title}}</span></h2>
+				</div>
+				<div class="aside-content filter-group">
+					<ul>
+						{% assign tags = settings.filter_tag2_list | split: ';' %} 
+						{% for t in tags %}
+						{% assign tag = t | strip %}
+						{% assign tag_value = tag | handleize %}
+						<li class="filter-item filter-item--check-box filter-item--green">
+							<span>
+								<label for="filter-{{ tag | handleize }}">
+									<input type="checkbox" id="filter-{{ tag | handleize }}" onchange="toggleFilter(this)" data-group="tag2" data-field="tags" data-text="{{tag}}" value="({{tag}})" data-operator="OR">
+									<i class="fa"></i>
+									{{tag}}
+								</label>
+							</span>
+						</li>	
+						{%endfor%}
+
+					</ul>
+				</div>
+			</aside>
+			{%endif%}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,54 @@
+{% if settings.store_support %}
+<div class="support-online">
+	<div class="support-content" style="display: none;">
+		{% if settings.store_edit %}
+		<a href="tel:{{ settings.zalo_phone | remove: ' '}}" class="call-now" rel="nofollow">
+			<i class="fa fa-phone" aria-hidden="true"></i>
+			<div class="animated infinite zoomIn kenit-alo-circle"></div>
+			<div class="animated infinite pulse kenit-alo-circle-fill"></div>
+			<span>Gọi ngay: {{ settings.zalo_phone }}</span>
+		</a>
+		{% else %}
+		<a href="tel:{{ store.phone_number | remove: ' '}}" class="call-now" rel="nofollow">
+			<i class="fa fa-phone" aria-hidden="true"></i>
+			<div class="animated infinite zoomIn kenit-alo-circle"></div>
+			<div class="animated infinite pulse kenit-alo-circle-fill"></div>
+			<span>Gọi ngay: {{ store.phone_number }}</span>
+		</a>
+		{% endif %}
+		{% if settings.store_support_2 %}
+		<a class="mes" href="{{ settings.store_support_link_2 }}" target="_blank" rel="nofollow">
+			<i class="fa fa-facebook" aria-hidden="true"></i>
+			<span>{{ settings.store_support_title_2 }}</span>
+		</a>
+		{% endif %}
+		{% if settings.store_edit %}
+		<a class="zalo" href="mailto:{{ settings.store_email }}" target="_blank" rel="nofollow">
+			<i class="fa fa-envelope"></i>
+			<span>{{ settings.store_email }}</span>
+		</a>
+		{% else %}
+		<a class="zalo" href="mailto:{{ store.customer_email }}" target="_blank" rel="nofollow">
+			<i class="fa fa-envelope"></i>
+			<span>{{ store.customer_email }}</span>
+		</a>
+		{% endif %}
+		{% if settings.store_edit %}
+		<a class="sms" href="sms:{{ settings.store_phone | remove: ' '}}" rel="nofollow">
+			<i class="fa fa-comments-o" aria-hidden="true"></i>
+			<span>SMS: {{ settings.store_phone }}</span>
+		</a>
+		{% else %}
+		<a class="sms" href="sms:{{ store.phone_number | remove: ' '}}" rel="nofollow">
+			<i class="fa fa-comments-o" aria-hidden="true"></i>
+			<span>SMS: {{ store.phone_number }}</span>
+		</a>
+		{% endif%}
+	</div>
+	<a class="btn-support">
+		<i class="fa fa-bell" aria-hidden="true"></i>
+		<div class="animated infinite zoomIn kenit-alo-circle"></div>
+		<div class="animated infinite pulse kenit-alo-circle-fill"></div>
+	</a>
+</div>
+{% endif %}

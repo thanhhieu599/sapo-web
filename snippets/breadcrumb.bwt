@@ -1,0 +1,121 @@
+<section class="bread-crumb">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<ul class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">					
+					<li class="home" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item" href="/" title="Trang chủ">
+							<span itemprop="name">Trang chủ</span>
+							<meta itemprop="position" content="1" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>
+					{% if template contains 'product' %}
+					{% if product.collections.size > 0 %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item" href="{{ product.collections.first.url }}" title="{{ product.collections.first.name }}">
+							<span itemprop="name">{{ product.collections.first.name }}</span>
+							<meta itemprop="position" content="2" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>
+					{% endif %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong>
+							<span itemprop="name">{{ product.name| escape }}</span>
+							<meta itemprop="position" content="3" />
+						</strong>
+					</li>
+					{% elsif template contains 'collection' and collection.alias %}
+					{% if current_tags %}					
+					{% capture url %}/collections/{{ collection.alias }}{% endcapture %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item"  href="{{ collection.url }}" title="{{ collection.name}}">
+							<span itemprop="name">{{ collection.name}}</span>
+							<meta itemprop="position" content="2" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>					
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{ current_tags | join: ', ' }}</strong>
+						<meta itemprop="position" content="3" />
+					</li>
+					{% else %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong>
+							<span itemprop="name">{%if collection.name == 'All'%}Tất cả sản phẩm{%else%}{{ collection.name }}{%endif%}</span>
+							<meta itemprop="position" content="2" />
+						</strong>
+					</li>
+					{% endif %}
+					{% elsif template == 'article' %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item" href="{{ blog.url }}" title="{{ blog.name| escape }}">
+							<span itemprop="name">{{ blog.name| escape }}</span>
+							<meta itemprop="position" content="2" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{ article.title| escape }}</strong>
+						<meta itemprop="position" content="3" />
+					</li>
+					{% elsif template == 'blog' %}
+					{% if current_tags %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item" href="{{ blog.url }}" title="{{ blog.name| escape }}">
+							<span itemprop="name">{{ blog.name| escape }}</span>
+							<meta itemprop="position" content="2" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{current_tags}}</strong>
+						<meta itemprop="position" content="3" />
+					</li>
+					{%else%}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{ blog.name| escape }}</strong>
+						<meta itemprop="position" content="2" />
+					</li>
+					{%endif%}
+					{% elsif template contains 'search' %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">Kết quả tìm kiếm</strong>
+						<meta itemprop="position" content="2" />
+					</li>
+					{% elsif template contains 'addresses' %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item" href="/account" title="Trang Tài khoản">
+							<span itemprop="name">Trang Tài khoản</span>
+							<meta itemprop="position" content="2" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>
+					<li class="active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{ page_title }}</strong>
+						<meta itemprop="position" content="2" />
+					</li>
+					{% elsif template contains 'order' %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<a itemprop="item" href="/account" title="Trang Tài khoản">
+							<span itemprop="name">Trang Tài khoản</span>
+							<meta itemprop="position" content="2" />
+						</a>
+						<span><i class="fa fa-angle-right"></i></span>
+					</li>
+					<li class="active" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{ page_title }}</strong>
+						<meta itemprop="position" content="3" />
+					</li>
+					{% else %}
+					<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+						<strong itemprop="name">{{ page_title }}</strong>
+						<meta itemprop="position" content="2" />
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>

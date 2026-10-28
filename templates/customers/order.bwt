@@ -1,0 +1,146 @@
+{% include 'breadcrumb' %} 
+<section class="login panel-login account-page  mr-bottom-20">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12">
+				<h1 class="title-head widget-title">Đơn hàng					
+				</h1>				
+				<span class="note order_date"><i>Ngày tạo &mdash; {{ order.created_on | date: 'dd/MM/yyyy' }}</i></span>
+				{% if order.cancelled %}
+				<div id="order_cancelled" class="flash notice">
+					<h5 id="order_cancelled_title">Hủy lúc <span class="note">{{ order.cancelled_on | date: 'dd/MM/yyyy' }}</span></h5>
+					<span class="note">Lý do hủy: {% if order.cancel_reason == "customer" %}KH thay đổi/hủy đơn hàng{% elsif order.cancel_reason == "fraud" %}Đơn hàng có vấn đề{% elsif order.cancel_reason == "inventory" %}Sản phẩm không sẵn có{% elsif order.cancel_reason == "other" %}Khác{% else %}{{ order.cancel_reason }}{% endif %}</span>
+				</div>
+				{% endif %}
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-6">
+				<div id="order_payment" class="span6 box-address margin-top-20">
+					<div class="box-header">
+						<h2 class="title-head">Địa chỉ thanh toán</h2>
+						<p>
+							<span class="note">Trạng thái thanh toán:</span>
+							{% if order.cancelled %}
+							<i i class="status">Đơn hàng đã bị hủy</i>
+							{% else %}
+							<i i class="status_{{ order.financial_status }}">
+								{% case order.financial_status %}
+								{% when 'paid' %}
+								Đã thanh toán
+								{% when 'pending' %}
+								Đang xử lý
+								{% when 'refunded' %}
+								Hoàn lại
+								{% else %}
+								Thanh toán một phần
+								{% endcase %}
+							</i>
+							{% endif %}
+						</p>
+					</div>
+					<div class="address note">
+						<p><i class="fa fa-user"></i> {{ order.billing_address.name }}</p>
+						<p><i class="fa fa-map-marker"></i> 
+							{{ order.billing_address.address1 }}{% if order.billing_address.ward != null %}, {{ order.billing_address.ward }}{% endif %}{% if order.billing_address.district != null %}, {{ order.billing_address.district }}{% endif %}{% if order.billing_address.province != null %}, {{ order.billing_address.province }}{% endif %}{% if order.billing_address.country != null %}, {{ order.billing_address.country }}{% endif %}
+						</p>						
+						<p><i class="fa fa-phone"> </i><a href="tel:{{ order.billing_address.phone }}">{{ order.billing_address.phone }}</a></p>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-6">
+				{% if order.shipping_address %}
+				<div id="order_shipping" class="span6 box-address margin-top-20">
+					<div class="box-header">
+						<h2 class="title-head">Địa chỉ giao hàng</h2>
+						<p>
+							<span class="note">Trạng thái hoàn thành:</span> 
+							{% if order.cancelled %}
+							<i i class="status">Đơn hàng đã bị hủy</i>
+							{% else %}
+							<i  class="status_{{ order.fulfillment_status }}"> <!-- order.fulfillment_status -->
+								{% case order.fulfillment_status %} <!-- order.fulfillment_status -->
+								{% when 'fulfilled' %}
+								Chuyển toàn bộ
+								{% when 'partially_fulfilled' %}
+								Chuyển một phần
+								{% else %}
+								Chưa giao hàng
+								{% endcase %}
+							</i>
+							{% endif %}
+						</p>
+					</div>
+					<div class="address note">
+						<p><i class="fa fa-user"></i> {{ order.shipping_address.name }}</p>
+						<p><i class="fa fa-map-marker"></i> 
+							{{ order.shipping_address.address1 }}{% if order.shipping_address.ward != null %}, {{ order.shipping_address.ward }}{% endif %}{% if order.shipping_address.district != null %}, {{ order.shipping_address.district }}{% endif %}{% if order.shipping_address.province != null %}, {{ order.shipping_address.province }}{% endif %}{% if order.shipping_address.country != null %}, {{ order.shipping_address.country }}{% endif %}
+						</p>						
+						<p><i class="fa fa-phone"> </i><a href="tel:{{ order.shipping_address.phone }}">{{ order.shipping_address.phone }}</a></p>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-12">
+				<div class="table-responsive-block margin-top-20">
+					<table id="order_details" class="table table-cart">
+						<thead class="thead-default">
+							<tr>
+								<th>Sản phẩm</th>
+								<th>Mã sản phẩm</th>
+								<th>Giá</th>
+								<th>Số lượng</th>
+								<th>Tổng</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for line_item in order.line_items %}
+							<tr>
+								<td data-title="Tên" class="names">
+									<a href="{{line_item.product.url}}" title="{{line_item.title}}">{{line_item.title}}{%if line_item.variant_title !='Default Title' %} {{line_item.variant_title}}{%endif%}</a>								
+								</td>
+								<td data-title="Mã SKU">{{ line_item.sku }}&nbsp;</td>
+								<td data-title="Giá" class="numeric color-price">{{ line_item.price | money }}</td>
+								<td data-title="Số lượng" class="numeric">{{ line_item.quantity }}</td>
+								<td data-title="Tổng" class="numeric color-price">{{ line_item.quantity | times: line_item.price | money }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>			
+			<div class="col-md-12 col-sm-12 col-xs-12">				
+				<table class="table  totalorders">					
+					<tfoot>
+						<tr class="order_summary ">
+							<td class="fix-width-200">Tạm tính:</td>								
+							<td class="total money right color-price">{{ order.subtotal_price | money }}</td>
+						</tr>   
+						{% if order.discount %}
+						<tr class="order_summary discount">
+							<td class="fix-width-200">{{ order.discount.code }} Khuyến mại:</td>
+
+							<td class="total money right color-price">{{ order.discount.savings | money }}</td>
+						</tr>
+						{% endif %}
+						{% for shipping_method in order.shipping_methods %}
+						<tr class="order_summary ">
+							<td class="fix-width-200" colspan="">Phí vận chuyển ({{ shipping_method.title }}):</td>
+
+							<td class="total money right color-price">{{ shipping_method.price | money }}</td>
+						</tr>
+						{% endfor %}
+						<tr class="order_summary order_total">
+							<td class="fix-width-200">Tổng tiền:</td>								
+							<td class="right"><strong class="color-price">{{ order.total_price | money }} {{ order.currency }}</strong></td>
+						</tr>   
+					</tfoot>
+				</table>
+			</div>
+			<div class="col-md-12 col-xs-12 col-sm-12">
+				<div class="text-center">
+					<a href="/account" class="btn btn-blues"><i class="fa fa-reply" aria-hidden="true"></i> Trang thông tin tài khoản</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

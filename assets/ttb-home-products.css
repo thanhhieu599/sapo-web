@@ -1,0 +1,36 @@
+/* Cập nhật ngày 27/10/2026 */
+/* Homepage responsive fix. Existing fonts, colors, buttons and carousel options stay in the theme. */
+/* Counteract the global pcx-grid.css flex row rule without changing desktop geometry. */
+body.bg-index .section_group_product.background-title .category-group-products-row{flex-wrap:nowrap!important}
+body.bg-index :is(.section_group_product.background-title,.section_bestsell)>.container>.row>[class*="col-"]{min-width:0}
+body.bg-index :is(.section_group_product.background-title,.section_bestsell) .owl-carousel{min-width:0;max-width:100%}
+
+@media(max-width:991px){
+ /* Stack only at tablet/mobile sizes. Keep desktop banner and original spacing unchanged. */
+ body.bg-index .section_group_product.background-title .category-group-products-row{flex-direction:column;margin-left:0;margin-right:0}
+ body.bg-index .section_group_product.background-title .category-group-products-row>.category-group-banner{
+  flex:0 0 auto;width:100%;max-width:100%;height:160px;min-height:160px;padding:0;
+ }
+ body.bg-index .section_group_product.background-title .category-group-banner .cgb-link{left:0;right:0;top:0;bottom:0}
+ body.bg-index .section_group_product.background-title .category-group-products-row>.category-group-banner+div,
+ body.bg-index .section_group_product.background-title .category-group-products-row>.col-md-12{
+  flex:0 0 auto;min-width:0;width:100%;max-width:100%;padding-left:0;padding-right:0;
+ }
+ body.bg-index .section_group_product.background-title .category-group-products-row>[class*="col-"]{margin-bottom:0}
+ body.bg-index .section_group_product.background-title .barbox>ul{max-width:100%;overflow-wrap:anywhere}
+ body.bg-index .section_tab_product .e-tabs>.row>.col-sm-12{min-width:0;width:100%}
+ body.bg-index .section_tab_product :is(.content,.tab-content,.tab-pane){min-width:0;max-width:100%}
+ body.bg-index .section_tab_product .products>[class*="col-"]{min-width:0}
+ /* Remove fixed image heights only within the three affected homepage blocks on small screens. */
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .product-thumbnail{height:auto;min-height:0}
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .product-image-flip{height:auto;min-width:0;width:100%}
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .product-image-flip>a{width:100%;aspect-ratio:1/1}
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .product-image-flip img{position:static;padding-top:0!important}
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .pcx-meta{flex-wrap:wrap}
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .pcx-actions .pcx-btn{min-width:0;max-width:100%;white-space:normal;height:auto;min-height:34px}
+ body.bg-index :is(.section_group_product.background-title,.section_bestsell,.section_tab_product) .pcx-countdown>div{flex:1 1 0;min-width:0;width:auto}
+}
+@media(max-width:767px){
+ body.bg-index .section_group_product.background-title .category-group-products-row>.category-group-banner{height:120px;min-height:120px}
+ body.bg-index .section_group_product.background-title .barbox.ttb-menu-open>ul{display:block}
+}

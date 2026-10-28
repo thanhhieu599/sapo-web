@@ -1,0 +1,65 @@
+{% include 'breadcrumb' %} 
+<section class="search-main collections-container">
+<div class="container">
+		<div class="row">
+			{% if search.performed and search.terms != blank %}    
+			{% paginate search.results by 30 %}        
+			{% if search.results_count == 0 %}
+			<div class="col-md-12">
+				<h1 class="title-head text-center">Không tìm thấy bất kỳ kết quả nào với từ khóa trên.</h1>				
+			</div>
+			<div class="col-md-6 col-md-offset-3">
+				<div class="text-center">Vui lòng nhập từ khóa tìm kiếm khác</div>
+				<form action="/search" method="get">
+					<div class="input-group">
+						<input type="text" name="query" class="form-control" placeholder="Bạn muốn mua gì?" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+						</span>
+					</div>
+				</form>
+			</div>
+			{% else %}
+			<div class="col-md-12">
+				<h1 class="title-head text-center">Có {{ search.results_count }} kết quả tìm kiếm phù hợp</h1>
+			</div>
+			<div class="col-md-12">
+				<div class="row">
+					<div class="products-view-grid products">
+						<div class="row row-gutter-14">
+							{% for product in search.results %}
+							<div class="col-xs-6 col-sm-4 col-md-3 col-lg-15">
+								{% include 'product-grid-item' %}
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			{% if paginate.pages > 1 %}
+			<div class="col-md-12">
+				<div class="text-xs-right text-center pagging-css">
+					{% include 'paginate-pages' %}
+				</div>
+			</div>
+			{% endif %}
+			{% endpaginate %}
+			{% else %}
+			<div class="col-md-12">
+				<h1 class="title-head text-center">Nhập từ khóa để tìm kiếm sản phẩm</h1>
+			</div>
+			<div class="col-md-6 col-md-offset-3">
+				<form action="/search" method="get">
+					<div class="input-group">
+						<input type="text" name="query" class="form-control" placeholder="Bạn muốn mua gì?" />
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+						</span>
+					</div>
+				</form>
+			</div> 
+			{% endif %}
+		</div>
+	</div>
+</section>

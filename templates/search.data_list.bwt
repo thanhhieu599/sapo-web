@@ -1,0 +1,43 @@
+{% layout none %}
+<div class="category-products">
+	{% paginate search.results by settings.collection_number_product %}
+	{%include 'collection-sortby'%}	
+	{% if search.results.size > 0 %}
+	<section class="products-view products-view-list">
+		<div class="row row-noGutter">
+			{% for product in search.results %}
+			{% assign on_sale = false %}
+			{% if product.compare_at_price_max > product.price_min and product.compare_at_price_max > 0 %}
+			{% assign on_sale = true %}
+			{% endif %}
+			{% assign sold_out = true %}
+			{% if product.available  %}
+			{% assign sold_out = false %}
+			{% endif %} 
+			{% assign variantCount = product.variants | size %}
+			{% assign on_var = false %}
+			{% if product.price_max > product.price_min %}
+			{% assign on_var = true %}
+			{% endif %}
+			{% capture discount %} 
+			{{ product.selected_or_first_available_variant.compare_at_price | minus:product.selected_or_first_available_variant.price | times:100 | divided_by:product.selected_or_first_available_variant.compare_at_price | round }}% 
+			{% endcapture %}				
+			<div class="col-xs-12">
+				{%include 'product-list-item'%}			
+			</div>		
+			{% endfor %}
+		</div>
+	</section>
+	{% else %}
+	<div class="alert alert-warning fade in green-alert" role="alert">
+		<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+		Không có sản phẩm nào trong danh mục này.
+	</div>
+	{% endif %}
+	{% if paginate.pages > 1 %}
+	<div class="shop-pag text-xs-right">
+		{% include 'collection-paginate-pages' %}
+	</div>
+	{%endif%}
+	{% endpaginate %}
+</div>

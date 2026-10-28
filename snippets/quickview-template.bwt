@@ -1,0 +1,222 @@
+{% assign count_images = product.images | size %}
+{% assign column_center = 'col-sm-12 col-md-12' %}
+<div id="quick-view-product" class="quickview-product" style="display:none;">
+	<div class="quickview-overlay fancybox-overlay fancybox-overlay-fixed"></div>
+	<div class="quick-view-product"></div>
+	<div id="quickview-modal" style="display:none;">
+		<div class="block-quickview primary_block row">
+
+			<div class="product-left-column col-xs-12 col-sm-6 col-md-5 col-lg-5">
+				<div class="clearfix image-block">
+					<span class="view_full_size">
+						<a class="img-product" title="" href="#">
+							<img id="product-featured-image-quickview" class="img-responsive product-featured-image-quickview center-block" src="{{'logo.png'|asset_url}}" alt="quickview"  />
+						</a>
+					</span>
+					<div class="loading-imgquickview" style="display:none;"></div>
+				</div>
+				<div class="more-view-wrapper clearfix">
+					<div class="thumbs_quickview" id="thumbs_list_quickview">
+						<ul class="product-photo-thumbs quickview-more-views-owlslider clearfix" id="thumblist_quickview"></ul>
+					</div>
+				</div>
+			</div>
+			<div class="product-center-column product-info product-item col-xs-5 col-sm-6 col-md-7 col-lg-7">
+				<div class="head-qv">
+					<h3 class="qwp-name">abc</h3>
+
+				</div>
+				<div class="quickview-info">
+					{%if settings.use_reviews%}
+					<div class="reviews_qv">
+						<div class="bizweb-product-reviews-badge" data-id="{{ product.id }}"></div>
+					</div>
+					{%endif%}
+					<span class="prices">
+						<span class="price"></span>
+						<del class="old-price"></del>
+					</span>
+				</div>
+				<div class="product-description rte text4line"></div>
+				<a href="#" class="view-more" title="Xem chi tiết">Xem chi tiết</a>
+				<form action="/cart/add" method="post" enctype="multipart/form-data" class="quick_option variants form-ajaxtocart">
+					<span class="price-product-detail hidden" style="opacity: 0;">
+						<span class=""></span>
+					</span>
+					<select name='variantId' class="hidden" style="display:none"></select>
+					<div class="clearfix"></div>
+					{%comment%}
+					<div class="quantity_wanted_p">
+						
+						<div class="input_qty_qv">
+							<a class="btn_num num_1 button button_qty" onClick="var result = document.getElementById('quantity-detail'); var qtyqv = result.value; if( !isNaN( qtyqv ) &amp;&amp; qtyqv &gt; 1 ) result.value--;return false;" >-</a>
+							<input type="text" id="quantity-detail" name="quantity" value="1" onkeypress='validate(event)' onkeyup="valid(this,'numbers')" onblur="valid(this,'numbers')" class="form-control prd_quantity">
+							<a class="btn_num num_2 button button_qty" onClick="var result = document.getElementById('quantity-detail'); var qtyqv = result.value; if( !isNaN( qtyqv )) result.value++;return false;" >+</a>
+						</div>
+						  
+						<button type="submit" name="add" class="btn btn-primary fix_add_to_cart button_cart_buy_enable add_to_cart_detail ajax_addtocart" title="Mua ngay">
+							<span>Mua ngay</span>
+						</button>
+						
+					</div>{%endcomment%}
+					<div class="total-price" style="display:none">
+						<label>Tổng cộng: </label>
+						<span></span>
+					</div>
+
+				</form>
+
+				{%if settings.use_phone_details%}
+				<div class="contacts">
+					<span class="block_phone">Gọi ngay: <a title="Gọi ngay: {{settings.phone_details | default:store.phone_number}}" href="tel:{{settings.phone_details | default:store.phone_number}}">{{settings.phone_details | default:store.phone_number}}</a></span>
+				</div>
+				{%endif%}
+			</div>
+
+		</div>      
+		<a title="Close" class="quickview-close close-window" href="javascript:;"><i class="fa   fa-times"></i></a>
+	</div>    
+</div>
+<script type="text/javascript">  
+	Bizweb.doNotTriggerClickOnThumb = false;
+	function changeImageQuickView(img, selector) {
+		var src = $(img).attr("src");
+		src = src.replace("_compact", "");
+		$(selector).attr("src", src);
+	}
+	function validate(evt) {
+		var theEvent = evt || window.event;
+		var key = theEvent.keyCode || theEvent.which;
+		key = String.fromCharCode( key );
+		var regex = /[0-9]|\./;
+		if( !regex.test(key) ) {
+			theEvent.returnValue = false;
+			if(theEvent.preventDefault) theEvent.preventDefault();
+		}
+	}
+	var selectCallbackQuickView = function(variant, selector) {
+		$('#quick-view-product form').show();
+		var productItem = jQuery('.quick-view-product .product-item'),
+			addToCart = productItem.find('.add_to_cart_detail'),
+			productPrice = productItem.find('.price'),
+			comparePrice = productItem.find('.old-price'),
+			status = productItem.find('.soluong'),
+			totalPrice = productItem.find('.total-price span');
+		if (variant && variant.available) {
+			var form = jQuery('#' + selector.domIdPrefix).closest('form');
+			for (var i=0,length=variant.options.length; i<length; i++) {
+				var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+				if (radioButton.size()) {
+					radioButton.get(0).checked = true;
+				}
+			}
+			addToCart.removeClass('disabled').removeAttr('disabled');
+			$(addToCart).find("span").text("Thêm vào giỏ hàng");
+			status.text('Còn hàng');
+			if(variant.price < 1){			   
+				$("#quick-view-product .price").html('Liên hệ');
+				$("#quick-view-product del, #quick-view-product .quantity_wanted_p").hide();
+				$("#quick-view-product .prices .old-price").hide();
+			}else{
+				productPrice.html(Bizweb.formatMoney(variant.price, "{{ store.money_format }}"));
+				if ( variant.compare_at_price > variant.price ) {
+					comparePrice.html(Bizweb.formatMoney(variant.compare_at_price, "{{ store.money_format }}")).show();         
+					productPrice.addClass('on-sale');
+				} else {
+					comparePrice.hide();
+					productPrice.removeClass('on-sale');
+				}
+				$(".quantity_wanted_p").show();
+			}
+			{% if settings.use_color_swatch %}
+			var form = jQuery('#' + selector.domIdPrefix).closest('form');
+			 for (var i=0,length=variant.options.length; i<length; i++) {
+				 var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+				 if (radioButton.size()) {
+					 radioButton.get(0).checked = true;
+				 }
+			 }
+			 {% endif %}
+			 updatePricingQuickView();
+			  {% if settings.enable_multiple_currencies %}
+			  Currency.convertAll('{{ store.currency }}', jQuery('#currencies').val(), 'span.money', 'money_format');
+			   {% endif %}
+			   /*begin variant image*/
+			   if (variant && variant.featured_image) {
+
+				   var originalImage = $("#product-featured-image-quickview");
+				   var newImage = variant.featured_image;
+				   var element = originalImage[0];
+				   Bizweb.Image.switchImage(newImage, element, function (newImageSizedSrc, newImage, element) {
+					   $('#thumblist_quickview img').each(function() {
+						   var parentThumbImg = $(this).parent();
+						   var productImage = $(this).parent().data("image");
+						   if (newImageSizedSrc.includes(productImage)) {
+							   $(this).parent().trigger('click');
+							   return false;
+						   }
+					   });
+
+				   });
+				   $('#product-featured-image-quickview').attr('src',variant.featured_image.src);
+			   }
+			   } else {
+				   addToCart.addClass('disabled').attr('disabled', 'disabled');
+				   $(addToCart).find("span").text("Hết hàng");	
+				   status.text('Hết hàng');
+				   $(".quantity_wanted_p").show();
+				   if(variant){
+					   if(variant.price < 1){			   
+						   $("#quick-view-product .price").html('Liên hệ');
+						   $("#quick-view-product del").hide();
+						   $("#quick-view-product .quantity_wanted_p").hide();
+						   $("#quick-view-product .prices .old-price").hide();
+						   comparePrice.hide();
+						   productPrice.removeClass('on-sale');
+						   addToCart.addClass('disabled').attr('disabled', 'disabled');
+						   $(addToCart).find("span").text("Hết hàng");				   
+					   }else{
+						   if ( variant.compare_at_price > variant.price ) {
+							   comparePrice.html(Bizweb.formatMoney(variant.compare_at_price, "{{ store.money_format }}")).show();         
+							   productPrice.addClass('on-sale');
+						   } else {
+							   comparePrice.hide();
+							   productPrice.removeClass('on-sale');
+							   $("#quick-view-product .prices .old-price").html('');
+						   }
+						   $("#quick-view-product .price").html(Bizweb.formatMoney(variant.price, "{{ store.money_format }}"));
+						   $("#quick-view-product del ").hide();
+						   $("#quick-view-product .prices .old-price").show();
+						   addToCart.addClass('disabled').attr('disabled', 'disabled');
+						   $(addToCart).find("span").text("Hết hàng");
+					   }
+				   }else{
+					   $("#quick-view-product .price").html('Liên hệ');
+					   $("#quick-view-product del").hide();
+					   $("#quick-view-product .quantity_wanted_p").hide();
+					   $("#quick-view-product .prices .old-price").hide();
+					   comparePrice.hide();
+					   productPrice.removeClass('on-sale');
+					   addToCart.addClass('disabled').attr('disabled', 'disabled');
+					   $(addToCart).find("span").text("Hết hàng");	
+				   }
+			   }
+			   /*begin variant image*/
+			   if (variant && variant.featured_image) {
+				   var originalImage = $("#product-featured-image-quickview");
+				   var newImage = variant.featured_image;
+				   var element = originalImage[0];
+				   Bizweb.Image.switchImage(newImage, element, function (newImageSizedSrc, newImage, element) {
+					   $('#thumblist_quickview img').each(function() {
+						   var parentThumbImg = $(this).parent();
+						   var productImage = $(this).parent().data("image");
+						   if (newImageSizedSrc.includes(productImage)) {
+							   $(this).parent().trigger('click');
+							   return false;
+						   }
+					   });
+				   });
+				   $('#product-featured-image-quickview').attr('src',variant.featured_image.src);
+			   }
+			  };
+</script>

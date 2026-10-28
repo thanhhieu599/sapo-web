@@ -1,0 +1,270 @@
+{% comment %}
+  Chỉnh thời gian ở dòng: var CFG = { firstDelay: 15, repeatDelay: 300 ... }
+{% endcomment %}
+{% if customer %}
+<script>try{localStorage.setItem('dt_reg_done','1');}catch(e){}</script>
+{% else %}
+<div id="dtReg" class="dtreg" aria-hidden="true">
+  <div class="dtreg-overlay" data-dtclose></div>
+  <div class="dtreg-box" role="dialog" aria-modal="true" aria-labelledby="dtRegTitle">
+    <button type="button" class="dtreg-x" data-dtclose aria-label="Đóng">&times;</button>
+
+    <h3 id="dtRegTitle" class="dtreg-title">Đăng ký tài khoản</h3>
+    <p class="dtreg-sub">Tạo tài khoản để theo dõi đơn hàng, lưu địa chỉ giao hàng và nhận báo giá nhanh hơn.</p>
+
+    <div class="dtreg-social">
+      <a class="dtreg-soc" id="dtRegFb" href="/account/register" rel="nofollow" data-social="facebook">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/></svg>
+        Facebook
+      </a>
+      <a class="dtreg-soc" id="dtRegGg" href="/account/register" rel="nofollow" data-social="google">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M12.2 10.3v3.9h5.5c-.2 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C17 3.6 14.8 2.6 12.2 2.6 7 2.6 2.8 6.8 2.8 12s4.2 9.4 9.4 9.4c5.4 0 9-3.8 9-9.2 0-.6-.1-1.1-.2-1.6l-8.8-.3z"/></svg>
+        Google
+      </a>
+    </div>
+
+    <div class="dtreg-divider"><span>hoặc đăng ký bằng email</span></div>
+
+    {% form 'customer_register' %}
+      <div class="dtreg-row">
+        <div class="dtreg-field">
+          <label for="dtLastName">Họ</label>
+          <input type="text" id="dtLastName" name="lastName" placeholder="Nguyễn" autocomplete="family-name" required>
+        </div>
+        <div class="dtreg-field">
+          <label for="dtFirstName">Tên</label>
+          <input type="text" id="dtFirstName" name="firstName" placeholder="Văn A" autocomplete="given-name" required>
+        </div>
+      </div>
+      <div class="dtreg-field">
+        <label for="dtEmail">Email</label>
+        <input type="email" id="dtEmail" name="email" placeholder="ten@congty.com" autocomplete="email" required>
+      </div>
+      <div class="dtreg-field">
+        <label for="dtPass">Mật khẩu</label>
+        <div class="dtreg-pass">
+          <input type="password" id="dtPass" name="password" placeholder="Nhập mật khẩu" autocomplete="new-password" minlength="6" required>
+          <button type="button" class="dtreg-eye" id="dtEye">Hiện</button>
+        </div>
+      </div>
+      <button type="submit" class="dtreg-submit">Đăng ký</button>
+      <p class="dtreg-policy">Bằng việc đăng ký, bạn đồng ý với <a href="/chinh-sach-bao-mat" target="_blank">Chính sách bảo mật</a> của D&amp;T.</p>
+    {% endform %}
+
+    <p class="dtreg-alt">Đã có tài khoản? <a href="/account/login">Đăng nhập</a></p>
+  </div>
+</div>
+<button type="button" id="dtRegTimer" class="dtreg-timer" style="display:none">
+  Đăng ký nhận báo giá ưu đãi · <b id="dtRegCount">05:00</b>
+</button>
+
+<style>
+  .dtreg{position:fixed;inset:0;z-index:99999;display:none}
+  .dtreg *,.dtreg input,.dtreg button,.dtreg-timer *{font-family:inherit!important}
+  .dtreg.is-open{display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+  .dtreg-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+  .dtreg-box{position:relative;box-sizing:border-box;max-width:440px;width:calc(100% - 32px);max-height:calc(100vh - 32px);overflow-y:auto;margin:0;background:#fff;border-radius:14px;padding:30px 28px 22px;box-shadow:0 12px 40px rgba(0,0,0,.25);animation:dtregIn .3s ease}
+  @keyframes dtregIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .dtreg-x{position:absolute;top:8px;right:12px;border:0;background:none;font-size:28px;line-height:1;color:#999;cursor:pointer;padding:4px 8px}
+  .dtreg-x:hover{color:#c0202a}
+  .dtreg-title{margin:0 0 8px;text-align:center;font-size:26px;font-weight:800;color:#1a1a1a}
+  .dtreg-sub{margin:0 auto 20px;max-width:340px;text-align:center;font-size:14px;line-height:1.55;color:#777}
+  .dtreg-social{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .dtreg-soc{display:flex;align-items:center;justify-content:center;gap:10px;height:46px;border:1px solid #e3e3e3;border-radius:10px;background:#fff;color:#1a1a1a!important;font-size:15px;font-weight:600;text-decoration:none!important;transition:.2s}
+  .dtreg-soc:hover{border-color:#bbb;background:#fafafa}
+  .dtreg-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;color:#999;font-size:13px}
+  .dtreg-divider:before,.dtreg-divider:after{content:"";flex:1;height:1px;background:#e8e8e8}
+  .dtreg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .dtreg-field{margin-bottom:14px}
+  .dtreg-field label{display:block;margin-bottom:6px;font-size:14px;font-weight:700;color:#1a1a1a}
+  .dtreg-field input{box-sizing:border-box;width:100%;height:46px;padding:0 14px;border:1px solid #e3e3e3;border-radius:10px;background:#fafafa;font-size:15px;color:#1a1a1a;outline:none;transition:.2s;margin:0}
+  .dtreg-field input::placeholder{color:#aaa}
+  .dtreg-field input:focus{border-color:#c0202a;background:#fff;box-shadow:0 0 0 3px rgba(192,32,42,.1)}
+  .dtreg-pass{position:relative}
+  .dtreg-pass input{padding-right:64px}
+  .dtreg-eye{position:absolute;top:0;right:4px;height:46px;border:0;background:none;padding:0 12px;font-size:13px;font-weight:600;color:#555;cursor:pointer}
+  .dtreg-submit{display:block;width:100%;height:50px;margin-top:6px;border:0;border-radius:10px;background:#c0202a;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.2s}
+  .dtreg-submit:hover{background:#a51b24}
+  .dtreg-policy{margin:10px 0 0;text-align:center;font-size:12px;color:#999}
+  .dtreg-policy a{color:#777;text-decoration:underline}
+  .dtreg-alt{margin:16px 0 0;text-align:center;font-size:14px;color:#555}
+  .dtreg-alt a{color:#c0202a;font-weight:700}
+  .dtreg-timer{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:9999;border:0;border-radius:30px;background:#c0202a;color:#fff;font-size:14px;padding:10px 18px;box-shadow:0 4px 14px rgba(0,0,0,.25);cursor:pointer;white-space:nowrap}
+  .dtreg-timer b{font-variant-numeric:tabular-nums}
+  body.dtreg-lock{overflow:hidden}
+  @media (max-width:575px){
+    .dtreg-box{max-width:340px;width:100%;border-radius:14px;padding:20px 16px 14px}
+    .dtreg-x{top:4px;right:6px;font-size:26px}
+    .dtreg-title{font-size:19px;margin-bottom:4px}
+    .dtreg-sub{font-size:12.5px;margin-bottom:12px;line-height:1.45}
+    .dtreg-social{gap:8px}
+    .dtreg-soc{height:40px;font-size:14px;gap:8px}
+    .dtreg-soc svg{width:17px;height:17px}
+    .dtreg-divider{margin:12px 0 10px;font-size:12px}
+    .dtreg-row{gap:8px}
+    .dtreg-field{margin-bottom:9px}
+    .dtreg-field label{font-size:13px;margin-bottom:4px}
+    .dtreg-field input{height:40px;font-size:16px;padding:0 12px}
+    .dtreg-eye{height:40px}
+    .dtreg-submit{height:44px;font-size:15px}
+    .dtreg-policy{font-size:11px;margin-top:8px}
+    .dtreg-alt{font-size:13px;margin-top:10px}
+    .dtreg-timer{font-size:13px;padding:9px 14px;bottom:12px}
+  }
+</style>
+
+<script>
+(function(){
+  var CFG = { firstDelay: 15, repeatDelay: 300, registerUrl: '/account/register' };
+
+  function get(store,k){ try{ return window[store].getItem(k); }catch(e){ return null; } }
+  function set(store,k,v){ try{ window[store].setItem(k,v); }catch(e){} }
+  function markDone(){ set('localStorage','dt_reg_done','1'); }
+
+  // Ghi nhận khi khách gửi form đăng ký (ở popup hoặc ở trang đăng ký)
+  document.addEventListener('submit', function(e){
+    var f = e.target, act = (f && f.getAttribute('action')) || '';
+    if (/register/i.test(act) || (f && f.id === 'customer_register')) { markDone(); }
+  }, true);
+
+  // Kiểm tra nhanh: mở trang với ?dtreg=test để xoá ghi nhớ và hiện popup sau 1 giây
+  var testMode = /[?&]dtreg=test/.test(location.search);
+  if (testMode) {
+    try { localStorage.removeItem('dt_reg_done'); sessionStorage.removeItem('dt_reg_next'); sessionStorage.removeItem('dt_reg_first'); } catch(e) {}
+    CFG.firstDelay = 1;
+  }
+
+  if (get('localStorage','dt_reg_done') === '1') return;
+  if (/^\/(account|checkout|cart)/.test(location.pathname)) return;
+
+  var pop = document.getElementById('dtReg');
+  var timer = document.getElementById('dtRegTimer');
+  var count = document.getElementById('dtRegCount');
+  if (!pop || !timer) return;
+
+  // Dùng đúng font chữ của menu website cho popup
+  try {
+    var src = document.querySelector('nav a, .nav a, .menu a, header a') || document.body;
+    var ff = window.getComputedStyle(src).fontFamily;
+    if (ff) { pop.style.fontFamily = ff; timer.style.fontFamily = ff; }
+  } catch(e) {}
+
+  // Nút Hiện / Ẩn mật khẩu
+  var eye = document.getElementById('dtEye'), pass = document.getElementById('dtPass');
+  if (eye && pass) eye.addEventListener('click', function(){
+    var show = pass.type === 'password';
+    pass.type = show ? 'text' : 'password';
+    eye.innerHTML = show ? 'Ẩn' : 'Hiện';
+  });
+
+  // Đăng nhập Facebook / Google trực tiếp:
+  var regDocP = null, injected = false;
+  function getRegDoc(){
+    if (!regDocP) {
+      regDocP = (window.fetch && window.DOMParser)
+        ? fetch(CFG.registerUrl, {credentials:'same-origin'}).then(function(r){ return r.text(); })
+            .then(function(h){ return new DOMParser().parseFromString(h, 'text/html'); })
+        : Promise.reject();
+    }
+    return regDocP;
+  }
+  function goRegister(){ location.href = CFG.registerUrl; }
+  function runHandler(code){ try { new Function(code).call(document.createElement('a')); return true; } catch(e) { return false; } }
+
+  function socialLogin(kind){
+    var re = kind === 'facebook' ? /facebook/i : /google|gmail/i;
+    getRegDoc().then(function(doc){
+      var cands = doc.querySelectorAll('a, button, [onclick]'), el = null;
+      for (var i = 0; i < cands.length; i++) {
+        var c = cands[i], href = c.getAttribute('href') || '', oc = c.getAttribute('onclick') || '';
+        var sig = oc + ' ' + (c.className || '') + ' ' + (c.id || '') + ' ' + (c.textContent || '') + ' ' + href;
+        if (!re.test(sig)) continue;
+        // bỏ qua link fanpage / mạng xã hội ở header, footer
+        if (!oc && !/oauth|account|login|social/i.test(href)) continue;
+        el = c; break;
+      }
+      if (!el) { goRegister(); return; }
+
+      var href = el.getAttribute('href') || '', oc = el.getAttribute('onclick') || '';
+      if (!oc && href && !/^(#|javascript)/i.test(href)) { location.href = href; return; }
+      if (!oc) { goRegister(); return; }
+
+      // Chạy hàm đăng nhập; nếu trang hiện tại chưa có hàm đó thì nạp script từ trang đăng ký
+      if (runHandler(oc)) return;
+      if (!injected) {
+        injected = true;
+        var fn = (oc.match(/([A-Za-z_$][\w$.]*)\s*\(/) || [])[1] || '';
+        var scripts = doc.querySelectorAll('script:not([src])');
+        for (var j = 0; j < scripts.length; j++) {
+          var t = scripts[j].textContent || '';
+          if ((fn && t.indexOf(fn) > -1) || /dialog\/oauth|accounts\.google\.com|client_id/i.test(t)) {
+            var sc = document.createElement('script'); sc.text = t; document.body.appendChild(sc);
+          }
+        }
+      }
+      if (!runHandler(oc)) goRegister();
+    })['catch'](goRegister);
+  }
+
+  var socBtns = pop.querySelectorAll('[data-social]');
+  for (var k = 0; k < socBtns.length; k++) {
+    socBtns[k].addEventListener('click', function(e){
+      e.preventDefault();
+      this.style.opacity = '.6';
+      socialLogin(this.getAttribute('data-social'));
+    });
+  }
+
+  var loop = null;
+  function fmt(sec){ var m = Math.floor(sec/60), s = sec%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+  function stop(){ if (loop) { clearInterval(loop); loop = null; } }
+
+  function openPop(){
+    stop();
+    timer.style.display = 'none';
+    getRegDoc()["catch"](function(){});
+    pop.classList.add('is-open');
+    pop.setAttribute('aria-hidden','false');
+    document.body.classList.add('dtreg-lock');
+  }
+
+  function closePop(){
+    pop.classList.remove('is-open');
+    pop.setAttribute('aria-hidden','true');
+    document.body.classList.remove('dtreg-lock');
+    var next = Date.now() + CFG.repeatDelay*1000;
+    set('sessionStorage','dt_reg_next', String(next));
+    schedule(next, true);
+  }
+
+  function schedule(at, showTimer){
+    stop();
+    function tick(){
+      var remain = Math.ceil((at - Date.now())/1000);
+      if (remain <= 0) { openPop(); return; }
+    }
+    tick();
+    if (pop.classList.contains('is-open')) return;
+    loop = setInterval(tick, 1000);
+  }
+
+  pop.addEventListener('click', function(e){
+    if (e.target.hasAttribute && e.target.hasAttribute('data-dtclose')) closePop();
+  });
+  document.addEventListener('keydown', function(e){
+    if ((e.key === 'Escape' || e.keyCode === 27) && pop.classList.contains('is-open')) closePop();
+  });
+  timer.addEventListener('click', openPop);
+
+  // Lần đầu trong phiên: đếm 15 giây kể từ lúc vào web (tính liên tục khi chuyển trang)
+  var nextAt = parseInt(get('sessionStorage','dt_reg_next') || '0', 10);
+  if (nextAt) {
+    schedule(nextAt, true);
+  } else {
+    var first = parseInt(get('sessionStorage','dt_reg_first') || '0', 10);
+    if (!first) { first = Date.now(); set('sessionStorage','dt_reg_first', String(first)); }
+    schedule(first + CFG.firstDelay*1000, false);
+  }
+})();
+</script>
+{% endif %}

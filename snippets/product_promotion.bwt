@@ -1,0 +1,18 @@
+{% assign description_parts = product.content | split: "<h6>" %}
+{% for part in description_parts %}
+{% assign fp = part | append: " " | split: "</h6>" | last %}
+{% assign p = part | append: " " | split: "</h6>" | last | strip_html | replace: "&nbsp;", "" | replace: " ", "" | strip_newlines %}
+{% if p != "" or fp contains "<img" or fp contains "<iframe" %}
+{% if forloop.index0 == '0' %}
+{% else %}
+<div class="main-project__tab--content hidden-sm hidden-xs">
+	<div class="product-promotions-list">
+		<h2 class="product-promotions-list-title">Khuyến mãi cho {{ product.name }}</h2>
+		<div class="product-promotions-list-content">
+			{{ part | split: "</h6>" | last | replace: "<div", "<span" | replace: "</div", "</span" }}
+	</div>
+</div>
+</div>
+{% endif %}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,43 @@
+<section class="section_group_product section-news">
+	<div class="container">
+		<div class="blogs-content">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="box-shock">
+						<div class="barbox clearfix">
+							<h2 class="titlecate">{{ settings.sec_new_title }}</h2>
+							<a href="{{blogs[settings.sec_new_blog].url}}" class="viewmoretext" title="Xem tất cả">Xem tất cả</a>
+						</div>
+						<div class="list-blogs-link">
+							<div class="section_blogs_owl owl-carousel owl-theme not-dqowl">
+								{% for article in blogs[settings.sec_new_blog].articles limit: settings.sec_new_limit %}		
+								<div class="item">
+									<article class="blog-item">
+										<div class="blog-item-thumbnail">								
+											<a href="{{ article.url }}">
+												{% if article.image == null %}
+												<img src="{{ 'no-image.jpg' | asset_url }}" alt="{{ article.title }}">
+												{%else%}
+												<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ article.image.src | img_url:'large' }}" alt="{{ article.title }}" class="img-responsive center-block" />
+												{%endif%}
+											</a>
+										</div>
+										<div class="blog-item-contens">
+											<h3 class="blog-item-name margin-top-10"><a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a></h3>
+											<div class="post-time">
+												<span>Đăng bởi <b>{{article.author}}</b> - {{ article.created_on | date:'dd/MM/yyyy'}}</span>
+											</div>
+											<p class="blog-item-summary margin-bottom-5">{{ article.summary_or_content | strip_html | truncate: 100 }}</p>
+										</div>
+									</article>				
+								</div>
+								{% endfor %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

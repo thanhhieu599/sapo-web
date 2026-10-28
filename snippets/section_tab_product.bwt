@@ -1,0 +1,59 @@
+{% include 'ttb-home-product-styles' %}
+{%assign title = settings.sec_tab_title%}
+{%assign limit = settings.sec_tab_limit%}
+{% assign tab_limit = limit | plus: 0 %}
+<div class="section section_tab_product a-center">
+	<div class="container">
+		<h2><span>{{title}}</span></h2>
+		<div class="e-tabs">
+			<div class="row row-noGutter">
+				<div class="col-sm-12">
+					<div class="content">
+						<div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+							{% assign ttb_enabled_tabs_seen = 0 %}
+							<ul id="myTab" class="nav nav-tabs nav-tabs-responsive" role="tablist">
+								{%for i in (1..5)%}
+								{%capture enable%}sec_tab_{{i}}_enable{%endcapture%}
+								{%capture title%}sec_tab_{{i}}_title{%endcapture%}
+								{%if settings[enable]%}
+								<li role="presentation" class="{% if ttb_enabled_tabs_seen == 1 %}next{% endif %} {% if ttb_enabled_tabs_seen == 0 %}active{% endif %}">
+									<a href="#home-{{i}}" id="home-tab-{{i}}" role="tab" data-toggle="tab" aria-controls="home-{{i}}" aria-expanded="{% if ttb_enabled_tabs_seen == 0 %}true{% else %}false{% endif %}">
+										<span class="text">{{settings[title]}}</span>
+									</a>
+								</li>
+								{% assign ttb_enabled_tabs_seen = ttb_enabled_tabs_seen | plus: 1 %}
+								{%endif%}
+								{%endfor%}
+							</ul>
+							{% assign ttb_first_enabled_panel = true %}
+							<div id="myTabContent" class="tab-content">
+								{%for i in (1..5)%}
+								{%capture enable%}sec_tab_{{i}}_enable{%endcapture%}
+								{%capture col%}sec_tab_{{i}}_col{%endcapture%}
+								{%if settings[enable]%}
+								<div role="tabpanel" class="tab-pane fade {% if ttb_first_enabled_panel %} in active{% endif %}" id="home-{{i}}" aria-labelledby="home-tab-{{i}}">
+									<div class="products row row-gutter-14">
+										{%assign col = settings[col]%}
+										{% comment %} Chỉ hiện sản phẩm đủ thông tin mua hàng; đếm lại cho từng tab {% endcomment %}
+										{% assign tab_shown = 0 %}
+										{% for product in collections[col].products %}
+										{% if tab_shown < tab_limit and product.available and product.variants.size == 1 and product.price_min > 0 %}
+										{% assign tab_shown = tab_shown | plus: 1 %}
+										<div class="col-xs-6 col-sm-4 col-md-3">
+											{% include 'product-grid-item' %}
+										</div>
+										{% endif %}
+										{% endfor %}
+									</div>
+								</div>
+								{% assign ttb_first_enabled_panel = false %}
+								{%endif%}
+								{%endfor%}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

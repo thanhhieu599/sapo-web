@@ -1,0 +1,21 @@
+<div class="sortPagiBar">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 text-xs-left text-sm-right">
+			<div id="sort-by">
+				<label class="left hidden-xs">Sắp xếp: </label>
+				<ul>
+					<li><span>Thứ tự</span>
+						<ul>                    
+							<li><a href="javascript:;" onclick="sortby('alpha-asc')" title="A &rarr; Z">A &rarr; Z</a></li>
+							<li><a href="javascript:;" onclick="sortby('alpha-desc')" title="Z &rarr; A">Z &rarr; A</a></li>
+							<li><a href="javascript:;" onclick="sortby('price-asc')" title="Giá tăng dần">Giá tăng dần</a></li>
+							<li><a href="javascript:;" onclick="sortby('price-desc')" title="Giá giảm dần">Giá giảm dần</a></li>
+							<li><a href="javascript:;" onclick="sortby('created-desc')" title="Hàng mới nhất">Hàng mới nhất</a></li>
+							<li><a href="javascript:;" onclick="sortby('created-asc')" title="Hàng cũ nhất">Hàng cũ nhất</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

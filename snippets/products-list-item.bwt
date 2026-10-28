@@ -1,0 +1,39 @@
+<section class="products-view products-view-list">
+	<div class="row row-noGutter">
+		{% for product in collection.products %}
+		{% assign on_sale = false %}
+		{% if product.compare_at_price_max > product.price_min %}
+		{% assign on_sale = true %}
+		{% endif %}
+		{% assign sold_out = true %}
+		{% if product.available  %}
+		{% assign sold_out = false %}
+		{% endif %} 
+		{% assign variantCount = product.variants | size %}
+		{% assign on_var = false %}
+		{% if product.price_max > product.price_min %}
+		{% assign on_var = true %}
+		{% endif %}
+		{% capture discount %} 
+		{{ product.selected_or_first_available_variant.compare_at_price | minus:product.selected_or_first_available_variant.price | times:100 | divided_by:product.selected_or_first_available_variant.compare_at_price | round }}% 
+		{% endcapture %}
+		{%assign check = false%}
+		{% for tag in product.tags %}
+		{%if tag == 'noo'%}
+		{%assign check = true%}
+		{%endif%}
+		{% endfor %}
+		{%if check == true%}
+		{%else%}
+		<div class="col-xs-12">
+			{%include 'product-list-item'%}
+		</div>
+		{%endif%}
+		{% endfor %}
+	</div>
+	<div class="text-xs-right">
+		{% if paginate.pages > 1 %}
+		{% include 'collection-paginate-pages' %}
+		{% endif %}
+	</div>
+</section>

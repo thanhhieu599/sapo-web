@@ -1,0 +1,83 @@
+<div class="collections_des_and_menu margin-top-10">
+	<div class="collections_des_and_menu-content js-collection-desc">
+		{% if page_title != "Tất cả sản phẩm" %}
+		{{ collection.description }}
+		{% else %}
+		{{ settings.aside_category_intro_content }}
+		{% endif %}
+	</div>
+
+	<button type="button" class="toggle-desc-btn">
+		Xem thêm
+	</button>
+
+	{% if page_title != "Tất cả sản phẩm" %}
+	<div class="collections_des_and_menu_list">
+		<ul class="list-inline">
+			{% if link_alias == null %}
+			{% assign link_alias = settings.aside_category_menu %}
+			{% endif %}
+			{% for link in linklists[link_alias].links %}
+			<li class="{% if link.active %}active{% endif %}">
+				<a href="{{ link.url }}" class="nav-link" title="{{ link.title }}">
+					{{ link.title }}
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	{% endif %}
+</div>
+
+<style>
+.collections_des_and_menu-content {
+	max-height: 200px;
+	overflow: hidden;
+	position: relative;
+	transition: all 0.3s ease;
+}
+
+.collections_des_and_menu-content.active {
+	max-height: 100000px;
+}
+
+.toggle-desc-btn {
+    background: #be2326;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 5px 15px;
+    margin: 0 auto;
+	  margin-top: 10px;
+    text-align: center;
+    display: block;
+    border: 1px solid #be2326;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	const desc = document.querySelector(".js-collection-desc");
+	const btn = document.querySelector(".toggle-desc-btn");
+
+	if(desc && btn){
+
+		// Ẩn nút nếu nội dung ngắn
+		if(desc.scrollHeight <= 200){
+			btn.style.display = "none";
+		}
+
+		btn.addEventListener("click", function () {
+
+			desc.classList.toggle("active");
+
+			if(desc.classList.contains("active")){
+				btn.innerText = "Thu gọn";
+			}else{
+				btn.innerText = "Xem thêm";
+			}
+
+		});
+	}
+});
+</script>

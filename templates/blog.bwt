@@ -1,0 +1,326 @@
+{% include 'breadcrumb' %}
+
+<div itemscope itemtype="http://schema.org/Blog">
+	<meta itemprop="name" content="{{ blog.name }}">
+	<meta itemprop="description" content="{{ blog.description | default: 'Chủ đề không có mô tả' }}">
+
+	<!-- ===== Banner ===== -->
+	<div class="bl-hero">
+		<div class="container">
+			<span class="bl-eyebrow">Tin tức</span>
+			<h1>{{ blog.name }}</h1>
+			<p>Cập nhật kiến thức an toàn lao động, hướng dẫn chọn thiết bị bảo hộ và tin tức mới nhất từ D&amp;T.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+
+			<section class="right-content {%if settings.blog_layout == 'no'%}col-md-12{%else%}col-md-9{%endif%} {%if settings.blog_layout == 'left'%}col-md-push-3{%endif%}">
+				{% paginate blog.articles by settings.blogs_number_perpage %}
+				{% if blog.articles.size > 0 %}
+				<section class="list-blogs blog-main">
+					<div class="bl-grid">
+						{% for article in blog.articles %}
+
+						{% if forloop.first and paginate.current_page == 1 %}
+						<!-- Bài nổi bật -->
+						<article class="bl-card bl-featured">
+							<a class="bl-thumb" href="{{ article.url }}" title="{{ article.title }}">
+								{% if article.image == null %}
+								<img src="{{ 'no-image.jpg' | asset_url }}" alt="{{ article.title }}" />
+								{% else %}
+								<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ article.image.src | img_url:'large' }}" alt="{{ article.title }}" />
+								{% endif %}
+								<span class="bl-badge">Nổi bật</span>
+							</a>
+							<div class="bl-body">
+								<div class="bl-meta">
+									<span><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ article.created_on | date:'dd/MM/yyyy' }}</span>
+									{% if article.author != blank %}<span><i class="fa fa-user-o" aria-hidden="true"></i> {{ article.author }}</span>{% endif %}
+								</div>
+								<h2 class="bl-title"><a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a></h2>
+								<p class="bl-summary">{{ article.summary_or_content | strip_html | truncate: 220 }}</p>
+								<a class="bl-more" href="{{ article.url }}">Đọc tiếp <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+							</div>
+						</article>
+
+						{% else %}
+						<!-- Thẻ bài viết thường -->
+						<article class="bl-card">
+							<a class="bl-thumb" href="{{ article.url }}" title="{{ article.title }}">
+								{% if article.image == null %}
+								<img src="{{ 'no-image.jpg' | asset_url }}" alt="{{ article.title }}" />
+								{% else %}
+								<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ article.image.src | img_url:'large' }}" alt="{{ article.title }}" />
+								{% endif %}
+							</a>
+							<div class="bl-body">
+								<div class="bl-meta">
+									<span><i class="fa fa-calendar-o" aria-hidden="true"></i> {{ article.created_on | date:'dd/MM/yyyy' }}</span>
+									{% if article.author != blank %}<span><i class="fa fa-user-o" aria-hidden="true"></i> {{ article.author }}</span>{% endif %}
+								</div>
+								<h3 class="bl-title"><a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a></h3>
+								<p class="bl-summary">{{ article.summary_or_content | strip_html | truncate: 90 }}</p>
+								<a class="bl-more" href="{{ article.url }}">Đọc tiếp <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+							</div>
+						</article>
+						{% endif %}
+
+						{% endfor %}
+					</div>
+
+					{% if paginate.pages > 1 %}
+					<div class="text-center pagging-css bl-pagination">{% include 'paginate-pages' %}</div>
+					{% endif %}
+				</section>
+				{% else %}
+				<div class="bl-empty">
+					<h2>Chưa có bài viết nào</h2>
+					<p>Nội dung đang được cập nhật, bạn vui lòng quay lại sau.</p>
+					<a href="/" class="bl-more">Về trang chủ <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+				</div>
+				{% endif %}
+				{% endpaginate %}
+			</section>
+
+			{%unless settings.blog_layout == 'no'%}
+			<aside class="left left-content col-md-3 {%if settings.blog_layout == 'left'%}col-md-pull-9{%endif%}">
+				{% include 'sidebar-blog' %}
+			</aside>
+			{%endunless%}
+
+		</div>
+	</div>
+</div>
+{% include 'appbulk-selling-products' %}
+
+<style>
+/* ===== Banner ===== */
+.bl-hero {
+	margin-bottom: 34px;
+	padding: 40px 0 36px;
+	background: linear-gradient(135deg, #1f1f1f 0%, #3b1315 100%);
+	color: #fff;
+}
+.bl-eyebrow {
+	display: inline-block;
+	margin-bottom: 14px;
+	padding: 4px 12px;
+	border-radius: 20px;
+	background: #bf2026;
+	font-size: 12px;
+	font-weight: 600;
+}
+.bl-hero h1 {
+	margin: 0 0 10px;
+	font-size: 34px;
+	font-weight: 700;
+	line-height: 1.28;
+	color: #fff;
+	text-transform: none;
+}
+.bl-hero p {
+	max-width: 900px;
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: rgba(255, 255, 255, .82);
+}
+
+/* ===== Lưới bài viết ===== */
+.bl-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr))
+	gap: 24px;
+}
+.bl-card {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid #eee;
+	border-radius: 14px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
+	transition: transform .25s, box-shadow .25s;
+}
+.bl-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 14px 32px rgba(0, 0, 0, .12);
+}
+.bl-thumb {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	aspect-ratio: 16 / 10;
+	background: #f3f3f3;
+}
+.bl-thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform .5s ease;
+}
+.bl-card:hover .bl-thumb img { transform: scale(1.06); }
+.bl-badge {
+	position: absolute;
+	top: 14px;
+	left: 14px;
+	padding: 4px 12px;
+	border-radius: 20px;
+	background: #bf2026;
+	font-size: 12px;
+	font-weight: 600;
+	color: #fff;
+}
+.bl-body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	padding: 18px 20px 20px;
+}
+.bl-meta {
+	margin-bottom: 8px;
+	font-size: 12px;
+	color: #999;
+}
+.bl-meta span { margin-right: 14px; }
+.bl-meta .fa { margin-right: 4px; color: #bf2026; }
+.bl-title {
+	margin: 0 0 10px;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.4;
+	text-transform: none;
+}
+.bl-title a {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	color: #222;
+	text-decoration: none;
+	transition: color .2s;
+}
+.bl-title a:hover { color: #bf2026; }
+.bl-summary {
+	flex: 1;
+	margin: 0 0 14px;
+	font-size: 14px;
+	line-height: 1.65;
+	color: #666;
+}
+.bl-more {
+	align-self: flex-start;
+	font-size: 14px;
+	font-weight: 600;
+	color: #bf2026;
+	text-decoration: none;
+}
+.bl-more .fa { margin-left: 4px; transition: margin-left .2s; }
+.bl-more:hover { color: #a01a20; }
+.bl-more:hover .fa { margin-left: 9px; }
+
+/* Bài nổi bật (chiếm cả hàng, ảnh trái - chữ phải) */
+.bl-featured {
+	grid-column: 1 / -1;
+	flex-direction: row;
+}
+.bl-featured .bl-thumb {
+	flex: 0 0 55%;
+	aspect-ratio: auto;
+	min-height: 320px;
+}
+.bl-featured .bl-body {
+	justify-content: center;
+	padding: 28px 30px;
+}
+.bl-featured .bl-title { margin-bottom: 14px; font-size: 24px; }
+.bl-featured .bl-title a { -webkit-line-clamp: 3; }
+.bl-featured .bl-summary { flex: 0 0 auto; margin-bottom: 20px; font-size: 15px; }
+
+/* ===== Phân trang ===== */
+.bl-pagination { margin: 34px 0 10px; }
+.bl-pagination .pagination,
+.bl-pagination ul { margin: 0; padding: 0; }
+.bl-pagination a,
+.bl-pagination span {
+	border-radius: 8px;
+}
+
+/* ===== Trạng thái trống ===== */
+.bl-empty {
+	padding: 60px 20px;
+	border: 1px dashed #ddd;
+	border-radius: 14px;
+	text-align: center;
+}
+.bl-empty h2 { margin: 0 0 8px; font-size: 22px; font-weight: 700; color: #222; }
+.bl-empty p { margin: 0 0 16px; color: #777; }
+
+/* ===== Responsive ===== */
+@media (max-width: 991px) {
+	.bl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.bl-side-card { margin-top: 10px; }
+}
+@media (max-width: 767px) {
+	.bl-hero { margin-bottom: 24px; padding: 30px 0 26px; }
+	.bl-hero h1 { font-size: 26px; }
+	.bl-featured { flex-direction: column; }
+	.bl-featured .bl-thumb { flex: none; min-height: 0; aspect-ratio: 16 / 10; }
+	.bl-featured .bl-body { padding: 18px 20px 20px; }
+	.bl-featured .bl-title { font-size: 20px; }
+}
+@media (max-width: 575px) {
+	.bl-grid { grid-template-columns: 1fr; gap: 18px; }
+}
+.bl-side-card li h2,
+.bl-side-card li h3,
+.bl-side-card article h2,
+.bl-side-card article h3,
+.bl-side-card h2:has(> a),
+.bl-side-card h3:has(> a) {
+	margin: 0 0 6px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	line-height: 1.45 !important;
+	color: #222 !important;
+}
+.bl-side-card li h3 a:hover,
+.bl-side-card article h3 a:hover,
+.bl-side-card h3:has(> a) a:hover { color: #bf2026; }
+
+/* Ngày đăng */
+.bl-side-card time,
+.bl-side-card .post-time,
+.bl-side-card .date,
+.bl-side-card .time {
+	font-size: 12px;
+	font-style: normal;
+	color: #999;
+}
+/* ===== Lưới bài viết: 3 cột, bài nổi bật chiếm cả hàng ===== */
+.list-blogs .bl-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px;
+}
+.list-blogs .bl-grid > .bl-featured {
+	grid-column: 1 / -1;
+}
+.list-blogs .bl-grid > .bl-card {
+	min-width: 0;
+}
+
+/* Màn hình vừa: 2 cột */
+@media (max-width: 1199px) {
+	.list-blogs .bl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Mobile: 1 cột, bài nổi bật xếp dọc */
+@media (max-width: 575px) {
+	.list-blogs .bl-grid { grid-template-columns: 1fr; gap: 18px; }
+}
+</style>

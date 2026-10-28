@@ -1,0 +1,15 @@
+<div class="category-gallery">
+	{% if settings.banner_category_enable %}
+	<div class="image pd-bt30">
+		{% if collection.description contains "<img" %} 
+			{% include 'portfolio_gallery' %}
+			{% else %}
+			{% if collection.image %}
+			<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ collection.image.src }}" alt="{{ page_title }}" class="img-responsive center-block" />
+			{% else %}
+			<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ 'cat-banner-1.jpg' | asset_url }}" alt="{{ page_title }}" class="img-responsive center-block" />
+			{% endif %}
+			{% endif %}
+			</div>
+			{% endif %}
+			</div>

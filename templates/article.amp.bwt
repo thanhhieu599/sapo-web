@@ -1,0 +1,1195 @@
+{% layout none %}
+{% assign coppyright = settings.coppyright %}
+<!doctype html>
+<html ⚡ lang="vi">
+	<head>
+		<meta name="zalo-platform-site-verification" content="PVsK2URq1LLZvRHSvzC602t_lZJ1YMLeE3Sm" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>{%if page_title == 'All'%}Tất cả sản phẩm{% elsif template == "search" %}Tìm kiếm sản phẩm{%else%}{{ page_title }}{%endif%}{% if current_tags %} tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} - Trang {{ current_page }}{% endif %}{% unless page_title contains store.name %} | {{ store.name }}{% endunless %}</title>
+		{% if page_description != ""%}<meta name="description" content="{{ page_description | escape }}">{% endif %}
+		{%if template contains 'index'%}{%if settings.home_page_keywords != '' and settings.home_page_keywords != null%}<meta name="keywords" content="{{settings.home_page_keywords}}"/>{%else%}<meta name="keywords" content="{{store.name}}, {{store.domain}}"/>{%endif%}{%elsif template contains 'product'%}<meta name="keywords" content="{{product.name}}, {%for collection in product.collections%}{{collection.name}}, {%endfor%}{%if product.tags.size > 0%}{% for tag in product.tags %}{{tag}}, {%endfor%}{%endif%}{{store.name}}, {{store.domain}}"/>{%elsif template contains 'collection'%}<meta name="keywords" content="{{collection.name }}, {{store.name}}, {{store.domain}}"/>{%elsif template contains 'blog'%}<meta name="keywords" content="{{blog.name }}, {{store.name}}, {{store.domain}}"/>{%elsif template contains 'article'%}<meta name="keywords" content="{{article.title}}, {{blog.name}}, {%if article.tags.size > 0%}{% for tag in article.tags %}{{tag}}, {%endfor%}{%endif%} {{store.name}}, {{store.domain}}"/>{%else%}<meta name="keywords" content="{{page_title}}, {{store.name}}, {{store.domain}}"/>{%endif%}
+		{%if settings.favicon_enable%}<link rel="icon" href="{{ 'favicon.png' | asset_url }}" type="image/x-icon" />{%endif%}
+		<link rel="canonical" href="{{ canonical_url }}" />
+		<meta property="og:site_name" content="{{store.name}}" />
+		<meta property="og:rich_attachment" content="true" />
+		{% if page_description != ""%}<meta name="description" content="{{ page_description }}">{% endif %}
+		{% include 'fb-open-graph-tags' %}
+		{% include 'evo-schema' %}
+		<meta property="og:locale" content="vi_VN" />
+		<meta property="article:published_time" content="{{ article.published_on | date: 'dd-MM-yyyy' }}" />
+		<meta property="article:modified_time" content="{{ article.created_on | date: 'dd-MM-yyyy' }}" />
+		{% include 'evo-article-amp' %}
+		<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+		<!-- Custom CSS -->
+		<style amp-custom>
+			html,
+			body,
+			body div,
+			span,
+			object,
+			iframe,
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6,
+			p,
+			blockquote,
+			pre,
+			abbr,
+			address,
+			cite,
+			code,
+			del,
+			dfn,
+			em,
+			img,
+			ins,
+			kbd,
+			q,
+			samp,
+			sub,
+			sup,
+			var,
+			dl,
+			dt,
+			dd,
+			ol,
+			ul,
+			li,
+			fieldset,
+			form,
+			label,
+			legend,
+			table,
+			caption,
+			tbody,
+			tfoot,
+			thead,
+			tr,
+			th,
+			td,
+			article,
+			aside,
+			figure,
+			footer,
+			header,
+			menu,
+			nav,
+			section,
+			time,
+			mark,
+			audio,
+			video,
+			details,
+			summary {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				font-size: 100%;
+				font-weight: normal;
+				vertical-align: baseline;
+				background: transparent
+			}
+
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6,
+			p,
+			small,
+			strong,
+			b,
+			i {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				vertical-align: baseline;
+				background: transparent
+			}
+
+			article,
+			aside,
+			figure,
+			footer,
+			header,
+			nav,
+			section,
+			details,
+			summary {
+				display: block
+			}
+
+			html {
+				box-sizing: border-box
+			}
+
+			*,
+			*:before,
+			*:after {
+				box-sizing: inherit
+			}
+
+			img,
+			object,
+			embed {
+				max-width: 100%
+			}
+
+			ul {
+				list-style: none
+			}
+
+			blockquote,
+			q {
+				quotes: none
+			}
+
+			blockquote:before,
+			blockquote:after,
+			q:before,
+			q:after {
+				content: '';
+				content: none
+			}
+
+			a {
+				margin: 0;
+				padding: 0;
+				font-size: 100%;
+				vertical-align: baseline;
+				background: transparent
+			}
+
+			del {
+				text-decoration: line-through
+			}
+
+			abbr[title],
+			dfn[title] {
+				border-bottom: 1px dotted #000;
+				cursor: help
+			}
+
+			table {
+				border-collapse: collapse;
+				border-spacing: 0
+			}
+
+			th {
+				font-weight: bold;
+				vertical-align: bottom
+			}
+
+			td {
+				font-weight: normal;
+				vertical-align: top
+			}
+
+			hr {
+				display: block;
+				height: 1px;
+				border: 0;
+				border-top: 1px solid #ccc;
+				margin: 1em 0;
+				padding: 0
+			}
+
+			input,
+			select {
+				vertical-align: middle
+			}
+
+			pre {
+				white-space: pre;
+				white-space: pre-wrap;
+				white-space: pre-line;
+				word-wrap: break-word
+			}
+
+			input[type="radio"] {
+				vertical-align: text-bottom
+			}
+
+			input[type="checkbox"] {
+				vertical-align: bottom
+			}
+
+			.ie7 input[type="checkbox"] {
+				vertical-align: baseline
+			}
+
+			.ie6 input {
+				vertical-align: text-bottom
+			}
+
+			select,
+			input,
+			textarea {
+				font: 99% sans-serif
+			}
+
+			table {
+				font-size: inherit
+			}
+
+			small {
+				font-size: 85%
+			}
+
+			strong {
+				font-weight: bold
+			}
+
+			td,
+			td {
+				vertical-align: top
+			}
+
+			sub,
+			sup {
+				font-size: 75%;
+				line-height: 0;
+				position: relative
+			}
+
+			sup {
+				top: -.5em
+			}
+
+			sub {
+				bottom: -.25em
+			}
+
+			pre,
+			code,
+			kbd,
+			samp {
+				font-family: monospace, sans-serif
+			}
+
+			.clickable,
+			label,
+			input[type=button],
+			input[type=submit],
+			input[type=file],
+			button {
+				cursor: pointer
+			}
+
+			button,
+			input,
+			select,
+			textarea {
+				margin: 0
+			}
+
+			button,
+			input[type=button] {
+				width: auto;
+				overflow: visible
+			}
+
+			.ie7 img {
+				-ms-interpolation-mode: bicubic
+			}
+
+			.clearfix:before,
+			.clearfix:after {
+				content: "\20";
+				display: block;
+				height: 0;
+				overflow: hidden
+			}
+
+			.clearfix:after {
+				clear: both
+			}
+
+			.clearfix {
+				zoom: 1
+			}
+
+			img {
+				vertical-align: middle
+			}
+
+			body {
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 14px;
+				line-height: 1.42857143;
+				color: #333;
+				overflow-x: hidden
+			}
+
+			a,
+			a:hover,
+			a:focus,
+			a:active {
+				outline: none;
+				text-decoration: none;
+				color: #000
+			}
+
+			.mf-body {
+				background: #fff;
+				min-height: 100vh;
+				width: 100vw;
+				max-width: 960px;
+				margin: 0 auto;
+				padding: 0;
+				position: relative
+			}
+
+			.mf-ico {
+				display: inline-block;
+				background-color: transparent;
+				background-image: url({{ 'icon.svg' | asset_url }});
+				background-repeat: no-repeat
+			}
+
+			.mf-mnlmain {
+				position: relative;
+				padding: 15px
+			}
+
+			.mf-lgleft {
+				width: 100px;
+				height: 50px;
+				margin-bottom: 5px;
+				background-image: url({{ 'logo.png' | asset_url }});
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: contain;
+				display: inline-block;
+			}
+
+			.mf-mnclose {
+				border: none;
+				position: absolute;
+				top: 18px;
+				right: 15px;
+				color: #d0011b;
+				font-size: 18px;
+				font-weight: bold;
+				background: transparent
+			}
+
+			.mf-mnleft ul li a {
+				display: block;
+				padding: 8px 0
+			}
+
+			.mf-mnleft ul li.active a {
+				color: #d0011b
+			}
+
+			.mf-header {
+				background: #2a2a2a
+			}
+
+			.mf-hdtop {
+				height: 48px;
+				position: relative
+			}
+
+			.mf-hdimn {
+				position: absolute;
+				top: 16px;
+				left: 11px;
+				width: 18px;
+				height: 14px;
+				border: none;
+				background-position: -4px -81px
+			}
+
+			.mf-hdlogo {
+				position: absolute;
+				top: 0px;
+				left: 42px;
+				width: 100px;
+				height: 50px;
+				background-image: url({{ 'logo.png' | asset_url }});
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: contain;
+			}
+
+			.mf-hdcart {
+				float: right;
+				position: relative;
+				display: inline-block;
+				margin: 17px 17px 0 0
+			}
+
+			.mf-hdcart .mf-ico {
+				width: 21px;
+				height: 18px;
+				background-position: -33px -81px
+			}
+
+			.mf-hdcart-sl {
+				display: inline-block;
+				position: absolute;
+				top: -10px;
+				right: -10px;
+				width: 15px;
+				height: 15px;
+				line-height: 16px;
+				text-align: center;
+				color: #000;
+				font-size: 12px;
+				background: {{settings.color_main_1}};
+				-webkit-border-radius: 100%;
+				border-radius: 100%
+			}
+
+			.mf-hdcall {
+				position: absolute;
+				top: 10px;
+				right: 49px
+			}
+
+			.mf-hdcall span {
+				display: block;
+				font-size: 11px;
+				letter-spacing: .4px;
+				color: #c8c8c8
+			}
+
+			.mf-hdcall strong {
+				display: block;
+				font-size: 16px;
+				font-weight: bold;
+				color: {{settings.color_main_1}};
+				line-height: 1;
+			}
+
+			.mf-isearch {
+				cursor: pointer;
+				position: absolute;
+				top: 15px;
+				right: 63px;
+				width: 18px;
+				height: 18px;
+				background-position: -150px -81px
+			}
+
+			.mf-search {
+				position: relative;
+				padding: 0 8px 11px;
+				z-index: 8
+			}
+
+			.mf-search:before {
+				content: '';
+				width: 18px;
+				height: 18px;
+				display: inline-block;
+				position: absolute;
+				top: 7px;
+				left: 16px;
+				background: url({{ 'icon.svg' | asset_url }}) no-repeat -68px -81px
+			}
+
+			.mf-frsearch {
+				width: 100%;
+				height: 32px;
+				padding: 5px 80px 5px 32px;
+				border: none;
+				background: #fff;
+				-webkit-border-radius: 2px;
+				border-radius: 2px
+			}
+
+			.mf-frs-clr {
+				display: none;
+				position: absolute;
+				top: 2px;
+				right: 51px;
+				border: none;
+				height: 28px;
+				width: 32px;
+				line-height: 26px;
+				text-align: center;
+				background: #fff;
+				font-size: 14px;
+				font-weight: bold;
+				color: #6f6f6f;
+				outline: none
+			}
+
+			.mf-frs-btn {
+				display: none;
+				position: absolute;
+				top: 0;
+				right: 8px;
+				height: 32px;
+				line-height: 34px;
+				text-align: center;
+				padding: 0 10px;
+				border: none;
+				background: #d60000;
+				color: #fff;
+				-webkit-border-radius: 0 2px 2px 0;
+				border-radius: 0 2px 2px 0
+			}
+
+			.mf-sarm-tit {
+				padding: 15px 15px 0 15px;
+				font-size: 12px;
+				font-weight: bold;
+				color: #919191
+			}
+
+			.mf-ismost {
+				position: relative;
+				top: 2px;
+				left: 3px;
+				width: 15px;
+				height: 15px;
+				background-position: -97px -82px
+			}
+
+			.mf-sarm-most {
+				display: none;
+				position: absolute;
+				top: 40px;
+				left: 0;
+				right: 0;
+				background: #fff;
+				z-index: 999;
+				box-shadow: 0 10px 10px 0 rgba(0, 0, 0, .15)
+			}
+
+			.mf-sarm-most ul {
+				padding: 5px 15px
+			}
+
+			.mf-sarm-most ul li a {
+				display: block;
+				padding: 8px 0;
+				font-size: 14px;
+				color: #4a4a4a
+			}
+
+			.mf-sarm-rs {
+				display: none;
+				position: absolute;
+				top: 40px;
+				left: 0;
+				right: 0;
+				background: #fff;
+				z-index: 999;
+				box-shadow: 0 10px 10px 0 rgba(0, 0, 0, .15)
+			}
+
+			.mf-sarm-rs li a {
+				display: table;
+				width: 100%;
+				padding: 8px;
+				font-size: 14px;
+				color: #4a4a4a;
+				border-bottom: 1px solid #e5e5e5
+			}
+
+			.mf-sarimg {
+				display: table-cell;
+				vertical-align: top;
+				width: 51px;
+				text-align: center
+			}
+
+			.mf-sarimg img {
+				width: 50px
+			}
+
+			.mf-sarif {
+				display: table-cell;
+				vertical-align: top;
+				padding-left: 10px
+			}
+
+			.mf-sarif h3 {
+				font-size: 14px;
+				color: #140d0d;
+				line-height: 1.2;
+				margin-bottom: 3px
+			}
+
+			.mf-sarif p {
+				font-size: 12px;
+				color: #858585
+			}
+
+			.mf-sarif p span {
+				color: #d0011b;
+				padding-right: 10px
+			}
+
+			.active .mf-frs-clr,
+			.active .mf-frs-btn {
+				display: inline-block
+			}
+
+			.mf-menumain {
+				padding: 0 2px 7px 2px;
+				position: relative;
+				z-index: 6
+			}
+
+			.mf-mnit {
+				display: inline-block;
+				width: 70px;
+				height: 48px;
+				text-align: center;
+				color: #fff
+			}
+
+			.mf-mnit span {
+				display: block;
+				font-size: 12px;
+				color: #ececec;
+				text-align: center;
+				letter-spacing: .4px
+			}
+
+			.mf-mnit i {
+				margin-bottom: 3px;
+				height: 24px;
+				width: 24px
+			}
+
+			.mf-mnit i.mf-ikm {
+				background-position: -7px -124px
+			}
+
+			.mf-mnit i.mf-imb {
+				background-position: -36px -124px
+			}
+
+			.mf-mnit i.mf-iap {
+				background-position: -65px -124px
+			}
+
+			.mf-mnit i.mf-ila {
+				background-position: -98px -124px
+			}
+
+			.mf-mnit i.mf-ipk {
+				background-position: -132px -124px
+			}
+
+			.mf-mnit i.mf-ita {
+				background-position: -165px -124px
+			}
+
+			.mf-mnit i.mf-isi {
+				background-position: -198px -124px
+			}
+
+			.mf-mnit i.mf-ixh {
+				background-position: -228px -124px
+			}
+
+			.mf-mnit i.mf-itt {
+				background-position: -256px -124px
+			}
+
+			.mf-mnit i.mf-ihd {
+				background-position: -286px -124px
+			}
+
+			.mf-mnit i.mf-iff {
+				background-position: -319px -124px
+			}
+
+			.mf-mnit i.mf-iss {
+				width: 70px;
+				height: 24px;
+				background-position: 0 -310px
+			}
+
+			.mfarow-l,
+			.mfarow {
+				display: inline-block
+			}
+
+			.mfarow:before {
+				content: '';
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+				top: -2px;
+				left: 3px;
+				border-style: solid;
+				border-width: 1px 1px 0 0;
+				height: 6px;
+				width: 6px
+			}
+
+			.mfarow-l:before {
+				content: '';
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+				top: 0;
+				left: 2px;
+				border-style: solid;
+				border-width: 1px 1px 0 0;
+				height: 6px;
+				width: 6px
+			}
+
+			.mf-footer {
+				background: #fff
+			}
+
+			.mghrft {
+				height: 8px;
+				margin: 0;
+				border-top: 1px solid #ebebeb;
+				background: #f5f5f5
+			}
+
+			.mf-cares {
+				display: table;
+				width: 100%;
+				border-bottom: 1px solid #ebebeb;
+				border-top: 1px solid #ebebeb
+			}
+
+			.mf-cares li {
+				display: block;
+				vertical-align: middle;
+				width: 100%;
+				text-align: center
+			}
+
+			.mf-cares li:first-child {
+				border-right: 1px solid #ebebeb
+			}
+
+			.mf-cares li a {
+				display: block;
+				padding: 12px 0
+			}
+
+			.mf-cares li p {
+				font-size: 14px;
+				color: #4a4a4a
+			}
+
+			.mf-cares li h3 {
+				font-size: 18px;
+				font-weight: bold;
+				color: #d0011b
+			}
+
+			.mf-cares li h3:before {
+				content: "";
+				display: inline-block;
+				width: 18px;
+				height: 18px;
+				background: url({{ 'icon.svg' | asset_url }}) no-repeat 0 -174px
+			}
+
+			.mf-ftif {
+				display: table;
+				width: 100%;
+				border-bottom: 1px solid #ebebeb
+			}
+
+			.mf-ftif li {
+				display: table-cell;
+				vertical-align: middle;
+				text-align: center;
+				width: 50%
+			}
+
+			.mf-ftif li:first-child {
+				border-right: 1px solid #ebebeb
+			}
+
+			.mf-ftif li button {
+				border: none;
+				background: transparent;
+				display: block;
+				font-size: 13px;
+				color: #4990e2;
+				padding: 14px 0;
+				width: 100%;
+				outline: 0
+			}
+
+			.mf-ftif li a {
+				display: block;
+				font-size: 13px;
+				color: #4990e2;
+				padding: 14px 0
+			}
+
+			.mf-ftif-ex li a {
+				font-size: 13px;
+				display: block;
+				color: #4990e2;
+				padding: 8px;
+				border-bottom: 1px solid #e6e6e6
+			}
+
+			.mf-backtop {
+				display: inline-block;
+				position: fixed;
+				bottom: 5px;
+				right: 5px;
+				cursor: pointer;
+				width: 26px;
+				height: 26px;
+				line-height: 28px;
+				text-align: center;
+				background: rgba(0, 0, 0, .3)
+			}
+
+			.mf-backtop:before {
+				content: '';
+				display: inline-block;
+				width: 12px;
+				height: 13px;
+				background: url({{ 'icon.svg' | asset_url }}) no-repeat -126px -84px
+			}
+
+			.show {
+				display: block
+			}
+
+			.hide {
+				display: none
+			}
+
+			.fm-break {
+				background: #fff;
+				padding: 5px
+			}
+
+			.fm-break ul li {
+				display: inline;
+				vertical-align: middle
+			}
+
+			.fm-break ul li a {
+				font-size: 14px;
+				display: inline;
+				vertical-align: middle
+			}
+
+			.fm-break ul li:last-child a {
+				color: {{settings.color_main}};
+			}
+
+			.fm-break ul li~li:before {
+				content: "›";
+				font-size: 15px;
+				padding: 0 6px 0 2px;
+				position: relative;
+				top: -1px;
+				display: inline-block;
+				vertical-align: middle
+			}
+
+			.mf-newsct {
+				padding: 0 5px;
+				background: {{settings.color_main}};
+				border-bottom: 1px solid #e3e3e3
+			}
+
+			.mf-nclink {
+				position: relative;
+				display: inline-block;
+				padding: 0 15px;
+				height: 48px;
+				line-height: 47px;
+				text-align: center;
+				color: #fff;
+				font-size: 16px
+			}
+
+			.mf-nclink:before {
+				content: "";
+				width: 100%;
+				display: none;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				height: 2px;
+				background: #fff
+			}
+
+			.mf-nclink.active:before {
+				display: block
+			}
+
+			.mf-newsltop {
+				margin-bottom: 10px
+			}
+
+			.mf-ntimg img {
+				width: 100%
+			}
+
+			.mf-ntname {
+				color: {{settings.color_main}};
+				font-size: 20px;
+				font-weight: 600
+			}
+
+			.mf-newslday {
+				font-size: 11px;
+				color: #454546
+			}
+
+			.mf-nttxt {
+				color: #263447;
+				line-height: 20px
+			}
+
+			.mf-ntif {
+				padding: 5px 10px
+			}
+
+			.mf-newslmul li {
+				margin-bottom: 15px
+			}
+
+			.mf-nmimg {
+				display: block;
+				width: 150px;
+				float: left;
+				text-align: center
+			}
+
+			.mf-nmif {
+				margin-left: 160px;
+				display: block
+			}
+
+			.mf-nmname {
+				display: block;
+				color: {{settings.color_main}};
+				font-size: 13px;
+				font-weight: 600;
+				margin-bottom: 5px
+			}
+
+			.mf-newsbot {
+				padding: 10px 0 20px;
+				text-align: center
+			}
+
+			.mf-newsbtn {
+				display: inline-block;
+				height: 42px;
+				line-height: 42px;
+				padding: 0 35px;
+				color: #fff;
+				background: {{settings.color_main}};
+				border: none
+			}
+
+			.mf-newdtbox {
+				padding: 10px
+			}
+
+			.mf-newdtmain {
+				padding: 10px 0
+			}
+
+			.mf-ndttit {
+				color: {{settings.color_main}};
+				font-size: 20px;
+				font-weight: 600
+			}
+
+			.mf-search {
+				display: none
+			}
+
+			.viewmore {
+				display: block;
+				overflow: hidden;
+				padding: 10px 0;
+				margin: 10px;
+				font-size: 14px;
+				color: #288ad6;
+				border: 1px solid #eee;
+				border-radius: 4px;
+				text-align: center
+			}
+
+			.btn_odn {
+				background: -webkit-gradient(linear, center top, center bottom, from(#ec1010), to(#da0b00));
+				background: linear-gradient(#ec1010, #da0b00);
+				background-color: #e60d0d;
+				width: 245px;
+				height: 45px;
+				line-height: 45px;
+				color: #fff;
+				font-size: 15px;
+				font-weight: bold;
+				text-decoration: none;
+				text-align: center;
+				text-transform: uppercase;
+				border-radius: 5px;
+				display: block;
+				margin: 0 auto
+			}
+
+			.btn_gidn {
+				background: #5cb85c;
+				width: 245px;
+				height: 45px;
+				line-height: 45px;
+				color: #fff;
+				font-size: 15px;
+				font-weight: bold;
+				text-decoration: none;
+				text-align: center;
+				text-transform: uppercase;
+				border-radius: 5px;
+				display: block;
+				margin: 0 auto
+			}
+
+			.btn_gidn2 {
+				background: #5cb85c;
+				width: 245px;
+				height: 45px;
+				line-height: 45px;
+				color: #fff;
+				font-size: 15px;
+				font-weight: bold;
+				text-decoration: none;
+				text-align: center;
+				text-transform: uppercase;
+				border-radius: 5px;
+				display: block;
+				margin: 0 auto
+			}
+			.mf-newdtmain p{
+				margin: 10px 0;
+			}
+		</style>
+		<script async src="https://cdn.ampproject.org/v0.js"></script>
+		<script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"></script>
+		<script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
+		<script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+		<script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
+		<script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
+		<script async custom-element="amp-vimeo" src="https://cdn.ampproject.org/v0/amp-vimeo-0.1.js"></script>
+		<script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+
+	</head>
+	<body>
+		<amp-sidebar id="sidebar-left" layout="nodisplay" side="left">
+			<div class="mf-mnleft">
+				<div class="mf-mnlmain">
+					<a class="mf-lgleft" href="/" title=""></a>
+					<button class="mf-mnclose" on="tap:sidebar-left.close" tabindex="0">✕</button>
+					<ul>
+						{% for link in linklists[settings.main_menu].links %}
+						<li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+		</amp-sidebar>
+		<div class="mf-body">
+			<header class="mf-header">
+				<div class="mf-hdfix">
+					<div class="mf-hdtop clearfix">
+						<button class="mf-hdimn mf-ico" on="tap:sidebar-left.toggle" role="button"></button>
+						<a class="mf-hdlogo" href="/" title="{{store.name}}"></a>
+						{% if settings.store_edit %}
+						<a class="mf-hdcall" href="tel:{{ settings.store_phone | remove: ' '}}">
+							<span>{{settings.store_text}}</span>
+							<strong>{{ settings.store_phone}}</strong>
+						</a>
+						{% else %}
+						<a class="mf-hdcall" href="tel:{{ store.phone_number | remove: ' '}}">
+							<span>{{settings.store_text}}</span>
+							<strong>{{ store.phone_number}}</strong>
+						</a>
+						{% endif %}
+						<a class="mf-hdcart" href="/cart" title="Giỏ hàng"><span class="mf-ico"></span><span class="mf-hdcart-sl">{{ cart.item_count }}</span></a>
+					</div>
+				</div>
+			</header>
+			<div class="fm-break">
+				<ul>
+					<li><a href="{{ blog.url }}" title="{{ blog.name }}">{{ blog.name }}</a></li>
+					<li><a class="active" href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a></li>
+				</ul>
+			</div>
+			<div class="mf-newsct">
+				<amp-carousel height="48" layout="fixed-height" type="carousel">
+					{% for link in linklists[settings.blogs_aside_category_menu].links %}
+					<article class="review"><a class="mf-nclink" href="{{ link.url }}" title="{{ link.title }}"><span>{{ link.title }}</span></a></article>
+					{% endfor %}
+				</amp-carousel>
+			</div>
+			<div class="mf-newdtbox">
+				<h1 class="mf-ndttit">{{ article.title | escape }}</h1>
+				<p class="mf-newslday">Đăng bởi <b>{{article.author}}</b> vào lúc {{ article.created_on | date:'dd/MM/yyyy'}}</p>
+				<div class="mf-newdtmain clearfix">
+					{{ article.content | replace: '<img', '<amp-img' | replace: '" />', '"height="400" width="600" layout="responsive"></amp-img>' | replace: 'original-', '' | replace: 'data-thumb="original"', 'layout="responsive"'  }}
+				</div>
+			</div>
+			<hr class="mghrft">
+			<footer class="mf-footer">
+				<ul class="mf-cares">
+					<li>
+						{% if settings.store_edit %}
+						<a href="tel:{{ settings.store_phone | remove: ' '}}" title="{{ settings.store_phone }}">
+							<p>{{settings.store_text}}</p>
+							<h3> {{ settings.store_phone }}</h3>
+						</a>
+						{% else %}
+						<a href="tel:{{ store.phone_number | remove: ' '}}" title="{{ store.phone_number }}">
+							<p>{{settings.store_text}}</p>
+							<h3> {{ store.phone_number }}</h3>
+						</a>
+						{% endif %}
+					</li>
+					<li>
+						{% if settings.store_edit %}
+						<a href="mailto:{{ settings.store_email }}" title="{{ settings.store_email }}">
+							<p>Email liên hệ</p>
+							<h3> {{ settings.store_email }}</h3>
+						</a>
+						{% else %}
+						<a href="mailto:{{ store.customer_email }}" title="{{ store.customer_email }}">
+							<p>Email liên hệ</p>
+							<h3> {{ store.customer_email }}</h3>
+						</a>
+						{% endif %}
+					</li>
+				</ul>
+				<ul class="mf-ftif">
+					<li><button type="button" on="tap:AMP.setState({visible: !visible})">{{settings.fot_c4_title}} ›</button></li>
+					<li><a href="/lien-he" title="Liên hệ" target="_blank">Liên hệ ›</a></li>
+				</ul>
+				<div [class]="visible ? 'show' : 'hide'" class="hide">
+					<ul class="mf-ftif-ex">
+						{% for link in linklists[settings.fot_menu4].links %}
+						<li><a target="_blank" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</footer>
+
+		</div>
+	</body>
+</html>

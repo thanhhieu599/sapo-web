@@ -1,0 +1,115 @@
+<div class="section_feature_category">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-push-3">
+				<div class="main-category-text-flex">
+					<div class="main-category-text text-center">
+						<h2>{{ settings.feature_new_title }}</h2>
+						<div class="main-category-text-content">
+							{{ settings.feature_new_description }}
+						</div>
+						<a href="{{ settings.feature_new_link }}" title="{{ settings.feature_new_button }}">{{ settings.feature_new_button }}</a>
+					</div>
+				</div>
+			</div>
+			{% for link in linklists[settings.feature_menu].links limit: 1 %}
+			{% capture img %}{{ link.url | remove_first: "/" }}{% endcapture %}
+			<div class="col-md-3 col-md-pull-6 col-sm-6 col-xs-6 col-100 col-pd-right">
+				<div class="main-category-image">
+					<div class="a-main-category-image">
+						<a href="{{ link.url }}" title="{{ link.title }}">
+							{% if collections.[img].image.src != null %}
+							<picture>
+								<source 
+										media="(min-width: 992px)"
+										srcset="{{ collections.[img].image.src | img_url: 'grande' }}">
+								<source 
+										media="(min-width: 769px)"
+										srcset="{{ collections.[img].image.src | img_url: 'large' }}">
+								<source 
+										media="(min-width: 480px)"
+										srcset="{{ collections.[img].image.src | img_url:'large' }}">
+								<img 
+									 src="{{ collections.[img].image.src | img_url:'grande' }}" 
+									 alt="{{ link.title }}" class="img-responsive center-block" />
+							</picture>
+							{% else %}
+							<img src="//bizweb.dktcdn.net/thumb/large/assets/themes_support/noimage.gif" alt="{{ link.title }}" class="img-responsive center" />
+							{% endif %}
+						</a>
+					</div>
+					<div class="link-main-category-image">
+						<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			{% for link in linklists[settings.feature_menu].links offset: 1 limit: 1 %}
+			{% capture img %}{{ link.url | remove_first: "/" }}{% endcapture %}
+			<div class="col-md-3 col-sm-6 col-xs-6 col-100 col-pd-left">
+				<div class="main-category-image">
+					<div class="a-main-category-image">
+						<a href="{{ link.url }}" title="{{ link.title }}">
+							{% if collections.[img].image.src != null %}
+							<picture>
+								<source 
+										media="(min-width: 992px)"
+										srcset="{{ collections.[img].image.src | img_url: 'grande' }}">
+								<source 
+										media="(min-width: 769px)"
+										srcset="{{ collections.[img].image.src | img_url: 'large' }}">
+								<source 
+										media="(min-width: 480px)"
+										srcset="{{ collections.[img].image.src | img_url:'large' }}">
+								<img 
+									 src="{{ collections.[img].image.src | img_url:'large' }}" 
+									 alt="{{ link.title }}" class="img-responsive center-block" />
+							</picture>
+							{% else %}
+							<img src="//bizweb.dktcdn.net/thumb/large/assets/themes_support/noimage.gif" alt="{{ link.title }}" class="img-responsive center" />
+							{% endif %}
+						</a>
+					</div>
+					<div class="link-main-category-image">
+						<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<div class="row col-pd">
+			{% for link in linklists[settings.feature_menu].links offset: 2 limit: 4 %}
+			{% capture img %}{{ link.url | remove_first: "/" }}{% endcapture %}
+			<div class="col-md-3 col-sm-6 col-xs-6 col-100">
+				<div class="main-category-image">
+					<div class="a-main-category-image">
+						<a href="{{ link.url }}" title="{{ link.title }}">
+							{% if collections.[img].image.src != null %}
+							<picture>
+								<source 
+										media="(min-width: 992px)"
+										srcset="{{ collections.[img].image.src | img_url: 'grande' }}">
+								<source 
+										media="(min-width: 769px)"
+										srcset="{{ collections.[img].image.src | img_url: 'large' }}">
+								<source 
+										media="(min-width: 480px)"
+										srcset="{{ collections.[img].image.src | img_url:'large' }}">
+								<img 
+									 src="{{ collections.[img].image.src | img_url:'large' }}" 
+									 alt="{{ link.title }}" class="img-responsive center-block" />
+							</picture>
+							{% else %}
+							<img src="//bizweb.dktcdn.net/thumb/large/assets/themes_support/noimage.gif" alt="{{ link.title }}" class="img-responsive center" />
+							{% endif %}
+						</a>
+					</div>
+					<div class="link-main-category-image">
+						<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,58 @@
+{% layout none %}
+{% if search.results == empty %}
+    {}
+{% else %}
+    {% for item in search.results limit: 1 %}
+        {% if item.object_type == 'product' %}
+            {% capture results %}
+            {% for product in search.results %}
+                {
+                    "title": "{{ product.name | replace:'"',"'" }}",
+                    "url": "{{ product.url }}",
+                    "thumbnail": "{{ product.featured_image.src | img_url:'compact' }}",
+
+					{% if product.price != 0 %}
+
+                    {% if product.price_varies %}
+                    "price_from": "{{ product.price | money }}",
+                    {% else %}
+                    "price": "{{ product.price | money }}",
+                    {% endif %}
+
+					{% else %}
+					
+					"price_contact": "Liên hệ",
+
+					{% endif %}
+
+                    {% if product.compare_at_price_min > product.price %}
+                    "compare_at_price": "{{ product.compare_at_price_min | money }}",
+                    {% endif %}
+
+                    "description": "{{ product.content | strip_html | truncate: 50 | strip | strip_newlines}}"
+                }
+                {% unless forloop.last %},{% endunless %}
+
+            {% endfor %}
+        {% endcapture %}
+
+        {% elsif item.object_type == 'article' %}
+        {% capture results %}
+        {% for article in search.results %}
+            {
+            "title": "{{ article.title | replace:'"',"'" }}",
+            "url": "{{ article.url }}",
+            "thumbnail": "{{ article.image.src | img_url: 'compact' }}",
+            "description": "{{ article.content | strip_html | truncate: 50 | strip | strip_newlines }}"
+            }{% unless forloop.last %},{% endunless %}
+
+        {% endfor %}
+        {% endcapture %}
+        {% endif %}
+
+    {% endfor %}
+
+    {
+    "results": [{{ results }}]
+    }
+{% endif %}

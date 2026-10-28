@@ -1,0 +1,37 @@
+<div class="hidden">
+	<div class="container">
+		<h1>Tất cả danh mục</h1>
+	</div>
+</div>
+{% include 'breadcrumb' %}  
+<div class="container">
+	<div class="list-category row">
+		<div class="col-md-12">
+			{% for collection in collections %}
+			{% if collection.products_count > 0 %}
+			<div class="section_group_product clearfix margin-bottom-10 row">
+				<div class="col-md-12">
+					<div class="box-shock">
+						<div class="row">
+							<div class="col-md-12 margin-bottom-10">
+								<div class="clearfix col-title">
+									<h3>{%if collection.name == 'All'%}Tất cả sản phẩm{%else%}{{ collection.name }}{%endif%} <span>({{ collection.products_count }} sản phẩm)</span></h3>
+									<a href="{{ collection.url }}" title="Xem tất cả">Xem tất cả</a>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="products  owl-carousel owl-theme products-view-grid" data-md-items="5" data-sm-items="3" data-xs-items="2" data-margin="10">
+									{% for product in collection.products limit:6%}
+									{%include 'product-grid-item'%}
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</div>

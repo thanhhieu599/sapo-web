@@ -1,0 +1,32 @@
+<div class="section_index_banner_2">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-sm-6">
+				<div class="image-effect">
+					<a href="{{ settings.index_bottom_banner_1_link }}">
+						<picture>
+							<source media="(min-width: 1200px)" srcset="{{ 'index_bottom_banner_1.jpg' | asset_url }}">
+							<source media="(min-width: 992px)" srcset="{{ 'index_bottom_banner_1.jpg' | asset_url | img_url: '1024x1024' }}">
+							<source media="(min-width: 769px)" srcset="{{ 'index_bottom_banner_1.jpg' | asset_url | img_url: 'large' }}">
+							<source media="(min-width: 480px)" srcset="{{ 'index_bottom_banner_1.jpg' | asset_url | img_url:'large' }}">
+							<img src="{{ 'index_bottom_banner_1.jpg' | asset_url | img_url:'large' }}" alt="{{ settings.index_bottom_banner_1_alt }}" class="img-responsive center-block" />
+						</picture>
+					</a>
+				</div>
+			</div>
+			<div class="col-md-6 col-sm-6">
+				<div class="image-effect">
+					<a href="{{ settings.index_bottom_banner_2_link }}">
+						<picture>
+							<source media="(min-width: 1200px)" srcset="{{ 'index_bottom_banner_2.jpg' | asset_url }}">
+							<source media="(min-width: 992px)" srcset="{{ 'index_bottom_banner_2.jpg' | asset_url | img_url: '1024x1024' }}">
+							<source media="(min-width: 769px)" srcset="{{ 'index_bottom_banner_2.jpg' | asset_url | img_url: 'large' }}">
+							<source media="(min-width: 480px)" srcset="{{ 'index_bottom_banner_2.jpg' | asset_url | img_url:'large' }}">
+							<img src="{{ 'index_bottom_banner_2.jpg' | asset_url | img_url:'large' }}" alt="{{ settings.index_bottom_banner_2_alt }}" class="img-responsive center-block" />
+						</picture>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

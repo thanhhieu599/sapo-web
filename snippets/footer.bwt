@@ -1,0 +1,307 @@
+{% if settings.fot_search_enable %}
+{% if linklists[settings.fot_search].links.size > 0 %}
+{% assign section_menu_alias = settings.fot_search %}
+{% else %}
+{% assign section_menu_alias = 'main-menu' %}
+{% endif %}
+<div class="search-more">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<label>{{ settings.fot_search_title }}</label>
+				{% for link in linklists[section_menu_alias].links limit:5 %}
+				<a href="{{ link.url }}" title="{{ link.title }}">• {{ link.title }}</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+{% assign info = settings.fot_info %}
+{% assign social = settings.fot_social %}
+{% assign c1_title = settings.fot_c1_title %}
+{% assign c1_menu = settings.fot_menu1 %}
+{% assign c2_title = settings.fot_c2_title %}
+{% assign c2_menu = settings.fot_menu2 %}
+{% assign c3_title = settings.fot_c3_title %}
+{% assign c3_menu = settings.fot_menu3 %}
+{% assign c4_title = settings.fot_c4_title %}
+{% assign c4_menu = settings.fot_menu4 %}
+{% assign c5_title = settings.fot_c5_title %}
+{% assign coppyright = settings.coppyright %}
+{% assign btt = settings.backtotop_enable %}
+
+<footer class="footer {% if template != "index" %}footer-other{% endif %}">		
+	{% if settings.footer_intro_html != blank %}
+<div class="footer-intro container" style="margin-bottom:30px;">
+	<div class="row">
+		<div class="col-xs-12 col-sm-3" style="text-align:center;margin-bottom:15px;">
+			{% if settings.footer_intro_logo_link != blank %}<a href="{{ settings.footer_intro_logo_link }}">{% endif %}
+			<img src="{{ 'footer_intro_logo.png' | asset_url }}" alt="D&T" loading="lazy" style="display:block;width:100%;max-width:220px;height:auto;margin:0 auto;">
+			{% if settings.footer_intro_logo_link != blank %}</a>{% endif %}
+		</div>
+		<div class="col-xs-12 col-sm-9 footer-intro__content">
+			{{ settings.footer_intro_html }}
+			
+			<!-- ĐƯA NÚT VÀO BÊN TRONG CÙNG KHUNG, NGAY DƯỚI 3 HUY HIỆU -->
+			{% if template == "index" %}
+			<div class="footer-intro-cta-wrap" style="margin-top: 18px;">
+				<button type="button" class="quote-request-button" data-quote-open>Yêu cầu báo giá</button>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endif %}
+	<div class="site-footer">		
+		<div class="container">			
+			<div class="footer-inner padding-top-10 padding-bottom-10">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 footer-widget">
+						<h4>{{c1_title}}</h4>
+						<ul class="widget-menu contact-info-page">
+							{% if settings.store_edit %}
+							<li><i class="fa fa-home color-x" aria-hidden="true"></i> {{ settings.store_company }}</li>
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i>
+								<a href="https://maps.app.goo.gl/aG68chLDCC27a43p7"
+								   target="_blank"
+								   rel="noopener noreferrer">
+									{{ settings.store_address }}
+								</a></li>
+
+							{% if settings.store_address_2_show %}
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i>
+								<a href="https://maps.app.goo.gl/3mP11AiSFgofZ6HcA"
+								   target="_blank"
+								   rel="noopener noreferrer">
+									{{ settings.store_address_2 }}
+								</a></li>
+							{% endif %}
+
+							{% if settings.store_address_3_show %}
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i> {{ settings.store_address_3 }}</li>
+							{% endif %}
+							
+							{% if settings.store_address_4_show %}
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i> {{ settings.store_address_4 }}</li>
+							{% endif %}
+							
+							{% if settings.store_address_5_show %}
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i> {{ settings.store_address_5 }}</li>
+							{% endif %}
+							
+							{% if settings.store_address_6_show %}
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i> {{ settings.store_address_6 }}</li>
+							{% endif %}
+
+							<li><i class="fa fa-phone color-x" aria-hidden="true"></i> <a href="tel:{{ settings.store_phone | remove: ' '}}" title="{{ settings.store_phone | remove: ' '}}">{{ settings.store_phone }}</a></li>
+							<li><i class="fa fa-envelope-o" aria-hidden="true"></i> <a href="mailto:{{ settings.store_email }}" title="{{ settings.store_email }}">{{ settings.store_email }}</a></li>
+							{% else %}
+							<li><i class="fa fa-map-marker color-x" aria-hidden="true"></i> {{ store.address }}, {{ store.province }}</li>
+							<li><i class="fa fa-phone color-x" aria-hidden="true"></i> <a href="tel:{{ store.phone_number | remove: ' ' }}" title="{{ store.phone_number | remove: ' ' }}">{{ store.phone_number }}</a></li>
+							<li><i class="fa fa-envelope-o" aria-hidden="true"></i> <a href="mailto:{{ store.customer_email }}" title="{{ store.customer_email }}">{{ store.customer_email }}</a></li>
+							{% endif %}
+						</ul>
+						<ul class="social">
+							<li class="fb">
+								<a href="{{ settings.social_facebook_link }}" target="_blank" aria-label="Facebook" title="Facebook" rel="nofollow">
+									<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25px" height="25px" viewBox="0 0 96.124 96.123" style="enable-background:new 0 0 96.124 96.123;" xml:space="preserve">
+										<path d="M72.089,0.02L59.624,0C45.62,0,36.57,9.285,36.57,23.656v10.907H24.037c-1.083,0-1.96,0.878-1.96,1.961v15.803   c0,1.083,0.878,1.96,1.96,1.96h12.533v39.876c0,1.083,0.877,1.96,1.96,1.96h16.352c1.083,0,1.96-0.878,1.96-1.96V54.287h14.654   c1.083,0,1.96-0.877,1.96-1.96l0.006-15.803c0-0.52-0.207-1.018-0.574-1.386c-0.367-0.368-0.867-0.575-1.387-0.575H56.842v-9.246   c0-4.444,1.059-6.7,6.848-6.7l8.397-0.003c1.082,0,1.959-0.878,1.959-1.96V1.98C74.046,0.899,73.17,0.022,72.089,0.02z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#EBE7E7"/>
+									</svg>
+								</a>
+							</li>
+							<li class="tt">
+								<a href="{{settings.social_twitter_link}}" target="_blank" aria-label="Twitter" title="Twitter" rel="nofollow">
+									<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="25px" height="25px">
+										<path d="M512,97.248c-19.04,8.352-39.328,13.888-60.48,16.576c21.76-12.992,38.368-33.408,46.176-58.016    c-20.288,12.096-42.688,20.64-66.56,25.408C411.872,60.704,384.416,48,354.464,48c-58.112,0-104.896,47.168-104.896,104.992    c0,8.32,0.704,16.32,2.432,23.936c-87.264-4.256-164.48-46.08-216.352-109.792c-9.056,15.712-14.368,33.696-14.368,53.056    c0,36.352,18.72,68.576,46.624,87.232c-16.864-0.32-33.408-5.216-47.424-12.928c0,0.32,0,0.736,0,1.152    c0,51.008,36.384,93.376,84.096,103.136c-8.544,2.336-17.856,3.456-27.52,3.456c-6.72,0-13.504-0.384-19.872-1.792    c13.6,41.568,52.192,72.128,98.08,73.12c-35.712,27.936-81.056,44.768-130.144,44.768c-8.608,0-16.864-0.384-25.12-1.44    C46.496,446.88,101.6,464,161.024,464c193.152,0,298.752-160,298.752-298.688c0-4.64-0.16-9.12-0.384-13.568    C480.224,136.96,497.728,118.496,512,97.248z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#EBE7E7"/>
+									</svg>
+								</a>
+							</li>
+							<li class="yt">
+								<a href="{{settings.social_pinterest_link}}" target="_blank" aria-label="Youtube" title="Youtube" rel="nofollow">
+									<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+										<path d="M490.24,113.92c-13.888-24.704-28.96-29.248-59.648-30.976C399.936,80.864,322.848,80,256.064,80
+												 c-66.912,0-144.032,0.864-174.656,2.912c-30.624,1.76-45.728,6.272-59.744,31.008C7.36,138.592,0,181.088,0,255.904
+												 C0,255.968,0,256,0,256c0,0.064,0,0.096,0,0.096v0.064c0,74.496,7.36,117.312,21.664,141.728
+												 c14.016,24.704,29.088,29.184,59.712,31.264C112.032,430.944,189.152,432,256.064,432c66.784,0,143.872-1.056,174.56-2.816
+												 c30.688-2.08,45.76-6.56,59.648-31.264C504.704,373.504,512,330.688,512,256.192c0,0,0-0.096,0-0.16c0,0,0-0.064,0-0.096
+												 C512,181.088,504.704,138.592,490.24,113.92z M192,352V160l160,96L192,352z"/>
+									</svg>
+								</a>
+							</li>
+							<li class="ins">
+								<a href="{{settings.social_instagram_link}}" target="_blank" aria-label="Instagram" title="Instagram" rel="nofollow">
+									<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m75 512h362c41.355469 0 75-33.644531 75-75v-362c0-41.355469-33.644531-75-75-75h-362c-41.355469 0-75 33.644531-75 75v362c0 41.355469 33.644531 75 75 75zm-45-437c0-24.8125 20.1875-45 45-45h362c24.8125 0 45 20.1875 45 45v362c0 24.8125-20.1875 45-45 45h-362c-24.8125 0-45-20.1875-45-45zm0 0"/><path d="m256 391c74.4375 0 135-60.5625 135-135s-60.5625-135-135-135-135 60.5625-135 135 60.5625 135 135 135zm0-240c57.898438 0 105 47.101562 105 105s-47.101562 105-105 105-105-47.101562-105-105 47.101562-105 105-105zm0 0"/><path d="m406 151c24.8125 0 45-20.1875 45-45s-20.1875-45-45-45-45 20.1875-45 45 20.1875 45 45 45zm0-60c8.269531 0 15 6.730469 15 15s-6.730469 15-15 15-15-6.730469-15-15 6.730469-15 15-15zm0 0"/></svg>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 footer-widget">
+						<h4>{{c2_title}}</h4>
+						<ul class="list-menu">
+							{% for link in linklists[c2_menu].links %}
+							<li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-3 footer-widget">
+						<h4>{{c3_title}}</h4>
+						<ul class="list-menu">
+							{% for link in linklists[c3_menu].links %}
+							<li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+							{% endfor %}
+						</ul>
+					</div>
+					<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 footer-widget">
+						<h4>{{c4_title}}</h4>
+						<div class="footer-payment">
+							<img src="{{ 'payment_1.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+							<img src="{{ 'payment_2.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+							<img src="{{ 'payment_3.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+							<img src="{{ 'payment_4.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+							<img src="{{ 'payment_5.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+							<img src="{{ 'payment_6.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+						</div>
+						<div class="bocongthuong">
+							<a target="_blank" href="{{ settings.bocongthuong_url }}" rel="nofollow">
+								<img style="max-width: 170px" src="{{ 'bocongthuong.png' | asset_url }}" alt="Bộ công thương">
+							</a>
+						</div>
+						<div id="fb-root"></div>
+						<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0" nonce="2kTuVyXh"></script>
+						<div class="fb-page" data-href="{{ settings.social_facebook_link }}" data-tabs="" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="{{ settings.social_facebook_link }}" class="fb-xfbml-parse-ignore"><a rel="nofollow" href="{{ settings.social_facebook_link }}">Fanpage</a></blockquote></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<div class="copyright clearfix">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-copyright">
+					{% if coppyright != "" %}
+						<span>
+							{{coppyright}} 
+							<span class="hidden-f">|Cung cấp bởi</span> 
+							<a href="https://www.sapo.vn/" title="Sapo" target="_blank" rel="nofollow">Sapo</a>
+						</span>
+					{% else %}
+					Bản quyền thuộc về <a href="https://www.sapo.vn" title="Sapo" rel="nofollow">Sapo</a> | Cung cấp bởi <a href="https://www.sapo.vn/?utm_campaign=cpn:site_khach_hang-plm:footer&amp;utm_source=site_khach_hang&amp;utm_medium=referral&amp;utm_content=fm:text_link-km:-sz:&amp;utm_term=&amp;campaign=site_khach_hang" title="Sapo" target="_blank" rel="nofollow">Sapo</a>
+					{%endif%}
+				</div>
+			</div>
+			{%if btt%}
+			<div class="back-to-top"><i class="fa fa-angle-up" aria-hidden="true"></i></div>
+			{%endif%}
+		</div>
+		
+	</div>
+
+<div id="quote-request-modal" class="quote-request-modal" hidden aria-hidden="true">
+	<div class="quote-request-dialog" role="dialog" aria-modal="true" aria-labelledby="quote-request-title">
+		<button type="button" class="quote-request-close" data-quote-close aria-label="Đóng">&times;</button>
+		<h2 id="quote-request-title">Yêu cầu báo giá</h2>
+		<p class="quote-request-intro">Vui lòng để lại thông tin, chúng tôi sẽ liên hệ tư vấn và báo giá.</p>
+		{% form 'contact' %}
+		{% if form.posted_successfully %}
+		<div class="quote-form-success" role="status">Cảm ơn bạn đã gửi yêu cầu báo giá. Chúng tôi sẽ liên hệ sớm nhất.</div>
+		{% endif %}
+		{% include 'form-errors-custom' %}
+		<div class="quote-request-grid">
+			<div class="quote-request-field">
+				<label for="quote-request-name">Họ tên <span>*</span></label>
+				<input id="quote-request-name" type="text" name="contact[name]" autocomplete="name" placeholder="Nhập họ tên" required>
+			</div>
+			<div class="quote-request-field">
+				<label for="quote-request-phone">Số điện thoại <span>*</span></label>
+				<input id="quote-request-phone" type="tel" name="contact[tel]" autocomplete="tel" placeholder="Nhập số điện thoại" required>
+			</div>
+			<div class="quote-request-field">
+				<label for="quote-request-email">Email <span>*</span></label>
+				<input id="quote-request-email" type="email" name="contact[email]" autocomplete="email" placeholder="name@example.com" required>
+			</div>
+			<div class="quote-request-field">
+				<label for="quote-request-company">Tên công ty</label>
+				<input id="quote-request-company" type="text" name="contact[company]" autocomplete="organization" placeholder="Tên công ty (không bắt buộc)">
+			</div>
+			<div class="quote-request-field">
+				<label for="quote-request-address">Địa chỉ</label>
+				<input id="quote-request-address" type="text" name="contact[address]" autocomplete="street-address" placeholder="Địa chỉ (không bắt buộc)">
+			</div>
+			<div class="quote-request-field">
+				<label for="quote-request-tax">Mã số thuế</label>
+				<input id="quote-request-tax" type="text" name="contact[tax_code]" placeholder="Mã số thuế (không bắt buộc)">
+			</div>
+			<div class="quote-request-field quote-request-message">
+				<label for="quote-request-body">Nội dung <span>*</span></label>
+				<textarea id="quote-request-body" name="contact[body]" rows="4" placeholder="Mô tả sản phẩm và số lượng cần báo giá" required></textarea>
+			</div>
+		</div>
+		<div class="quote-request-field quote-request-upload">
+			<label for="quote-request-file">Tệp đính kèm <span class="quote-request-optional">(không bắt buộc, tối đa 10 MB)</span></label>
+			<input id="quote-request-file" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" data-cloudinary-cloud-name="jq5uqgef" data-cloudinary-upload-preset="sapo_form_preset">
+		</div>
+		<input type="hidden" name="contact[attachment_url]" id="quote-request-attachment-url">
+		<p class="quote-request-status" data-quote-status role="status" aria-live="polite"></p>
+		<p class="quote-request-file-note">Tệp sẽ được tải lên Cloudinary an toàn qua unsigned preset; liên kết công khai sẽ được gửi kèm yêu cầu báo giá. Email nhận yêu cầu theo cấu hình liên hệ quản trị trong Sapo.</p>
+		<button type="submit" class="quote-request-submit">Gửi yêu cầu</button>
+		{% endform %}
+	</div>
+</div>
+<style>
+.quote-request-button,.quote-request-submit{border:0;border-radius:4px;background:#c52228;color:#fff;padding:11px 20px;font-weight:700;cursor:pointer}.quote-request-button:hover,.quote-request-submit:hover{background:#a91c22;color:#fff}.quote-product-cta{margin:8px 0 12px}.quote-footer-cta{text-align:center;padding:16px 15px}.quote-request-modal[hidden]{display:none!important}.quote-request-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55)}.quote-request-dialog{position:relative;width:min(600px,100%);max-height:calc(100vh - 32px);overflow-y:auto;background:#fff;border-radius:10px;padding:28px;box-shadow:0 12px 50px rgba(0,0,0,.25)}.quote-request-dialog h2{margin:0 40px 8px 0;color:#c52228;text-align:center;text-transform:uppercase;font-size:22px}.quote-request-intro{text-align:center;color:#666;margin:0 0 20px}.quote-request-close{position:absolute;right:14px;top:10px;border:0;background:none;color:#777;font-size:28px;line-height:1;cursor:pointer}.quote-request-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.quote-request-field label{display:block;margin:0 0 5px;font-weight:600}.quote-request-field label span{color:#c52228}.quote-request-field input,.quote-request-field textarea{width:100%;border:1px solid #d8d8d8;border-radius:5px;padding:10px 12px;box-sizing:border-box;font:inherit}.quote-request-field input:focus,.quote-request-field textarea:focus{outline:2px solid rgba(197,34,40,.18);border-color:#c52228}.quote-request-message{grid-column:1/-1}.quote-request-message textarea{resize:vertical}.quote-request-file-note{font-size:12px;line-height:1.5;color:#666;margin:12px 0}.quote-request-submit{width:100%;min-height:44px}.quote-form-success{padding:12px;margin-bottom:14px;background:#eaf7ed;color:#216e39;border-radius:5px}@media(max-width:575px){.quote-request-dialog{padding:24px 18px}.quote-request-grid{grid-template-columns:1fr}.quote-request-message{grid-column:auto}}
+.quote-request-upload input[type=file]{display:block;width:100%;padding:10px;border:1px dashed #c8c8c8;border-radius:5px;background:#fafafa;font:inherit}.quote-request-optional{color:#777;font-size:12px;font-weight:400}.quote-request-status{min-height:20px;margin:10px 0;color:#555;font-size:14px}.quote-request-status[data-state="error"]{color:#c52228}.quote-request-status[data-state="success"]{color:#216e39}.quote-request-submit:disabled{opacity:.65;cursor:wait}
+
+.footer-payment{display:grid;grid-template-columns:repeat(3,42px);gap:7px 6px;align-items:center;justify-content:start;width:max-content;max-width:100%}.footer-payment img{display:block;width:42px!important;height:26px;max-width:42px;object-fit:contain}
+</style>
+<script>
+(function(){
+	var modal=document.getElementById('quote-request-modal');
+	if(!modal)return;
+	var body=modal.querySelector('#quote-request-body');
+	var form=modal.querySelector('form');
+	var fileInput=modal.querySelector('#quote-request-file');
+	var fileUrlInput=modal.querySelector('#quote-request-attachment-url');
+	var status=modal.querySelector('[data-quote-status]');
+	var submitButton=modal.querySelector('.quote-request-submit');
+	var previousFocus=null;
+	var submitting=false;
+	var allowSubmit=false;
+	var metadataAdded=false;
+	function setStatus(message,state){if(!status)return;status.textContent=message;status.dataset.state=state||'';}
+	function openModal(trigger){
+		previousFocus=document.activeElement;
+		modal.hidden=false;
+		modal.setAttribute('aria-hidden','false');
+		document.body.style.overflow='hidden';
+		var product=trigger&&trigger.getAttribute('data-quote-product');
+		var url=trigger&&trigger.getAttribute('data-quote-url');
+		if(product&&body&&!body.value){body.value='Sản phẩm: '+product+(url?'\n'+url:'')+'\n\n';}
+		var first=modal.querySelector('input:not([type=hidden]),textarea,button[type=submit]');
+		if(first)first.focus();
+	}
+	function closeModal(){modal.hidden=true;modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(previousFocus)previousFocus.focus();}
+	document.addEventListener('click',function(event){
+		var trigger=event.target.closest('[data-quote-open]');
+		if(trigger){event.preventDefault();openModal(trigger);return;}
+		if(event.target===modal||event.target.closest('[data-quote-close]'))closeModal();
+	});
+	document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!modal.hidden)closeModal();});
+	var allowedExtensions=['jpg','jpeg','png','webp','gif','pdf','doc','docx','xls','xlsx','ppt','pptx','zip'];
+	function isAllowedFile(file){var parts=file.name.toLowerCase().split('.');return parts.length>1&&allowedExtensions.indexOf(parts.pop())!==-1;}
+	if(fileInput){fileInput.addEventListener('change',function(){if(fileInput.files&&fileInput.files[0]){var file=fileInput.files[0];if(!isAllowedFile(file)){fileInput.value='';setStatus('Định dạng tệp không được hỗ trợ. Hãy chọn ảnh, PDF, Office hoặc ZIP.','error');return;}if(file.size>10*1024*1024){fileInput.value='';setStatus('Tệp vượt quá giới hạn 10 MB. Vui lòng chọn tệp nhỏ hơn.','error');return;}setStatus('Đã chọn tệp: '+file.name,'');}else{setStatus('','');}});}
+	function addContactDetails(){if(metadataAdded)return;metadataAdded=true;var details=[];var address=form.querySelector('[name="contact[address]"]');var company=form.querySelector('[name="contact[company]"]');var tax=form.querySelector('[name="contact[tax_code]"]');if(address&&address.value.trim())details.push('Địa chỉ: '+address.value.trim());if(company&&company.value.trim())details.push('Công ty: '+company.value.trim());if(tax&&tax.value.trim())details.push('Mã số thuế: '+tax.value.trim());if(details.length&&body)body.value=body.value+'\n\n'+details.join('\n');}
+	async function uploadFile(file){var cloud=fileInput.dataset.cloudinaryCloudName;var preset=fileInput.dataset.cloudinaryUploadPreset;if(!cloud||!preset)throw new Error('Thiếu cấu hình Cloudinary cloud name hoặc unsigned upload preset.');var data=new FormData();data.append('file',file);data.append('upload_preset',preset);var response=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(cloud)+'/auto/upload',{method:'POST',body:data});var result;try{result=await response.json();}catch(error){throw new Error('Cloudinary trả về phản hồi không hợp lệ.');}if(!response.ok||!result.secure_url)throw new Error(result.error&&result.error.message?result.error.message:'Không tải được tệp lên Cloudinary.');return result.secure_url;}
+	if(form){form.addEventListener('submit',async function(event){if(allowSubmit){addContactDetails();return;}event.preventDefault();if(submitting)return;submitting=true;submitButton.disabled=true;try{var file=fileInput&&fileInput.files&&fileInput.files[0];if(file){if(!isAllowedFile(file))throw new Error('Định dạng tệp không được hỗ trợ. Hãy chọn ảnh, PDF, Office hoặc ZIP.');if(file.size>10*1024*1024)throw new Error('Tệp vượt quá giới hạn 10 MB. Vui lòng chọn tệp nhỏ hơn.');setStatus('Đang tải tệp lên Cloudinary...','');var fileUrl=await uploadFile(file);fileUrlInput.value=fileUrl;if(body)body.value=body.value+'\n\nTệp đính kèm: '+fileUrl;setStatus('Tải tệp thành công. Đang gửi yêu cầu báo giá...','success');}else{setStatus('Đang gửi yêu cầu báo giá...','');}addContactDetails();allowSubmit=true;form.requestSubmit(event.submitter||undefined);}catch(error){submitting=false;submitButton.disabled=false;setStatus('Không thể gửi yêu cầu: '+(error&&error.message?error.message:'Lỗi không xác định.')+' Vui lòng thử lại.','error');}});}
+	if(modal.querySelector('.quote-form-success')){setStatus('Yêu cầu báo giá đã được gửi thành công.','success');openModal(null);}
+})();
+</script>
+<script>
+(function(){
+	if(!window.matchMedia('(max-width: 767px)').matches)return;
+	document.querySelectorAll('.section_group_product.background-title .section_tab_product-owl').forEach(function(carousel){
+		Array.prototype.slice.call(carousel.children,8).forEach(function(item){item.remove();});
+	});
+})();
+</script>
+</footer>

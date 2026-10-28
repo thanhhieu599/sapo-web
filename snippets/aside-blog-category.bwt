@@ -1,0 +1,42 @@
+<aside class="aside-item collection-category blog-category">	
+	<div class="heading">
+		<h2 class="title-head"><span>{{ settings.blogs_aside_category_title }}</span></h2>
+	</div>	
+	<div class="aside-content">
+		<nav class="nav-category  navbar-toggleable-md" >
+			<ul class="nav navbar-pills">
+				{% for link in linklists[settings.blogs_aside_category_menu].links %}
+				{% if linklists[link.alias] %}
+				<li class="nav-item {% if link.active %}active{% endif %}">
+					<a href="{{ link.url }}" class="nav-link" title="{{ link.title }}">{{ link.title }}</a>
+					<i class="fa fa-angle-down" ></i>
+					<ul class="dropdown-menu">
+						{% for childlink in linklists[link.alias].links %}
+						{% if linklists[childlink.alias] %}
+						<li class="dropdown-submenu nav-item">
+							<a class="nav-link" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+							<i class="fa fa-angle-down" ></i>
+							<ul class="dropdown-menu">
+								{% for childlink2 in linklists[childlink.alias].links %}
+								<li class="dropdown-submenu nav-item">
+									<a class="nav-link" href="{{ childlink2.url }}" title="{{ childlink2.title }}">{{ childlink2.title }}</a>
+								</li>
+								{% endfor %}
+							</ul>                      
+						</li>
+						{% else %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{ childlink.url }}" title="{{ childlink.title }}">{{ childlink.title }}</a>
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</li>
+				{% else %}
+				<li class="nav-item {% if link.active %}active{% endif %}"><a class="nav-link" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+		</nav>
+	</div>
+</aside>

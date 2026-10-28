@@ -1,0 +1,288 @@
+{% comment %}
+Giu cart_sidebar va cac class/ID ben duoi
+{% endcomment %}
+<style>
+#cart-sidebars .ttb-popup-view-cart{display:flex;align-items:center;justify-content:center;width:100%;min-height:40px;margin:0 0 10px;padding:10px 12px;background:#fff;color:#bb2025;border:1px solid #bb2025;text-decoration:none;font-weight:600;line-height:1.4;text-align:center;box-sizing:border-box}
+#cart-sidebars .ttb-popup-view-cart:hover{background:#fff3f3;color:#96191d}
+#cart-sidebars .ttb-popup-view-cart:focus-visible{outline:3px solid #7ca7cc;outline-offset:2px}
+#cart-sidebars #ttb-popup-status{margin:8px 12px;color:#64748b;font-size:12px;line-height:1.5}
+#cart-sidebars #ttb-popup-status.ttb-popup-error{color:#b42318}
+#cart-sidebars .cart_body[inert]{opacity:.6}
+#cart-sidebars .ttb-popup-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;min-height:min(360px,calc(100dvh - 140px));padding:36px 24px;text-align:center;box-sizing:border-box}
+#cart-sidebars .ttb-popup-empty-icon{display:flex;align-items:center;justify-content:center;width:120px;height:120px;flex-shrink:0;margin:0 0 22px;border-radius:50%;background:#fff3f3;color:#bb2025}
+#cart-sidebars .ttb-popup-empty-icon svg{display:block;width:78px;height:78px}
+#cart-sidebars .ttb-popup-empty p{margin:0 0 22px;color:#38434d;font-size:16px;font-weight:500;line-height:1.5}
+#cart-sidebars .ttb-popup-empty .ttb-popup-empty-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;max-width:100%;padding:11px 24px;border:1px solid #bb2025;border-radius:3px;background:#bb2025;color:#fff;font-size:14px;font-weight:600;line-height:1.4;text-decoration:none;box-sizing:border-box}
+#cart-sidebars .ttb-popup-empty .ttb-popup-empty-button:hover{background:#96191d;border-color:#96191d;color:#fff}
+#cart-sidebars .ttb-popup-empty .ttb-popup-empty-button:focus-visible{outline:3px solid #7ca7cc;outline-offset:3px}
+
+/* Responsive popup - chi ap dung tren mobile. */
+@media (max-width: 767px) {
+  #cart-sidebars,
+  #cart-sidebars * { box-sizing: border-box; }
+
+  #cart-sidebars {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    transform: translate3d(100%, 0, 0);
+    -webkit-transform: translate3d(100%, 0, 0);
+    visibility: hidden;
+  }
+
+  #cart-sidebars.active {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    visibility: visible;
+  }
+
+  #cart-sidebars .cart_heading {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    padding: 12px 16px;
+  }
+  #cart-sidebars .cart_title {
+    float: none;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+  }
+  #cart-sidebars .cart_btn-close {
+    float: none;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    margin: 0 0 0 12px;
+    line-height: 38px;
+  }
+
+  #cart-sidebars .cart_body {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    padding: 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  #cart-sidebars .cart_product { display: flex; width: 100%; }
+  #cart-sidebars .cart_image { flex: 0 0 64px; width: 64px; }
+  #cart-sidebars .cart_image img { display: block; width: 100%; height: auto; }
+  #cart-sidebars .cart_info { flex: 1 1 0; min-width: 0; padding-left: 12px; }
+  #cart-sidebars .cart_name a { white-space: normal; overflow-wrap: anywhere; }
+  #cart-sidebars .row-cart-left { display: flex; flex-wrap: wrap; gap: 8px; }
+  #cart-sidebars .cart_item_name { float: none; flex: 1 1 104px; width: auto; }
+  #cart-sidebars .cart_prices { float: none; flex: 1 1 90px; width: auto; }
+  #cart-sidebars .cart_select .input-group-btn { display: flex; width: auto; }
+  #cart-sidebars .cart_select button { flex: 0 0 32px; width: 32px; height: 36px; }
+  #cart-sidebars .cart_select input { flex: 0 0 40px; width: 40px; height: 36px; min-height: 36px; }
+
+  #cart-sidebars #ttb-popup-status {
+    flex: 0 0 auto;
+    max-height: 20vh;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+  }
+  #cart-sidebars .cart-footer {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+  }
+  #cart-sidebars .cart-footer hr { margin: 0 0 12px; }
+  #cart-sidebars .cart__btn-proceed-checkout-dt { padding-top: 0; }
+  #cart-sidebars .ttb-popup-view-cart,
+  #cart-sidebars #btn-proceed-checkout {
+    width: 100%;
+    min-height: 44px;
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  #cart-sidebars .ttb-popup-empty {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 24px 12px;
+  }
+  #cart-sidebars .ttb-popup-empty p { white-space: normal; overflow-wrap: anywhere; }
+}
+</style>
+<div id="myModal" class="modal fade" role="dialog"></div>
+<div class="cart_sidebar" id="cart-sidebars">
+  <div class="clearfix cart_heading">
+    <h4 class="cart_title">Giỏ hàng<span class="abcb">(<span class="cart-popup-count"></span> Sản phẩm)</span></h4>
+    <div class="cart_btn-close" title="Tiếp tục mua sắm!"><i class="fa fa-close"></i></div>
+  </div>
+  <div class="cart_body"></div>
+  <p id="ttb-popup-status" role="status" aria-live="polite" hidden></p>
+  <div class="cart-footer">
+    <hr>
+    <div class="clearfix">
+      <div class="cart__subtotal">
+        <div class="cart__col-6">Thành tiền:</div>
+        <div class="text-right cart__totle"><span class="total-price"></span></div>
+      </div>
+    </div>
+    <div class="cart__btn-proceed-checkout-dt">
+      <a href="/cart" class="ttb-popup-view-cart" title="Xem chi tiết giỏ hàng">Xem chi tiết giỏ hàng</a>
+      <button onclick="location.href='/checkout'" type="button" class="button btn btn-default cart__btn-proceed-checkout" id="btn-proceed-checkout">Tiến hành thanh toán</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var sidebar = document.getElementById('cart-sidebars');
+  if (!sidebar || window.TTBCartBridge) return;
+  var body = sidebar.querySelector('.cart_body');
+  var message = document.getElementById('ttb-popup-status');
+  var refreshing = null;
+  function renderEmptyState() {
+    body.innerHTML = '<div class="ttb-popup-empty"><span class="ttb-popup-empty-icon" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14h10l8 38h35l9-27H21M29 52l-3 9h36"/><circle cx="31" cy="69" r="3"/><circle cx="59" cy="69" r="3"/></svg></span><p>Giỏ hàng của bạn đang trống.</p><a class="ttb-popup-empty-button" href="/collections/all">Tiếp tục mua sắm</a></div>';
+  }
+  function restoreLegacyEmptyState() {
+    if (body.querySelector('.cart_product') || !body.querySelector('.cart-empty')) return;
+    renderEmptyState();
+  }
+  function status(text, error) {
+    message.textContent = text;
+    message.hidden = !text;
+    message.classList.toggle('ttb-popup-error', !!error);
+  }
+  function decorate(cart) {
+    // Theme hien tai dung prependTo, nen thu tu popup nguoc cart.items.
+    var items = cart.items.slice().reverse();
+    body.querySelectorAll('.cart_product').forEach(function (row, i) {
+      var item = items[i];
+      if (!item) return;
+      row.dataset.ttbVariantId = String(item.variant_id != null ? item.variant_id : item.id);
+      row.dataset.ttbProperties = JSON.stringify(item.properties || {});
+    });
+    sidebar.querySelector('.cart-footer').style.display = cart.items.length ? '' : 'none';
+    if (!cart.items.length) renderEmptyState();
+  }
+  function install() {
+    var bizweb = window.Bizweb;
+    if (!bizweb || typeof bizweb.updateCartPopupForm !== 'function') return false;
+    if (!bizweb.updateCartPopupForm.ttbSync) {
+      var render = bizweb.updateCartPopupForm;
+      var wrapped = function (cart) {
+        var result = render.apply(this, arguments);
+        if (cart && Array.isArray(cart.items)) {
+          decorate(cart);
+          window.dispatchEvent(new CustomEvent('ttb:cart-sync', {detail:cart}));
+        }
+        return result;
+      };
+      wrapped.ttbSync = true;
+      bizweb.updateCartPopupForm = wrapped;
+    }
+    ['onCartUpdateClick', 'onCartRemoveClick'].forEach(function (name) {
+      var previous = bizweb[name];
+      if (typeof previous !== 'function' || previous.ttbSync) return;
+      var wrapped = function (cart) {
+        var result = previous.apply(this, arguments);
+        bizweb.updateCartPopupForm(cart, '#cart-sidebars .cart_body');
+        return result;
+      };
+      wrapped.ttbSync = true;
+      bizweb[name] = wrapped;
+    });
+    return true;
+  }
+  function render(cart) {
+    if (!install()) throw new Error('Chưa tải được JavaScript giỏ hàng của theme. Vui lòng tải lại trang.');
+    window.Bizweb.updateCartPopupForm(cart, '#cart-sidebars .cart_body');
+  }
+  async function readCart() {
+    var response = await fetch('/cart.js', {credentials:'same-origin', cache:'no-store', headers:{Accept:'application/json'}});
+    var cart = await response.json();
+    if (!response.ok || !cart || !Array.isArray(cart.items)) throw new Error('Không đọc được giỏ hàng. Vui lòng đóng rồi mở lại popup.');
+    return cart;
+  }
+  function refresh() {
+    if (refreshing) return refreshing;
+    status('Đang đồng bộ giỏ hàng…');
+    body.inert = true;
+    refreshing = (async function () {
+      try {
+        if (window.TTBCartPage) {
+          if (await window.TTBCartPage.sync() === false) return;
+        } else render(await readCart());
+        status('');
+      } catch (error) { status(error.message || 'Chưa đồng bộ được giỏ hàng. Vui lòng thử lại.', true); }
+      finally { body.inert = false; refreshing = null; }
+    })();
+    return refreshing;
+  }
+  window.TTBCartBridge = {render:render, refresh:refresh, status:status};
+  function context(row) {
+    var input = row.querySelector('.variantID');
+    return {variantId:row.dataset.ttbVariantId || (input && input.value), properties:row.dataset.ttbProperties || '{}'};
+  }
+  document.addEventListener('click', function (event) {
+    var remove = event.target.closest('#cart-sidebars .remove-item-cart');
+    if (remove) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      var row = remove.closest('.cart_product'), item = context(row);
+      if (window.TTBCartPage) window.TTBCartPage.remove(item, remove);
+      else if (window.confirm('Bạn thật sự muốn bỏ sản phẩm này khỏi giỏ hàng?')) {
+        if (typeof window.removeItemCart === 'function') window.removeItemCart(item.variantId);
+        else status('Chưa tải được chức năng xóa. Vui lòng tải lại trang.', true);
+      }
+      return;
+    }
+    var button = event.target.closest('#cart-sidebars .cart_body .items-count');
+    if (!button || !window.TTBCartPage) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var row = button.closest('.cart_product');
+    var input = row.querySelector('.number-sidebar'), n = Number(input.value);
+    var step = button.classList.contains('btn-minus') ? -1 : 1;
+    input.value = Math.max(1, (Number.isSafeInteger(n) && n > 0 ? n : 1) + step);
+    window.TTBCartPage.quantity(context(row), input.value);
+  }, true);
+  function inputChanged(event) {
+    var input = event.target.closest('#cart-sidebars .cart_body .number-sidebar');
+    if (!input || !window.TTBCartPage) return;
+    event.stopImmediatePropagation();
+    window.TTBCartPage.quantity(context(input.closest('.cart_product')), input.value);
+  }
+  document.addEventListener('input', inputChanged, true);
+  document.addEventListener('change', inputChanged, true);
+  var observer = new MutationObserver(function () {
+    if (sidebar.classList.contains('active')) refresh();
+  });
+  observer.observe(sidebar, {attributes:true, attributeFilter:['class']});
+  var emptyObserver = new MutationObserver(restoreLegacyEmptyState);
+  emptyObserver.observe(body, {childList:true});
+  restoreLegacyEmptyState();
+  install();
+  document.addEventListener('DOMContentLoaded', function () { install(); if (sidebar.classList.contains('active')) refresh(); });
+  if (sidebar.classList.contains('active')) refresh();
+})();
+</script>

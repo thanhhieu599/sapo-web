@@ -1,0 +1,42 @@
+<div class="header-bar hidden-lg-down">
+	<div class="fix-height-img">
+		<img src="{{'topbar.jpg'|asset_url}}" alt="topbar">
+	</div>
+	<div class="header-bar-inner">
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-sm-6 col-xs-2">
+					{%comment%}
+					<div class="mobile-menu dropdown-toggle hidden-lg hidden-md">       
+						<a class="menu-icon" href="#" title="">{% include 'svgs' with 'menu' %}</a>
+						<div class="dropdown-content">
+							{% include 'site-nav' with 'mobile' %} 
+						</div>
+					</div>
+					{%endcomment%}
+					{% if settings.header_message1 != "" %}
+					<ul class="list-inline message hidden-sm hidden-xs">
+						{% if settings.header_message1 != "" %}
+						<li>
+							<p>{{settings.header_message1}}</p>
+						</li>
+						{% endif %}
+
+
+					</ul>
+					{% endif %}          
+				</div>
+				<div class="col-md-6 col-sm-6 d-list col-xs-10 a-right">
+					{% assign topbar_menu = settings.topbar_menu %}
+					{% for link in linklists[topbar_menu].links %}
+					<span><a href="{{ link.url }}">{{ link.title }}</a></span>
+					{% endfor %}
+
+
+				</div>
+			</div>
+
+		</div>    
+	</div>
+</div>

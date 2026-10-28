@@ -1,0 +1,217 @@
+{% include 'ttb-home-product-styles' %}
+{% comment %}
+  SECTION NHÓM SẢN PHẨM SỐ 1 - bản đã sửa banner
+  Dán thay toàn bộ nội dung file section cũ (file đang chứa settings.group_product_sec_tab_1_col).
+  Với section 2, 3, 4...: copy file này, đổi mọi số 1 thành 2, 3, 4 (xem danh sách cuối file).
+{% endcomment %}
+
+{% if collections[settings.group_product_sec_tab_1_col].products.size > 0 %}
+	{% assign section_group_products_alias = settings.group_product_sec_tab_1_col %}
+	{% assign section_group_products_limit = settings.group_product_limit_1 %}
+{% else %}
+	{% assign section_group_products_alias = 'frontpage' %}
+	{% assign section_group_products_limit = 8 %}
+{% endif %}
+
+{% assign section_group_banner_image = collections[section_group_products_alias].image %}
+{% if section_group_banner_image == blank %}
+	{% assign section_group_banner_image = collections[section_group_products_alias].products.first.featured_image %}
+{% endif %}
+
+{% assign section_group_banner_link = settings.group_product_banner_link_1 %}
+{% if section_group_banner_link == blank %}
+	{% assign section_group_banner_link = collections[section_group_products_alias].url %}
+{% endif %}
+
+{% if linklists[settings.group_product_menu1].links.size > 0 %}
+	{% assign section_menu_alias = settings.group_product_menu1 %}
+{% else %}
+	{% assign section_menu_alias = 'main-menu' %}
+{% endif %}
+
+<div class="section_group_product section_group_product_1 background-title">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box-shock">
+
+					<div class="barbox clearfix">
+						<h2 class="titlecate">{{ settings.group_product_sec_tab_1_title }}</h2>
+						{% if linklists[settings.group_product_menu1].links.size > 0 %}
+						<div class="menu-button-edit">
+							<i class="fa fa-navicon" aria-hidden="true"></i>
+						</div>
+						<ul>
+							{% for link in linklists[section_menu_alias].links limit: 5 %}
+							<li><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></li>
+							{% endfor %}
+							<li><a href="{{ collections[section_group_products_alias].url }}" class="viewmoretext" title="Xem tất cả">Xem tất cả</a></li>
+						</ul>
+						{% endif %}
+					</div>
+
+					<div class="row category-group-products-row">
+						{% if section_group_banner_image %}
+						<div class="col-md-2 category-group-banner">
+							<a href="{{ section_group_banner_link }}" class="cgb-link" title="{{ settings.group_product_sec_tab_1_title }}">
+								<img src="{{ 'group_product_banner_1.jpg' | asset_url }}"
+								     data-banner-fallback="{{ section_group_banner_image | img_url: 'large' }}"
+								     onerror="if(this.dataset.bannerFallback){this.onerror=null;this.src=this.dataset.bannerFallback;}"
+								     alt="{{ settings.group_product_sec_tab_1_title }}"
+								     loading="lazy">
+								<span class="cgb-overlay">
+									<span class="cgb-title">{{ settings.group_product_sec_tab_1_title }}</span>
+									<span class="cgb-btn">Xem ngay</span>
+								</span>
+							</a>
+						</div>
+						{% endif %}
+
+						<div class="{% if section_group_banner_image %}col-md-10{% else %}col-md-12{% endif %}">
+							<div class="section_tab_product-owl owl-carousel owl-theme not-dqowl">
+								{% for product in collections[section_group_products_alias].products limit: section_group_products_limit %}
+								<div class="item">
+									{% include 'product-grid-item' %}
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+/* ===== Banner cột trái các khối nhóm sản phẩm ===== */
+/* Có thể chuyển khối CSS này sang file CSS trong assets để dùng chung cho mọi section */
+
+.category-group-products-row {
+	display: flex;
+	align-items: stretch;
+}
+.category-group-products-row:before,
+.category-group-products-row:after {
+	display: none;
+}
+.category-group-products-row > div {
+	min-width: 0;
+}
+
+/* Cột banner: khung cố định, ảnh phủ kín bất kể tỉ lệ ảnh gốc */
+.category-group-products-row > .category-group-banner {
+	position: relative;
+	flex: 0 0 20%;
+	width: 20%;
+	max-width: 20%;
+	min-height: 340px;
+	padding: 0;
+	float: none;
+}
+.category-group-products-row > .category-group-banner + div {
+	flex: 1 1 0;
+	width: auto;
+	max-width: none;
+	padding-left: 15px;
+	float: none;
+}
+.category-group-products-row > .col-md-12 {
+	flex: 1 1 100%;
+	float: none;
+}
+
+.category-group-banner .cgb-link {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	overflow: hidden;
+	background: #f3f3f3;
+}
+.category-group-banner .cgb-link img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	transition: transform .4s ease;
+}
+.category-group-banner .cgb-link:hover img {
+	transform: scale(1.05);
+}
+
+/* Lớp phủ tên danh mục + nút */
+.category-group-banner .cgb-overlay {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 44px 14px 16px;
+	background: linear-gradient(to top, rgba(0, 0, 0, .7), rgba(0, 0, 0, 0));
+	color: #fff;
+	text-align: center;
+}
+.category-group-banner .cgb-title {
+	display: block;
+	margin-bottom: 10px;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.3;
+}
+.category-group-banner .cgb-btn {
+	display: inline-block;
+	padding: 7px 18px;
+	border-radius: 3px;
+	background: #bf2026;
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.2;
+}
+.category-group-banner .cgb-link:hover .cgb-btn {
+	background: #a01a20;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+	.category-group-products-row > .category-group-banner {
+		flex: 0 0 28%;
+		width: 28%;
+		max-width: 28%;
+		min-height: 280px;
+		padding: 0 0 0 5px;
+	}
+	.category-group-products-row > .category-group-banner + div {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.category-group-banner .cgb-link {
+		left: 5px;
+	}
+	.category-group-banner .cgb-overlay {
+		padding: 24px 6px 10px;
+	}
+	.category-group-banner .cgb-title {
+		margin-bottom: 0;
+		font-size: 12px;
+	}
+	.category-group-banner .cgb-btn {
+		display: none;
+	}
+}
+</style>
+
+{% comment %}
+  KHI NHÂN BẢN CHO SECTION KHÁC, ĐỔI CÁC CHỖ SAU (số 1 -> 2, 3, 4...):
+  - class section_group_product_1
+  - settings.group_product_sec_tab_1_col
+  - settings.group_product_limit_1
+  - settings.group_product_banner_link_1
+  - settings.group_product_menu1
+  - settings.group_product_sec_tab_1_title (có 4 chỗ)
+  - 'group_product_banner_1.jpg'
+  Khối <style> chỉ cần giữ ở 1 section (hoặc chuyển sang file CSS), các section còn lại xóa đi.
+{% endcomment %}

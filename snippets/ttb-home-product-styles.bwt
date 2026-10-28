@@ -1,0 +1,8 @@
+{% comment %}Cập nhật ngày 27/10/2026{% endcomment %}
+{% comment %}Shared homepage styles; include from existing product sections. Do not include in product-grid-item.{% endcomment %}
+{% if template == 'index' %}
+  {% unless ttb_home_product_styles_loaded %}
+    {% assign ttb_home_product_styles_loaded = true %}
+    {{ 'ttb-home-products.css' | asset_url | stylesheet_tag }}
+  {% endunless %}
+{% endif %}

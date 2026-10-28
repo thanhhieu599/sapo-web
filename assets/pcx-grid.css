@@ -1,0 +1,34 @@
+/* ===== KHUNG SẢN PHẨM ĐỀU NHAU - TOÀN WEBSITE - trangthietbi.vn =====
+   Gọi trong theme.bwt, ngay trên </head>:
+   {{ 'pcx-grid.css' | asset_url | stylesheet_tag }} */
+
+/* 1. Lưới trang danh mục / tìm kiếm: xếp hàng bằng flex, hết lủng lỗ */
+.products-view-grid .row,
+.category-products .row,
+.category-products .products-view-grid,
+.row:has(> [class*="col-"] .product-box){display:flex!important;flex-wrap:wrap!important}
+.products-view-grid .row::before,.products-view-grid .row::after,
+.category-products .row::before,.category-products .row::after,
+.row:has(> [class*="col-"] .product-box)::before,
+.row:has(> [class*="col-"] .product-box)::after{display:none!important}
+.products-view-grid [class*="col-"],
+.category-products [class*="col-"],
+.row > [class*="col-"]:has(.product-box){display:flex!important;flex-direction:column;float:none!important;margin-bottom:15px}
+.products-view-grid [class*="col-"] > *,
+.category-products [class*="col-"] > *{flex:1 1 auto}
+
+/* 2. Thanh trượt trang chủ, sản phẩm cùng loại */
+.owl-carousel .owl-stage{display:flex!important}
+.owl-carousel .owl-item{display:flex!important;height:auto!important}
+.owl-carousel .owl-item > .item{display:flex!important;flex:1 1 auto;width:100%}
+
+/* 3. Khung sản phẩm */
+.product-box{display:flex!important;flex-direction:column!important;flex:1 1 auto;width:100%;height:auto!important;margin-bottom:0!important;box-sizing:border-box}
+.product-box .product-thumbnail{flex:0 0 auto;background:#fff!important}
+.product-box .product-image-flip a{display:flex!important;align-items:center;justify-content:center;aspect-ratio:1/1;overflow:hidden;background:#fff}
+.product-box .product-image-flip img{width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain}
+.product-box .product-info{display:flex!important;flex-direction:column!important;flex:1 1 auto}
+.product-box .product-name{min-height:2.8em}
+.product-box .price-box{min-height:44px}
+.product-box .pcx-actions{margin-top:auto!important}
+

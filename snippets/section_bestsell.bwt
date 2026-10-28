@@ -1,0 +1,33 @@
+{% include 'ttb-home-product-styles' %}
+{% if collections[settings.sec_feature_product_col].products.size > 0 %}
+{% assign module_new_products_alias = settings.sec_feature_product_col %}
+{% assign module_new_products_limit = settings.sec_feature_product_limit %}
+{% else %}
+{% assign module_new_products_alias = 'frontpage' %}
+{% assign module_new_products_limit = 6 %}
+{% endif %}
+{% comment %} Chỉ hiện sản phẩm đủ thông tin mua hàng (1 phiên bản, còn hàng, giá > 0); đếm để vẫn đủ số lượng giới hạn {% endcomment %}
+{% assign bestsell_limit = module_new_products_limit | plus: 0 %}
+{% assign bestsell_shown = 0 %}
+<div class="section_bestsell">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<h2>{{ settings.sec_feature_product_title }}</h2>
+				<h4>{{ settings.sec_feature_product_content }}</h4>
+			</div>
+			<div class="col-md-12">
+				<div class="section-feature-product-slider owl-carousel not-dqowl">
+					{% for product in collections[module_new_products_alias].products %}
+					{% if bestsell_shown < bestsell_limit and product.available and product.variants.size == 1 and product.price_min > 0 %}
+					{% assign bestsell_shown = bestsell_shown | plus: 1 %}
+					<div class="item">
+						{% include 'product-grid-item' %}
+					</div>
+					{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

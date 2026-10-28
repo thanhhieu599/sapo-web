@@ -1,0 +1,321 @@
+{% layout none %}
+<title>
+	{%if page_title == 'All'%}Tất cả sản phẩm{%else%}{{ page_title }}{%endif%}
+	{% if current_tags %} tagged "{{ current_tags | join: ', ' }}"{% endif %}
+	{% if current_page != 1 %} - Trang {{ current_page }}{% endif %}
+	{% unless page_title contains store.name %} | {{ store.name }}{% endunless %}			
+</title>		
+<!-- ================= Page description ================== -->
+{% if page_description != ""%}
+<meta name="description" content="{{ page_description | escape }}">
+{% endif %}
+<!-- ================= Meta ================== -->
+{%if template contains 'index'%}{%if settings.home_page_keywords != '' and settings.home_page_keywords != null%}<meta name="keywords" content="{{settings.home_page_keywords}}"/>{%else%}<meta name="keywords" content="{{store.name}}, {{store.domain}}"/>{%endif%}{%elsif template contains 'product'%}<meta name="keywords" content="{{product.name}}, {%for collection in product.collections%}{{collection.name}}, {%endfor%}{%if product.tags.size > 0%}{% for tag in product.tags %}{{tag}}, {%endfor%}{%endif%}{{store.name}}, {{store.domain}}"/>{%elsif template contains 'collection'%}<meta name="keywords" content="{{collection.name }}, {{store.name}}, {{store.domain}}"/>{%elsif template contains 'blog'%}<meta name="keywords" content="{{blog.name }}, {{store.name}}, {{store.domain}}"/>{%elsif template contains 'article'%}<meta name="keywords" content="{{article.title}}, {{blog.name}}, {%if article.tags.size > 0%}{% for tag in article.tags %}{{tag}}, {%endfor%}{%endif%} {{store.name}}, {{store.domain}}"/>{%else%}<meta name="keywords" content="{{page_title}}, {{store.name}}, {{store.domain}}"/>{%endif%}		
+<link rel="canonical" href="{{ canonical_url }}"/>
+<meta name='revisit-after' content='1 days' />
+<meta name="robots" content="noodp,index,follow" />
+<!-- ================= Favicon ================== -->
+<link rel="icon" href="{{ 'favicon.png' | asset_url }}" type="image/x-icon" />
+<link href="https://bizweb.dktcdn.net/100/183/481/themes/240176/assets/ec_documenter_style.css" media="all" rel="stylesheet" />
+<link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<script src="https://bizweb.dktcdn.net/100/183/481/themes/240176/assets/jquery.js"></script>
+<script src="https://bizweb.dktcdn.net/100/183/481/themes/240176/assets/jquery.scrollto.js"></script>
+<script src="https://bizweb.dktcdn.net/100/183/481/themes/240176/assets/jquery.easing.js"></script>
+<script>document.createElement('section');var duration='290',easing='swing';</script>
+<script src="https://bizweb.dktcdn.net/100/183/481/themes/240176/assets/ec_script.js"></script>
+<style type="text/css">html{background-color:#F1F1F1;color:#383838;}
+	::-moz-selection{background:#F94E3F;color:#FFFFFF;}
+	::selection{background:#F94E3F;color:#FFFFFF;}
+	#documenter_sidebar #documenter_logo{background-image:url(https://bizweb.dktcdn.net/100/183/481/files/ec-image-34.png);}
+	a{color:#F94E3F;}
+	.btn {
+		border-radius:3px;
+	}
+	.btn-primary {
+		background-image: -moz-linear-gradient(top, #F94E3F, #F94E3F);
+		background-image: -ms-linear-gradient(top, #F94E3F, #F94E3F);
+		background-image: -webkit-gradient(linear, 0 0, 0 F94E3F%, from(#333333), to(#F94E3F));
+		background-image: -webkit-linear-gradient(top, #F94E3F, #F94E3F);
+		background-image: -o-linear-gradient(top, #F94E3F, #F94E3F);
+		background-image: linear-gradient(top, #F94E3F, #F94E3F);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F94E3F', endColorstr='#F94E3F', GradientType=0);
+		border-color: #F94E3F #F94E3F #bfbfbf;
+		color:#FFFFFF;
+	}
+	.btn-primary:hover,
+	.btn-primary:active,
+	.btn-primary.active,
+	.btn-primary.disabled,
+	.btn-primary[disabled] {
+		border-color: #F94E3F #F94E3F #bfbfbf;
+		background-color: #F94E3F;
+	}
+	hr{border-top:1px solid #EBEBEB;border-bottom:1px solid #FFFFFF;}
+	#documenter_sidebar, #documenter_sidebar ul a{background-color:#333333;color:#FFFFFF;}
+	#documenter_sidebar ul a{-webkit-text-shadow:1px 1px 0px #333333;-moz-text-shadow:1px 1px 0px #333333;text-shadow:1px 1px 0px #333333;}
+	#documenter_sidebar ul{border-top:1px solid #E1E1E1;}
+	#documenter_sidebar ul a{border-top:1px solid #333333;border-bottom:1px solid #E1E1E1;color:#FFFFFF;}
+	#documenter_sidebar ul a:hover{background:#F94E3F;color:#FFFFFF;border-top:1px solid #F94E3F;}
+	#documenter_sidebar ul a.current{background:#F94E3F;color:#FFFFFF;border-top:1px solid #F94E3F;}
+	#documenter_copyright{display:block !important;visibility:visible !important;}
+	#admin_bar_iframe{display:none;}
+	#documenter_content img{max-width:100% !important;height:auto !important;width:auto !important;}
+</style>
+<div id="documenter_sidebar">
+	<ul id="documenter_nav">
+		<li><a class="current" href="#documenter_cover">Start</a></li>
+		<li><a href="#gi_i_thi_u" title="Giới thiệu">Giới thiệu</a></li>
+		<li><a href="#thi_t_l_p_chung" title="Thiết lập chung">Thiết lập chung</a></li>
+		<li><a href="#u_trang" title="Đầu trang">Đầu trang</a></li>
+		<li><a href="#ch_n_trang" title="Chân trang">Chân trang</a></li>
+		<li><a href="#thi_t_l_p_trang_ch" title="Thiết lập trang chủ">Thiết lập trang chủ</a></li>
+		<li><a href="#trang_danh_s_ch_s_n_ph_m" title="Trang danh sách sản phẩm">Trang danh sách sản phẩm</a></li>
+		<li><a href="#trang_s_n_ph_m" title="Trang sản phẩm">Trang sản phẩm</a></li>
+		<li><a href="#trang_blog" title="Trang blog">Trang blog</a></li>
+		<li><a href="#trang_li_n_h" title="Trang liên hệ">Trang liên hệ</a></li>
+		<li><a href="#nangcao" title="Tính năng nâng cao">Tính năng nâng cao</a></li>
+		<li><a href="#li_n_h" title="Liên hệ">Liên hệ</a></li></ul>
+	<div id="documenter_copyright">Copyright Kiến Vàng<br />
+		made with the <a href="http://rxa.li/documenter">Documenter v2.0</a></div></div>
+<div id="documenter_content">
+	<section id="documenter_cover">
+		<h1>Ant Kitchen</h1>
+		<h2>Hướng dẫn sử dụng Theme Ant Kitchen</h2>
+		<div id="documenter_buttons"><a class="btn btn-primary btn-large" href="http://ant-kitchen.bizwebvietnam.net" target="_blank">Xem demo</a></div>
+		<hr />
+		<ul>
+			<li>Created: 06/02/2018</li>
+			<li>Latest update: 06/02/2018</li>
+			<li>By: Kiến Vàng</li>
+			<li>&nbsp;</li>
+			<li>Email: <a href="mailto:baotrung304@gmail.com">baotrung304@gmail.com</a></li></ul>
+
+		<p>Xin chào! Cám ơn bạn đã chọn giao diện của chúng tôi. Dưới đây là những hướng dẫn để bạn cài đặt cũng như sử dụng chủ đề của chúng tôi. Mọi thắc mắc bạn có thể gửi về baotrung304@gmail.com. Chúng tôi thực sự đánh giá cao và hi vọng bạn sẽ thích giao diện của chúng tôi.</p></section>
+
+	<section id="gi_i_thi_u">
+		<div class="page-header">
+			<h3>Giới thiệu</h3>
+
+			<hr class="notop" /></div>
+
+		<p id="gi_i_thi_u_vi_thit_k_hin_ae">Với thiết kế hiện đại, tối giản, nhiều diện tích hiển thị hàng hóa giúp tập trung bán sản phẩm tốt hơn , giao diện Ant Kitchen phù hợp với các siêu thị, cửa hàng điện máy, shop tạp hóa...</p></section>
+
+	<section id="thi_t_l_p_chung">
+		<div class="page-header">
+			<h3>Thiết lập chung</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Sau khi cài đặt theme mới lên cửa hàng, bạn&nbsp;bấm vào THIẾT LẬP GIAO DIỆN để tùy chỉnh theme:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-1.png?v=1517902356493" style="width: 100%;" /></p>
+
+		<p>Đầu tiên, bạn tìm đến THIẾT LẬP CHUNG:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-2.png?v=1517902494580" style="width: 100%;" /></p>
+
+		<p>&nbsp;</p>
+
+		<p>Tại phần thiết lập chung, chúng tôi cung cấp cho bạn được tùy chỉnh mạnh mẽ giao diện:</p>
+
+		<ul>
+			<li><em><strong>Dùng Favicon</strong></em></li>
+			<li><em><strong>Màu sắc chính</strong></em></li>
+			<li><em><strong>Meta Keyword</strong></em></li></ul>
+
+		<p>&nbsp;</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-3.png?v=1517902588123" style="width: 100%;" /></p></section>
+
+	<section id="u_trang">
+		<div class="page-header">
+			<h3>Đầu trang</h3>
+
+			<hr class="notop" /></div>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-4.png?v=1517902696260" style="width: 100%;" /></p>
+
+		<p>Để thiết lập đầu trang, bạn tìm đến:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-5.png?v=1517902737320" style="width: 100%;" /></p>
+
+		<p>Tại đây cho phép bạn thay đổi tất cả các logo, Menu, Danh mục sản phẩm:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-6.png?v=1517902770277" style="width: 100%;" /></p>
+
+		<p>&nbsp;</p></section>
+
+	<section id="ch_n_trang">
+		<div class="page-header">
+			<h3>Chân trang</h3>
+
+			<hr class="notop" /></div>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-7.png?v=1517902875213"  style="width: 100%;" /></p>
+
+		<p>Để thiết lập chân trang, bạn cần tìm đến Chân trang:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-8.png?v=1517902923653" style="max-width: 100%;" /></p>
+
+		<p>&nbsp;</p>
+
+		<p>Tại đây bạn có thể thiết lập các tiêu đề, menu, các thông tin bản quyền vv...</p>
+
+		<p>&nbsp;</p></section>
+
+	<section id="thi_t_l_p_trang_ch">
+		<div class="page-header">
+			<h3>Thiết lập trang chủ</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Trên trang chủ, chúng tôi chung cấp 11 module cho phép bạn có thể lựa chọn và sắp xếp vị trí của chúng trên trang chủ</p>
+
+		<ul>
+			<li><a href="#"><strong>Module Slider</strong></a></li>
+			<li><a href="#"><strong>Module Chính sách</strong></a></li>
+			<li><a href="#"><strong>Module Tin tức</strong></a></li>
+			<li><a href="#"><strong>Module Nhóm sản phẩm (11 Nhóm sản phẩm giống nhau)</strong></a></li>
+		</ul>
+
+		<p>&nbsp;</p>
+
+		<p>Để chọn lựa và sắp xếp các module trang chủ, bạn cần tìm đến thiết lập TRANG CHỦ:</p>
+
+		<p><br />
+			<img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-9.png?v=1517903236120" style="width: 1024px; height: 502px;" /></p>
+
+		<p>&nbsp;</p>
+
+		<p>Nếu không cần thiết, bạn có thể lựa chọn không dùng và bạn có thể thiết lập khoảng cách với module khác:</p>
+
+		<p>&nbsp;</p>
+
+		<p>&nbsp;</p>
+
+		<h4 id="thi_t_l_p_trang_ch__module_danh_mc_slider_banner">Module Slider</h4>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-10.png?v=1517903305850" style="width: 1024px; height: 379px;" /></p>
+
+		<p>Đầu tiên bạn tìm đến Trang chủ - Slider:<br />
+			<img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-11.png?v=1517903436227" style="width: 1024px; height: 501px;" /></p>
+
+		<p>Thiết lập các ảnh slider:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-12.png?v=1517903528657" style="width: 1024px; height: 500px;" /></p>
+
+		<p>&nbsp;</p>
+
+		<h4 id="thi_t_l_p_trang_ch__megamenu_module_danh_mc_slider_banner">Module Chính sách</h4>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-13.png?v=1517903635000" style="width: 1024px; height: 504px;" /></p>
+		<h4 id="thi_t_l_p_trang_ch__module_ch_iacutenh_s_aacutech">Module Tin tức</h4>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-14.png?v=1517903740080" style="width: 1024px; height: 128px;" /></p>
+
+		<h4 id="thi_t_l_p_trang_ch__module_thng_hiu">Module Sản phẩm</h4>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-15.png?v=1517903826420" style="width: 1024px; height: 72px;" /></p>
+
+		<p>Chúng tôi cung cấp 11 Module sản phẩm. Mỗi module có thể thiết lập tiêu đề; Số lượng sản phẩm hiển thị; Danh mục sản phẩm và Menu cho danh mục</p>
+
+	</section>
+
+	<section id="trang_danh_s_ch_s_n_ph_m">
+		<div class="page-header">
+			<h3>Trang danh sách sản phẩm</h3>
+
+			<hr class="notop" /></div>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-16.png?v=1517903975150" style="width: 1024px; height: 500px;" /></p>
+
+		<p>&nbsp;</p>
+
+		<p>Bạn cần tìm đến thiết lập TRANG DANH SÁCH SẢN PHẨM</p>
+
+		<p>Tại đây, bạn được phép thiết lập:</p>
+
+		<ul>
+			<li>Số sản phẩm trên 1 trang</li>
+			<li>Ảnh quảng cáo đầu trang và nội dung giới thiệu</li>
+			<li>Hiển thị hoặc tắt các khối bên sidebar gồm: Bộ lọc, danh mục và ảnh quảng cáo</li></ul>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-17.png?v=1517904135533" style="width: 1024px; height: 501px;" /></p>
+	</section>
+
+	<section id="trang_s_n_ph_m">
+		<div class="page-header">
+			<h3>Trang sản phẩm</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Chúng tôi cung cấp cho bạn quyền tùy chỉnh mạnh mẽ trang chi tiết sản phẩm. Để thiết lập trang này, bạn cần tìm đến TRANG SẢN PHẨM:</p>
+
+		<p><br />
+			<img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-18.png?v=1517904208950" style="width: 1024px; height: 499px;" /></p>
+
+	</section>
+
+	<section id="trang_blog">
+		<div class="page-header">
+			<h3>Trang blog</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Để thiết lập trang blog, bạn cần tìm đến TRANG BLOG:<br />
+			<img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-19.png?v=1517904292437" style="width: 1024px; height: 499px;" /></p>
+
+		<p>Ở đây, chúng tôi cho phép bạn lựa chọn layout: slidebar trái , phải.<br />
+			Tắt bật các khối trên sidebar, cũng như thiết lập khác cho từng khối.<br />
+			Ngoài ra, bạn cũng có thể thiết lập giới hạn số sản phẩm trên từng trang</p>
+
+	</section>
+
+	<section id="trang_li_n_h">
+		<div class="page-header">
+			<h3>Trang liên hệ</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Đầu tiên bạn cần tìm đến Thiết lập giao diện -&gt; Liên hệ:</p>
+
+		<p>Tại đây bạn có thể thay đổi Bản đồ cũng như các thông tin&nbsp; liên hệ:</p>
+
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-20.png?v=1517904379780" style="width: 1024px; height: 499px;" /></p></section>
+	<section id="nangcao">
+		<div class="page-header">
+			<h3>Tính năng nâng cao</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Chúng tôi cung cấp ở theme Ant Kitchen 1 số tính năng nâng cao: </p>
+
+		<ul>
+			<li><a href="http://ant-kitchen.bizwebvietnam.net/cach-lam-banh-bong-lan-cuc-de-bang-noi-com-dien" target="_blank"><strong>Sản phẩm liên quan trong tin tức</strong></a></li>
+			<li><a href="http://ant-kitchen.bizwebvietnam.net/android-tivi-sony-4k-43-inch-kd-43x7500e target="_blank""><strong>Hiển thị nội dung khuyến mãi khác nhau cho từng sản phẩm</strong></a></li>
+			<li><a href="#" target="_blank"><strong>Ảnh danh mục sản phẩm có thể tạo thành slide</strong></a></li>
+		</ul>
+		<h4>Sản phẩm liên quan trong tin tức</h4>
+		<p><img alt="" src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-21.png?v=1517904853330" style="width: 1024px; height: 499px;" /></p>
+		<p>Cấu hình hiển thị: Vào Thiết lập giao diện/Trang Blog. Nhập tag cấu hình như như bên dưới</p>
+		<p><img src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-22.png?v=1517904930703" /></p>
+		<p>Vào trang Blog, nhập tin tức mới và thêm tag theo cú pháp bên dưới. "product" là tag đã cấu hình ở bước trên. "Nồi cơm điện" là tên danh mục sản phẩm.</p>
+		<p><img src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-23.png?v=1517905127733" /></p>
+		<h4>Hiển thị nội dung khuyến mãi khác nhau cho từng sản phẩm</h4>
+		<p><img src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-25.png?v=1517906123233" /></p>
+		<p>Tạo mới 1 sản phẩm(1). Đưa trỏ chuột xuống dưới cùng của nội dung mô tả sản phẩm(2). Thêm nội dung khuyến mãi, có tiêu đề (phân tiêu đề khách tùy chọn - Demo hiện tại là  "Khuyến mãi") (3). Bôi đen tiêu đề, chọn định dạng là thẻ h6.</p>
+		<p><img src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-24.png?v=1517905954140" /></p>
+		<h4>Ảnh danh mục sản phẩm có thể tạo thành slide</h4>
+		<p>Vào danh mục sản phẩm. Up ảnh cần tạo thành slider ở mục "Nội dung" của danh mục</p>
+		<p><img src="https://bizweb.dktcdn.net/100/270/860/files/huong-dan-26.png?v=1517906224147" /></p>
+	</section>
+	<section id="li_n_h">
+		<div class="page-header">
+			<h3>Liên hệ</h3>
+
+			<hr class="notop" /></div>
+
+		<p>Cám ơn các bạn đã chọn theme của chúng tôi.<br />
+			Ngoài ra, nếu cần sự giúp đỡ,&nbsp;bạn có thể liên lạc với chúng tôi qua emai:&nbsp;baotrung304@gmail.com.<br />
+			Chúng tôi luôn vui lòng giúp đỡ các bạn.</p></section>
+</div>

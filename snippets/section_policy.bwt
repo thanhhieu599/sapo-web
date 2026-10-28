@@ -1,0 +1,24 @@
+<div class="section_policy">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="owl-policy-mobile owl-carousel not-dqowl">
+					{% for i in (1..4) %}
+					{% capture var_image %}policy_image_{{i}}.png{% endcapture %}
+					{% capture var_name %}policy_content_{{i}}{% endcapture %}
+					{% capture var_title %}policy_title_{{i}}{% endcapture %}
+					<div class="item">
+						<div class="section_policy_content">
+							<img src="{{ var_image | asset_url }}" alt="{{ settings.[var_title] }}" />
+							<div class="section-policy-padding">
+								<h3>{{ settings.[var_title] }}</h3>
+								<div class="section_policy_title">{{ settings.[var_name] }}</div>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

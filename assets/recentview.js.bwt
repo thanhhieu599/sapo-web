@@ -1,0 +1,78 @@
+//Recent product
+
+var cookieList = function(cookieName) {
+	//When the cookie is saved the items will be a comma seperated string
+	//So we will split the cookie by comma to get the original array
+	var cookie = $.cookie(cookieName);
+	//Load the items or a new array if null.
+	var items = cookie ? cookie.split(/,/) : new Array();
+	return {
+		"add": function(val) {
+
+			var i;
+			var check = false;
+			for (i = 0; i< items.length;i++){
+				if(val == items[i]){
+					check= true;
+				}
+			}
+			if(check == false){
+				items.push(val);
+			}
+			//Save the items to a cookie.
+			//EDIT: Modified from linked answer by Nick see
+			//      http://stackoverflow.com/questions/3387251/how-to-store-array-in-jquery-cookie
+			$.cookie(cookieName, items.join(','));
+		},
+		"remove": function (val) {
+			//EDIT: Thx to Assef and luke for remove.
+			indx = items.indexOf(val);
+			if(indx!=-1) items.splice(indx, 1);
+			$.cookie(cookieName, items.join(','));
+		},
+		"clear": function() {
+			items = null;
+			//clear the cookie.
+			$.cookie(cookieName, null);
+		},
+		"items": function() {
+			//Get all the items.
+			return items;
+		}
+	}
+}
+
+function getProduct(alias) {
+	Bizweb.getProduct(alias,function(product){
+		if(product.images.length == 0){
+			var img = '<img src="//bizweb.dktcdn.net/thumb/medium/assets/themes_support/noimage.gif" alt="'+product.name+'">'
+			}
+		else{
+			var link_img1 = Bizweb.resizeImage(product.featured_image, 'small');
+			var img = '<img src="'+link_img1+'" alt="'+product.name+'">'
+			}
+		$(''
+		  +'<div class="item recently-item-pro clearfix">'
+		  +'<div class="wrp">'
+		  +'<a class="image" href="'+product.url+'">'
+		  + img
+		  +'</a>'
+		  +'<div class="info">'
+		  +'<h3><a href="'+product.url+'" title="'+product.name+'">'+product.name+'</a></h3>'
+		  +'</div>'
+		  +'</div>'
+		  +'</div>').prependTo('#recently-viewed-products');
+	})
+}
+var list = new cookieList("ant");
+list.add(alias);
+var i;
+var size_pro_review = list.items().length;
+if ( size_pro_review >= 5 ) {
+	size_pro_review = 5;
+} else {
+	size_pro_review = list.items().length;
+}
+for(i = 0; i < size_pro_review; i++ ){
+	getProduct(list.items()[i]);
+}
