@@ -18,16 +18,21 @@
   var BADGE_TOP = 3;          // mỗi khối gắn nhãn tối đa 3 sản phẩm cho mỗi loại nhãn
   var BADGE_SOLD_MIN = 10;    // "Bán chạy": cần tối thiểu 10 lượt mua
   var BADGE_VIEW_MIN = 200;   // "Xem nhiều": cần tối thiểu 200 lượt xem
-  var CACHE_HOURS = 6;        // lưu số liệu trên máy khách 6 giờ để không gọi lại API mỗi lần chuyển trang
+  var CACHE_HOURS = 6;        // số liệu "còn mới" trong 6 giờ
+  var STALE_DAYS = 7;         // số liệu cũ hơn 6 giờ (tối đa 7 ngày) vẫn dùng NGAY để xếp, rồi cập nhật ngầm cho lần sau
   var HIDE_ZERO = false; // true: sản phẩm 0 lượt mua thì ẩn chữ "Đã bán"
   var MAX = 4;           // số yêu cầu chạy cùng lúc
-  var WAIT = 3000;       // chờ tối đa 3 giây rồi sắp xếp với dữ liệu đang có
+  var WAIT = 800;        // lần đầu vào web: chờ tối đa 0,8 giây rồi sắp xếp với dữ liệu đang có
 
   /* ---------- Lấy & lưu tạm số liệu ---------- */
+  /* Trả về { st: số liệu, fresh: true/false } hoặc null nếu chưa từng có / quá 7 ngày */
   function cGet(id){
     try {
       var v = JSON.parse(localStorage.getItem('pcxStat_' + id) || 'null');
-      return v && v.t && (Date.now() - v.t) < CACHE_HOURS * 36e5 ? v.st : null;
+      if (!v || !v.t) return null;
+      var age = Date.now() - v.t;
+      if (age > STALE_DAYS * 864e5) return null;
+      return { st: v.st, fresh: age < CACHE_HOURS * 36e5 };
     } catch(e){ return null; }
   }
   function cSet(id, st){ try { localStorage.setItem('pcxStat_' + id, JSON.stringify({ t: Date.now(), st: st })); } catch(e){} }
@@ -68,9 +73,20 @@
     var cbs = waiting[id] || []; delete waiting[id];
     cbs.forEach(function(cb){ cb(stats[id] || null); });
   }
+  var refreshing = {};
+  function refreshLater(id){   // cập nhật ngầm, không xếp lại trang đang xem (tránh sản phẩm nhảy chỗ)
+    if (refreshing[id]) return; refreshing[id] = 1;
+    setTimeout(function(){
+      fetch(API + encodeURIComponent(id))
+        .then(function(r){ return r.ok ? r.text() : Promise.reject(r.status); })
+        .then(function(t){ var st = parse(t); if (st) cSet(id, st); })
+        ['catch'](function(){});
+    }, 2000);
+  }
   function getStat(id, cb){
     if (stats[id] !== undefined) return cb(stats[id]);
-    var c = cGet(id); if (c) { stats[id] = c; return cb(c); }
+    var c = cGet(id);
+    if (c) { stats[id] = c.st; if (!c.fresh) refreshLater(id); return cb(c.st); }
     if (waiting[id]) { waiting[id].push(cb); return; }
     waiting[id] = [cb]; q.push(id); next();
   }
@@ -108,7 +124,15 @@
     return pts;
   }
   /* Gắn nhãn "Bán chạy" / "Xem nhiều" cho top sản phẩm còn hàng trong khối */
+  var badgeCss = false;
   function badge(boxes){
+    if (!badgeCss) {   // CSS của nhãn nằm sẵn trong file này -> chỉ cần thay 1 file pcx-sold.js
+      badgeCss = true;
+      var css = '.product-thumbnail{position:relative}'
+        + '.pcx-hot{position:absolute;left:6px;bottom:6px;z-index:3;padding:3px 8px;border-radius:3px;font-size:11px;font-weight:700;line-height:1.2;color:#fff;text-transform:uppercase;letter-spacing:.3px;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.15)}'
+        + '.pcx-hot--sold{background:#be2326}.pcx-hot--view{background:#114773}';
+      var stEl = document.createElement('style'); stEl.appendChild(document.createTextNode(css)); document.head.appendChild(stEl);
+    }
     var live = boxes.filter(function(b){ return tier(b) === 0; });
     function top(key, min){
       return live.filter(function(b){ return statOf(b)[key] >= min; })
