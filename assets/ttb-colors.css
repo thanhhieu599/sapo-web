@@ -1,0 +1,61 @@
+/* D&T 29/10/2026: phoi mau DO - TRANG - XANH NAVY (thay cho do - trang - den)
+   - Xanh navy: mau nen chu dao (thanh menu, tieu de khoi, chu tieu de) -> tin cay, cong nghiep
+   - Do: chi danh cho hanh dong & khuyen mai (nut mua, gia, % giam, so luong gio hang) -> noi bat, keu goi mua
+   - Trang: nen trang, chu tren nen navy
+   Cach dung kem: Tuy chinh giao dien > Thiet lap chung > "Mau chinh" doi tu #000000 sang #114773
+   (doi khoang 200 chi tiet dang mau den cua theme sang navy). File nay xu ly phan con lai. */
+:root {
+	--ttb-navy: #114773;
+	--ttb-navy-dark: #0b3356;
+	--ttb-navy-light: #e8eff6;
+	--ttb-red: #be2326;
+	--ttb-red-dark: #a01a20;
+}
+
+/* ===== Thanh menu ngang: do -> navy. O "Danh muc san pham" giu do de noi bat ===== */
+header .main-navigation,
+header .main-navigation nav { background: var(--ttb-navy); }
+header .main-navigation nav .mainmenu > span { background: var(--ttb-red); }
+header nav .nav-item > a:hover,
+header nav .nav-item > a:focus,
+header nav .nav-item.active > a { color: #fff; box-shadow: inset 0 -3px 0 var(--ttb-red); }
+
+/* Khi cuon trang (menu nen trang): chu navy, hover do */
+header.header.is-scrolled .main-navigation #nav > li > a.nav-link { color: var(--ttb-navy) !important; }
+header.header.is-scrolled .main-navigation #nav > li:hover > a.nav-link,
+header.header.is-scrolled .main-navigation #nav > li.active > a.nav-link { color: var(--ttb-red) !important; }
+
+/* ===== Tieu de: chu navy ===== */
+h1, .title-head, .art-title, .title-section-page, .auth-title, .ttb-cat__heading { color: var(--ttb-navy); }
+
+/* Thanh tieu de cac khoi san pham trang chu: navy + gach chan do */
+.section_group_product.background-title .box-shock .barbox {
+	background: var(--ttb-navy);
+	border-bottom: 3px solid var(--ttb-red);
+}
+.section_category .category-frame-border h2 { background: var(--ttb-navy); }
+
+/* ===== Chi tiet dang mau den cung trong theme -> navy ===== */
+header .main-navigation nav .mainmenu .line i,
+.mobile-nav #trigger-mobile .icon-bar,
+header .top-header #trigger-mobile .icon-bar { background: var(--ttb-navy); }
+.details-product .owl-carousel .owl-nav .owl-prev,
+.details-product .owl-carousel .owl-nav .owl-next { background-color: var(--ttb-navy); }
+.home-slider.owl-carousel .owl-dots .owl-dot.active span { background-color: var(--ttb-red); }
+.pcx-countdown div { background: var(--ttb-navy); }
+
+/* ===== Do: giu cho hanh dong mua & khuyen mai ===== */
+.price, .product-price, .special-price .price { color: var(--ttb-red); }
+.pcx-btn, .quote-request-button, .quote-request-submit { background: var(--ttb-red); }
+.pcx-btn:hover, .quote-request-button:hover, .quote-request-submit:hover { background: var(--ttb-red-dark); }
+
+/* Nut phu (xem them, thu gon): vien navy */
+.ttb-cat__more { border-color: var(--ttb-navy); color: var(--ttb-navy); }
+.ttb-cat__more:hover, .ttb-cat__more:focus { background: var(--ttb-navy); color: #fff; }
+.toggle-desc-btn { background: var(--ttb-navy); border-color: var(--ttb-navy); }
+
+/* The danh muc co anh: vien navy khi re chuot, ten danh muc navy */
+.ttb-cat__link:hover, .ttb-cat__link:focus, .ttb-cat__item.active .ttb-cat__link { border-color: var(--ttb-navy); color: var(--ttb-navy); }
+
+/* Khoi gioi thieu chan trang: dai mau navy thay vi do */
+.footer-intro.container { border-left-color: var(--ttb-navy); }

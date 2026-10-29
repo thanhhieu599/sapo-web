@@ -67,6 +67,7 @@
 {{ 'ttb-pcx.css' | asset_url | stylesheet_tag }}
 {{ 'ttb-responsive.css' | asset_url | stylesheet_tag }}
 {{ 'ttb-typography.css' | asset_url | stylesheet_tag }}
+{{ 'ttb-colors.css' | asset_url | stylesheet_tag }}
 <style>
   /* Ẩn danh sách xổ xuống của menu "Thương hiệu" - bấm vào sẽ mở trang lưới logo */
   li:has(> a[href$="/thuong-hieu"]) > *:not(a) { display: none !important; }
