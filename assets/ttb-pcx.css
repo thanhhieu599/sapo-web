@@ -4,7 +4,7 @@
 .pcx-badge{display:inline-flex;align-items:center;gap:3px;height:20px;padding:0 6px;border:1px solid #f5b301;background:#fffaf0;border-radius:3px;font-size:12px;font-weight:600;line-height:1;color:#333}
 .pcx-badge .pcx-star{color:#f5b301;font-size:12px}
 .pcx-badge--none{border-color:#ddd;background:#f7f7f7;color:#999}
-.pcx-badge--none .pcx-star{color:#ccc}
+.pcx-badge--none .pcx-star{color:#f5b301}
 .pcx-sold{color:#555;font-size:12px}
 .pcx-countdown{display:flex;gap:6px;margin:6px 0}
 .pcx-countdown div{background:#2c3e50;color:#fff;border-radius:3px;width:44px;padding:4px 2px;text-align:center}
