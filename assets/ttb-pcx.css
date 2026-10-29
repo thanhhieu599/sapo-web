@@ -20,3 +20,8 @@
 .pcx-btn:hover{background:#a01a20;color:#fff}
 .pcx-btn--contact{background:#bf2026}
 .pcx-btn--contact:hover{background:#a01a20;color:#fff}
+/* Nhan "Ban chay" / "Xem nhieu" (gan boi pcx-sold.js theo so lieu that) - goc duoi ben trai anh */
+.product-thumbnail{position:relative}
+.pcx-hot{position:absolute;left:6px;bottom:6px;z-index:3;padding:3px 8px;border-radius:3px;font-size:11px;font-weight:700;line-height:1.2;color:#fff;text-transform:uppercase;letter-spacing:.3px;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.pcx-hot--sold{background:#be2326}
+.pcx-hot--view{background:#114773}

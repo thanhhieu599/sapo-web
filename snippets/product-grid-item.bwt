@@ -67,7 +67,7 @@
 {% assign pcx_hide = false %}
 
 {% unless pcx_hide %}
-<div class="product-box">															
+<div class="product-box"{% if product.tags contains 'noibat' %} data-pcx-pin="1"{% endif %}>															
 	<div class="product-thumbnail">
 		{% assign on_sale = false %}
 		{% if product.compare_at_price_min > product.price_min %}

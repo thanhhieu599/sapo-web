@@ -2,15 +2,35 @@
   if (window.__pcxSold) return; window.__pcxSold = true;
 
   var API = 'https://productstatistics.sapoapps.vn/Storefront/GetStats?storeAlias=trangthietbivn&productId=';
-  var W_SOLD = 10;       // 1 lượt mua = 10 lượt xem
-  var W_VIEW = 1;
+  /* ===== THUẬT TOÁN XẾP HẠNG & GẮN NHÃN (D&T 29/10/2026) =====
+     Điểm = 3 × ln(1 + lượt mua) + 1 × ln(1 + lượt xem) + 20 × tỉ lệ mua/xem (đã làm mượt)
+     - Dùng ln (logarit) để 1 sản phẩm cũ có hàng nghìn lượt xem không đè bẹp sản phẩm mới đang bán tốt.
+     - Tỉ lệ mua/xem làm mượt = (mua + 1) / (xem + 30): sản phẩm ít người xem nhưng ai xem cũng mua sẽ được đẩy lên,
+       nhưng không bị "ăn may" khi mới có 1 lượt xem 1 lượt mua.
+     - Sản phẩm có tag "noibat" trong Sapo luôn đứng đầu nhóm cùng tình trạng (dùng cho hàng chủ lực, hàng lãi cao).
+     Thứ tự nhóm giữ nguyên: Còn hàng > Hết hàng > Liên hệ. */
+  var W_SOLD = 3;        // trọng số lượt mua
+  var W_VIEW = 1;        // trọng số lượt xem
+  var W_CONV = 20;       // trọng số tỉ lệ mua/xem
+  var CONV_PRIOR = 30;   // độ "làm mượt" tỉ lệ mua/xem (số lượt xem giả định ban đầu)
+  var PIN_BONUS = 1000;  // điểm cộng cho sản phẩm gắn tag "noibat"
+  /* Nhãn trên ảnh sản phẩm (chỉ dựa trên số liệu thật) */
+  var BADGE_TOP = 3;          // mỗi khối gắn nhãn tối đa 3 sản phẩm cho mỗi loại nhãn
+  var BADGE_SOLD_MIN = 10;    // "Bán chạy": cần tối thiểu 10 lượt mua
+  var BADGE_VIEW_MIN = 200;   // "Xem nhiều": cần tối thiểu 200 lượt xem
+  var CACHE_HOURS = 6;        // lưu số liệu trên máy khách 6 giờ để không gọi lại API mỗi lần chuyển trang
   var HIDE_ZERO = false; // true: sản phẩm 0 lượt mua thì ẩn chữ "Đã bán"
   var MAX = 4;           // số yêu cầu chạy cùng lúc
   var WAIT = 3000;       // chờ tối đa 3 giây rồi sắp xếp với dữ liệu đang có
 
   /* ---------- Lấy & lưu tạm số liệu ---------- */
-  function cGet(id){ try { var v = sessionStorage.getItem('pcxStat_' + id); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
-  function cSet(id, st){ try { sessionStorage.setItem('pcxStat_' + id, JSON.stringify(st)); } catch(e){} }
+  function cGet(id){
+    try {
+      var v = JSON.parse(localStorage.getItem('pcxStat_' + id) || 'null');
+      return v && v.t && (Date.now() - v.t) < CACHE_HOURS * 36e5 ? v.st : null;
+    } catch(e){ return null; }
+  }
+  function cSet(id, st){ try { localStorage.setItem('pcxStat_' + id, JSON.stringify({ t: Date.now(), st: st })); } catch(e){} }
 
   function pick(o, isView){
     var r = null;
@@ -77,9 +97,31 @@
     if (box.querySelector('.pcx-btn--out')) return 1;       // Hết hàng
     return 0;                                               // Còn hàng
   }
+  function statOf(box){
+    var el = box.querySelector('.pcx-sold[data-pid]');
+    return (el && stats[el.getAttribute('data-pid')]) || { s: 0, v: 0 };
+  }
   function score(box){
-    var el = box.querySelector('.pcx-sold[data-pid]'), st = el && stats[el.getAttribute('data-pid')];
-    return st ? st.s * W_SOLD + st.v * W_VIEW : 0;
+    var st = statOf(box);
+    var pts = W_SOLD * Math.log(1 + st.s) + W_VIEW * Math.log(1 + st.v) + W_CONV * (st.s + 1) / (st.v + CONV_PRIOR);
+    if (box.getAttribute('data-pcx-pin') === '1') pts += PIN_BONUS;
+    return pts;
+  }
+  /* Gắn nhãn "Bán chạy" / "Xem nhiều" cho top sản phẩm còn hàng trong khối */
+  function badge(boxes){
+    var live = boxes.filter(function(b){ return tier(b) === 0; });
+    function top(key, min){
+      return live.filter(function(b){ return statOf(b)[key] >= min; })
+        .sort(function(a, b){ return statOf(b)[key] - statOf(a)[key]; })
+        .slice(0, BADGE_TOP);
+    }
+    var sold = top('s', BADGE_SOLD_MIN), view = top('v', BADGE_VIEW_MIN);
+    function put(box, cls, text){
+      var th = box.querySelector('.product-thumbnail'); if (!th || th.querySelector('.pcx-hot')) return;
+      var sp = document.createElement('span'); sp.className = 'pcx-hot ' + cls; sp.textContent = text; th.appendChild(sp);
+    }
+    sold.forEach(function(b){ put(b, 'pcx-hot--sold', 'Bán chạy'); });
+    view.forEach(function(b){ if (sold.indexOf(b) === -1) put(b, 'pcx-hot--view', 'Xem nhiều'); });
   }
   function sortItems(items){
     return items.map(function(it, i){ var box = it.querySelector('.product-box'); return { it: it, t: tier(box), sc: score(box), i: i }; })
@@ -89,6 +131,9 @@
   function rank(block){
     if (block.__pcxRanked) return; block.__pcxRanked = true;
     var $ = window.jQuery;
+    var seenBox = [];
+    [].forEach.call(block.querySelectorAll('.product-box'), function(b){ if (!b.closest('.cloned') && seenBox.indexOf(b) === -1) seenBox.push(b); });
+    badge(seenBox);
     if (block.classList.contains('owl-carousel')) {
       var loaded = block.querySelector('.owl-stage');
       var items = loaded
