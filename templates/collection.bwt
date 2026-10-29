@@ -9,7 +9,7 @@
 		<section class="main_container collection col-md-9 col-sm-12 col-xs-12">
 			{% include 'gallery_collections' %}
 			<div class="pottion">
-				<h1 class="title-head margin-top-0">{%if page_title == 'All'%}Tất cả sản phẩm{%else%}{{ page_title }}{%endif%}</h1>
+				<h1 class="title-head margin-top-0 text-center" style="text-align:center;">{%if page_title == 'All'%}Tất cả sản phẩm{%else%}{{ page_title }}{%endif%}</h1>
 				{% if linklists[group_key].links.size > 0 %}
 				{% include 'brand-subcategories' %}
 				{% else %}
