@@ -1,7 +1,7 @@
 /* D&T 29/10/2026: luoi danh muc co anh o cuoi trang danh muc (snippets/collections_des_and_menu.bwt) */
 .ttb-cat { margin: 25px 0 15px; }
 .ttb-cat__heading { margin: 0 0 15px; font-size: 18px; font-weight: 700; text-align: center; text-transform: uppercase; color: #222; }
-.ttb-cat__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.ttb-cat__grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
 .ttb-cat__grid > li { margin: 0; padding: 0; }
 .ttb-cat__link { display: flex; flex-direction: column; height: 100%; border: 1px solid #efefef; border-radius: 8px; background: #fff; overflow: hidden; color: #222; text-decoration: none; transition: border-color .2s, box-shadow .2s, transform .2s; }
 .ttb-cat__link:hover, .ttb-cat__link:focus { border-color: #be2326; box-shadow: 0 4px 14px rgba(0,0,0,.08); transform: translateY(-2px); color: #be2326; text-decoration: none; }
@@ -19,3 +19,11 @@
 @media (min-width: 768px) and (max-width: 991px) {
 	.ttb-cat__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* Toi da 2 hang: may tinh 5 cot x 2 = 10, tablet 4 x 2 = 8, dien thoai 3 x 2 = 6. Bam "Xem them" de mo het */
+.ttb-cat:not(.is-open) .ttb-cat__item:nth-child(n+11) { display: none; }
+@media (min-width: 768px) and (max-width: 991px) { .ttb-cat:not(.is-open) .ttb-cat__item:nth-child(n+9) { display: none; } }
+@media (max-width: 767px) { .ttb-cat:not(.is-open) .ttb-cat__item:nth-child(n+7) { display: none; } }
+.ttb-cat__more { display: block; margin: 15px auto 0; padding: 8px 22px; border: 1px solid #be2326; border-radius: 4px; background: #fff; color: #be2326; font-weight: 600; cursor: pointer; transition: background .2s, color .2s; }
+.ttb-cat__more:hover, .ttb-cat__more:focus { background: #be2326; color: #fff; }
+.ttb-cat__more[hidden] { display: none; }

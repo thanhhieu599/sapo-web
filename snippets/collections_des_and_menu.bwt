@@ -46,7 +46,26 @@
 			</li>
 			{% endfor %}
 		</ul>
+		{% if linklists[link_alias].links.size > 6 %}
+		<button type="button" class="ttb-cat__more" aria-expanded="false" hidden>Xem thêm danh mục <i class="fa fa-angle-down" aria-hidden="true"></i></button>
+		{% endif %}
 	</div>
+	<script>
+	(function(){
+		/* Hiện tối đa 2 hàng (máy tính 10, tablet 8, điện thoại 6); nút chỉ hiện khi còn mục bị ẩn */
+		var box=document.querySelector('.ttb-cat'), btn=box&&box.querySelector('.ttb-cat__more');
+		if(!btn) return;
+		function hasHidden(){ var items=box.querySelectorAll('.ttb-cat__item'); for(var i=0;i<items.length;i++){ if(items[i].offsetParent===null) return true; } return false; }
+		function sync(){ if(box.classList.contains('is-open')) { btn.hidden=false; return; } btn.hidden=!hasHidden(); }
+		btn.addEventListener('click',function(){
+			var open=box.classList.toggle('is-open');
+			btn.setAttribute('aria-expanded',open?'true':'false');
+			btn.innerHTML=open?'Thu gọn <i class="fa fa-angle-up" aria-hidden="true"></i>':'Xem thêm danh mục <i class="fa fa-angle-down" aria-hidden="true"></i>';
+			if(!open) box.scrollIntoView({block:'nearest'});
+		});
+		sync(); window.addEventListener('resize',sync);
+	})();
+	</script>
 	{% endif %}
 </div>
 
