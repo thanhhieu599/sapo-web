@@ -1,4 +1,4 @@
-/* D&T 29/10/2026: hien so "Da ban" that tren the san pham (lay tu app thong ke san pham Sapo).
+/* pcx-sold.js (viet lai D&T 29/10/2026): hien so "Da ban" that tren the san pham (lay tu app thong ke san pham Sapo).
    Chi dien so, KHONG sap xep lai san pham.
    The can co trong product-grid-item.bwt: <span class="pcx-sold" data-pid="{{ product.id }}">Đã bán: <b>0</b></span> */
 (function(){
@@ -83,4 +83,28 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
   /* Quet lai vai lan cho san pham nap sau (carousel, loc san pham, xem them) */
   var n = 0, t = setInterval(function(){ scan(); if (++n >= 10) clearInterval(t); }, 1000);
+})();
+
+/* ===== Nut +/- so luong va dong ho dem nguoc tren the san pham (du phong, giu nhu ban cu) =====
+   Chi chay khi theme.bwt KHONG co doan <script> rieng lam viec nay (bien window.__pcxInit). */
+(function(){
+  if (window.__pcxInit || window.__pcxCard) return; window.__pcxCard = true;
+  document.addEventListener('click', function(e){
+    var m = e.target.closest('[data-pcx-minus]'), p = e.target.closest('[data-pcx-plus]');
+    if (!m && !p) return;
+    var input = e.target.closest('.pcx-qty').querySelector('input');
+    input.value = Math.max(1, (parseInt(input.value, 10) || 1) + (p ? 1 : -1));
+  });
+  function endTime(s){ if (s.indexOf('T') === -1) s += 'T23:59:59'; return new Date(s).getTime(); }
+  function tick(){
+    var now = Date.now();
+    document.querySelectorAll('.pcx-countdown').forEach(function(el){
+      var diff = Math.max(0, endTime(el.getAttribute('data-end')) - now);
+      if (diff === 0) { el.style.display = 'none'; return; }
+      el.querySelector('[data-d]').textContent = Math.floor(diff / 864e5);
+      el.querySelector('[data-h]').textContent = Math.floor(diff % 864e5 / 36e5);
+      el.querySelector('[data-m]').textContent = Math.floor(diff % 36e5 / 6e4);
+    });
+  }
+  if (document.querySelector('.pcx-countdown')) { tick(); setInterval(tick, 30000); }
 })();
