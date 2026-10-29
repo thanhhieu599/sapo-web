@@ -12,15 +12,36 @@
 	</button>
 
 	{% if page_title != "Tất cả sản phẩm" %}
-	<div class="collections_des_and_menu_list">
-		<ul class="list-inline">
-			{% if link_alias == null %}
-			{% assign link_alias = settings.aside_category_menu %}
-			{% endif %}
+	{% if link_alias == null %}
+	{% assign link_alias = settings.aside_category_menu %}
+	{% endif %}
+	{% comment %}
+		Lưới danh mục có ảnh (D&T 29/10/2026). Ảnh lấy theo thứ tự:
+		1) Ảnh của danh mục (Sapo Admin > Sản phẩm > Danh mục > chọn danh mục > Ảnh danh mục)
+		2) Nếu chưa có: ảnh sản phẩm đầu tiên trong danh mục
+		3) Nếu vẫn không có: hiện biểu tượng mặc định
+	{% endcomment %}
+	{{ 'ttb-category-cards.css' | asset_url | stylesheet_tag }}
+	<div class="ttb-cat">
+		<h2 class="ttb-cat__heading">Danh mục sản phẩm</h2>
+		<ul class="ttb-cat__grid">
 			{% for link in linklists[link_alias].links %}
-			<li class="{% if link.active %}active{% endif %}">
-				<a href="{{ link.url }}" class="nav-link" title="{{ link.title }}">
-					{{ link.title }}
+			{% assign ttb_cat_img = '' %}
+			{% if link.object.image %}
+				{% assign ttb_cat_img = link.object.image.src | img_url: 'medium' %}
+			{% elsif link.object.products.first.featured_image %}
+				{% assign ttb_cat_img = link.object.products.first.featured_image.src | img_url: 'medium' %}
+			{% endif %}
+			<li class="ttb-cat__item{% if link.active %} active{% endif %}">
+				<a href="{{ link.url }}" class="ttb-cat__link" title="{{ link.title | escape }}">
+					<span class="ttb-cat__img">
+						{% if ttb_cat_img != '' %}
+						<img src="{{ ttb_cat_img }}" alt="{{ link.title | escape }}" loading="lazy" decoding="async">
+						{% else %}
+						<span class="ttb-cat__letter"><i class="fa fa-th-large" aria-hidden="true"></i></span>
+						{% endif %}
+					</span>
+					<span class="ttb-cat__name">{{ link.title }}</span>
 				</a>
 			</li>
 			{% endfor %}

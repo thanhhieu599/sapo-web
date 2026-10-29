@@ -1,0 +1,21 @@
+/* D&T 29/10/2026: luoi danh muc co anh o cuoi trang danh muc (snippets/collections_des_and_menu.bwt) */
+.ttb-cat { margin: 25px 0 15px; }
+.ttb-cat__heading { margin: 0 0 15px; font-size: 18px; font-weight: 700; text-align: center; text-transform: uppercase; color: #222; }
+.ttb-cat__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.ttb-cat__grid > li { margin: 0; padding: 0; }
+.ttb-cat__link { display: flex; flex-direction: column; height: 100%; border: 1px solid #efefef; border-radius: 8px; background: #fff; overflow: hidden; color: #222; text-decoration: none; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.ttb-cat__link:hover, .ttb-cat__link:focus { border-color: #be2326; box-shadow: 0 4px 14px rgba(0,0,0,.08); transform: translateY(-2px); color: #be2326; text-decoration: none; }
+.ttb-cat__img { display: flex; align-items: center; justify-content: center; aspect-ratio: 1 / 1; padding: 10px; background: #fafafa; }
+.ttb-cat__img img { width: 100%; height: 100%; object-fit: contain; }
+.ttb-cat__letter { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #be2326; color: #fff; font-size: 24px; font-weight: 700; }
+.ttb-cat__name { display: flex; align-items: center; justify-content: center; flex: 1; min-height: 48px; padding: 8px 10px; font-size: 14px; font-weight: 600; line-height: 1.35; text-align: center; }
+.ttb-cat__item.active .ttb-cat__link { border-color: #be2326; color: #be2326; }
+@media (max-width: 767px) {
+	.ttb-cat__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+	.ttb-cat__img { padding: 6px; }
+	.ttb-cat__letter { width: 40px; height: 40px; font-size: 18px; }
+	.ttb-cat__name { font-size: 12px; min-height: 40px; padding: 6px 4px; }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.ttb-cat__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
