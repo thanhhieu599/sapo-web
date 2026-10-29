@@ -145,6 +145,6 @@
 	{% include 'loyalty' %}
 	{{ 'appbulk-product-statistics.js' | asset_url | script_tag }}
 	{% include 'popup-dang-ky' %}
-<script src="{{ 'pcx-sold.js' | asset_url }}" defer></script>
+<script src="{{ 'ttb-da-ban.js' | asset_url }}" defer></script>
 </body>
 </html>
