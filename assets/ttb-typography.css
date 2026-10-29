@@ -1,68 +1,44 @@
-/* D&T 29/10/2026: bo chu thuong hieu - cung cap, manh me, ro rang
-   - Noi dung: Be Vietnam Pro (thiet ke rieng cho tieng Viet, dau ro, de doc tren dien thoai)
-   - Tieu de, menu, nut, gia: Barlow Semi Condensed (phong cach bien bao cong nghiep, dam, gon)
+/* D&T 29/10/2026: bo chu Roboto (giong phong cach ketnoitieudung.vn) - dam, ro, de doc
+   Website truoc day KHONG nap font rieng: Windows hien Segoe UI, Mac hien San Francisco -> moi may mot kieu.
+   Nay nap Roboto tu Google Fonts de moi thiet bi hien giong nhau.
    Nap SAU cac file CSS khac de ghi de. Khong dung selector "*" de khong pha icon FontAwesome. */
 :root {
-	--ttb-font-body: "Be Vietnam Pro", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-	--ttb-font-head: "Barlow Semi Condensed", "Be Vietnam Pro", "Arial Narrow", Arial, sans-serif;
-	--ttb-text: #1f1f1f;
+	--ttb-font: "Roboto", -apple-system, "Segoe UI", Arial, sans-serif;
+	--ttb-text: #222;
 }
 
 /* Noi dung chung */
-body, input, textarea, button, select, .btn, .form-control {
-	font-family: var(--ttb-font-body);
+body, input, textarea, button, select, .btn, .form-control,
+h1, h2, h3, h4, h5, h6, header nav {
+	font-family: var(--ttb-font);
 	letter-spacing: 0;
 }
 body { color: var(--ttb-text); }
-p, li, td, th { text-rendering: optimizeLegibility; }
 
-/* Tieu de: dam, gon, cung */
+/* Tieu de */
 h1, h2, h3, h4, h5, h6,
 .title-head, .titlecate, .title-section-page, .art-title, .auth-title,
-.cgb-title, .ttb-cat__heading, .quote-request-dialog h2 {
-	font-family: var(--ttb-font-head);
+.ttb-cat__heading, .quote-request-dialog h2 {
 	font-weight: 700;
-	letter-spacing: .3px;
 	color: var(--ttb-text);
 }
-h1, .title-head { line-height: 1.25; }
-.section_group_product .titlecate { letter-spacing: .6px; }
+.titlecate, .cgb-title { font-weight: 700; }
 
-/* Menu ngang & menu danh muc */
-header nav, #nav .nav-link, .mainmenu, .nav-cate a {
-	font-family: var(--ttb-font-head);
-	font-weight: 600;
-	letter-spacing: .3px;
-}
-#nav > .nav-item > .nav-link { font-size: 16px; }
+/* Menu ngang (thanh do) & menu danh muc ben trai */
+#nav .nav-link { font-weight: 700; font-size: 14px; }
+.mainmenu, .nav-cate a, .aside-content a { font-weight: 500; }
 
-/* Ten san pham: ro, dam vua */
-.product-name, .product-name a, .product-box .product-name a { font-family: var(--ttb-font-body); font-weight: 600; }
+/* Ten san pham: dam vua, mau dam */
+.product-name, .product-name a, .product-box .product-name a { font-weight: 500; color: #333; }
 
-/* Gia: so dam, de so sanh */
-.price, .product-price, .special-price .price { font-family: var(--ttb-font-head); font-weight: 700; letter-spacing: .2px; }
-.old-price .price, .product-price-old { font-weight: 500; }
+/* Gia */
+.price, .product-price, .special-price .price { font-weight: 700; }
+.old-price .price, .product-price-old { font-weight: 400; }
 
-/* Nut keu goi hanh dong */
-.pcx-btn, .quote-request-button, .quote-request-submit, .btn, .cgb-btn, .ttb-cat__more, .toggle-desc-btn, .viewmoretext {
-	font-family: var(--ttb-font-head);
+/* Nut */
+.pcx-btn, .quote-request-button, .quote-request-submit, .btn, .cgb-btn, .ttb-cat__more, .toggle-desc-btn {
 	font-weight: 700;
-	letter-spacing: .4px;
 }
-.pcx-btn { font-size: 14px; }
 
 /* Ten danh muc trong luoi danh muc */
-.ttb-cat__name { font-family: var(--ttb-font-head); font-weight: 700; font-size: 15px; letter-spacing: .2px; }
-@media (max-width: 767px) { .ttb-cat__name { font-size: 13px; } }
-
-/* Font hep (condensed) nhin nho hon cung co chu -> tang co cho tieu de va gia */
-h1.title-head, .title-head { font-size: 24px; }
-.art-title { font-size: 30px; }
-.product-box .price-box .special-price .price { font-size: 19px !important; }
-.details-product .special-price .price { font-size: 28px; }
-@media (max-width: 767px) {
-	h1.title-head, .title-head { font-size: 20px; }
-	.art-title { font-size: 24px; }
-	.product-box .price-box .special-price .price { font-size: 17px !important; }
-	.details-product .special-price .price { font-size: 24px; }
-}
+.ttb-cat__name { font-weight: 500; }
