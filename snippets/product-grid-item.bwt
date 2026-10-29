@@ -52,6 +52,11 @@
 {% assign pcx_stars = tag | split: '_' | last %}
 {% endif %}
 {% endfor %}
+{% comment %}Ưu tiên điểm đánh giá THẬT từ app Sapo Product Reviews (khách đã mua để lại đánh giá){% endcomment %}
+{% if product.metafields.bpr.votes > 0 %}
+{% assign pcx_stars = product.metafields.bpr.rating | round: 1 %}
+{% assign pcx_reviews = product.metafields.bpr.votes %}
+{% endif %}
 {% assign pcx_stars_num = pcx_stars | times: 1.0 %}
 
 {% comment %}
@@ -122,7 +127,7 @@
 		<h3 class="product-name"><a href="{{ product.url }}" title="{{ product.name }}">{{ product.name }}</a></h3>
 
 		<div class="pcx-meta">
-			<span class="pcx-badge{% if pcx_stars_num <= 0 %} pcx-badge--none{% endif %}" title="{{ pcx_reviews }} đánh giá"><span class="pcx-star">★</span>{{ pcx_stars }}</span>
+			{% if pcx_stars_num > 0 %}<span class="pcx-badge" title="{{ pcx_reviews }} đánh giá"><span class="pcx-star">★</span>{{ pcx_stars }}</span>{% endif %}
 			<span style = "margin-left:auto;text-align:right" class="pcx-sold" data-pid="{{ product.id }}">Đã bán: <b>{{ pcx_sold }}</b></span>
 		</div>
 		
