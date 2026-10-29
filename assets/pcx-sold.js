@@ -80,9 +80,19 @@
       io ? io.observe(el) : want(id);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
-  /* Quet lai vai lan cho san pham nap sau (carousel, loc san pham, xem them) */
-  var n = 0, t = setInterval(function(){ scan(); if (++n >= 10) clearInterval(t); }, 1000);
+  function start(){
+    scan();
+    /* Tu phat hien san pham moi xuat hien BAT KY LUC NAO: chuyen trang/loc/sap xep bang AJAX (col.js doSearch),
+       carousel trang chu, xem nhanh... (ban cu chi quet 10 giay dau nen trang 2, 3, 5... khong hien so) */
+    if ('MutationObserver' in window) {
+      var tm = null;
+      new MutationObserver(function(){ clearTimeout(tm); tm = setTimeout(scan, 80); })
+        .observe(document.body, { childList: true, subtree: true });
+    } else {
+      setInterval(scan, 1500);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
 
 /* ===== Nut +/- so luong va dong ho dem nguoc tren the san pham (du phong, giu nhu ban cu) =====
