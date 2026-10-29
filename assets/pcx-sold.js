@@ -152,12 +152,15 @@
       .sort(function(a, b){ return a.t - b.t || b.sc - a.sc || a.i - b.i; })
       .map(function(x){ return x.it; });
   }
-  function rank(block){
-    if (block.__pcxRanked) return; block.__pcxRanked = true;
-    var $ = window.jQuery;
+  function badgeBlock(block){
     var seenBox = [];
     [].forEach.call(block.querySelectorAll('.product-box'), function(b){ if (!b.closest('.cloned') && seenBox.indexOf(b) === -1) seenBox.push(b); });
     badge(seenBox);
+  }
+  function rank(block){
+    if (block.__pcxRanked) return; block.__pcxRanked = true;
+    var $ = window.jQuery;
+    badgeBlock(block);
     if (block.classList.contains('owl-carousel')) {
       var loaded = block.querySelector('.owl-stage');
       var items = loaded
@@ -200,7 +203,11 @@
     ids.forEach(function(id){
       getStat(id, function(st){
         block.querySelectorAll('.pcx-sold[data-pid="' + id + '"]').forEach(function(el){ paint(el, st); });
-        if (--left === 0) { clearTimeout(timer); rank(block); }
+        if (--left === 0) {
+          clearTimeout(timer);
+          if (block.__pcxRanked) badgeBlock(block);   // số liệu về muộn: chỉ gắn nhãn, không xếp lại (tránh nhảy chỗ)
+          else rank(block);
+        }
       });
     });
   }
