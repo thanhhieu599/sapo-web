@@ -1,0 +1,31 @@
+{% comment %}
+  Đo tốc độ KHÁCH THẬT (Core Web Vitals) và gửi về Google Analytics 4 (sự kiện LCP, CLS, INP, FCP, TTFB).
+  Gọi trong layouts/theme.bwt ngay trên </body>:  {% include 'ttb-web-vitals' %}
+  Chỉ tải thư viện 6 KB SAU khi trang tải xong -> không làm chậm trang.
+{% endcomment %}
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    var s = document.createElement('script');
+    s.src = 'https://unpkg.com/web-vitals@4.2.4/dist/web-vitals.iife.js';
+    s.async = true;
+    s.onload = function () {
+      function send(m) {
+        var data = {
+          value: Math.round(m.name === 'CLS' ? m.value * 1000 : m.value),
+          metric_value: m.value,
+          metric_rating: m.rating,          // good / needs-improvement / poor
+          metric_id: m.id,
+          page_type: '{{ template }}',
+          non_interaction: true
+        };
+        if (typeof window.gtag === 'function') window.gtag('event', m.name, data);
+        else { window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({ event: m.name }, data)); }
+      }
+      webVitals.onLCP(send); webVitals.onCLS(send); webVitals.onINP(send);
+      webVitals.onFCP(send); webVitals.onTTFB(send);
+    };
+    document.head.appendChild(s);
+  }, 0);
+});
+</script>
