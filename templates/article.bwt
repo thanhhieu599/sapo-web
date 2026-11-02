@@ -101,7 +101,7 @@
 								{% if article.image == null %}
 								<img src="{{ 'no-image.jpg' | asset_url }}" alt="{{ article.title }}" />
 								{% else %}
-								<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ article.image.src | img_url:'large' }}" alt="{{ article.title }}" />
+								<img src="{{ article.image.src | img_url:'large' }}" alt="{{ article.title | escape }}" loading="lazy" decoding="async" />
 								{% endif %}
 							</span>
 							<span class="art-rel-body">

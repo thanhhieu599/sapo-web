@@ -40,7 +40,7 @@ Nếu không có logo phù hợp, hiện tên hãng; không thay bằng ảnh s�
           {% assign ttb_vendor_collection = collections[ttb_vendor_handle] %}
           {% assign ttb_vendor_image = '' %}
 		  {% if ttb_vendor_collection.image != blank %}
- 		    {% assign ttb_vendor_image = ttb_vendor_collection | img_url: 'medium' %}
+ 		    {% assign ttb_vendor_image = ttb_vendor_collection | img_url: 'compact' %}
           {% endif %}
           <a href="{{ ttb_vendor | url_for_vendor | escape }}"
              data-name="{{ ttb_vendor | escape }}" data-image="{{ ttb_vendor_image | escape }}"></a>

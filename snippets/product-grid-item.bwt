@@ -104,7 +104,7 @@
 		<div class="product-image-flip">
 			<a href="{{ product.url }}" title="{{ product.name }}">
 				{% if product.featured_image != null %}
-				<img src="{{ 'loaders.svg' | asset_url }}" 
+				<img src="{{ product.featured_image.src | img_url: 'medium' }}" 
 				 data-lazyload="{{ product.featured_image.src | img_url: 'medium' }}" 
 				 alt="{{ product.name | escape }}" 
 				 class="img-responsive center-block" 

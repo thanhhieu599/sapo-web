@@ -11,7 +11,8 @@
  <meta name="google-site-verification" content="wrDFMLb_kfoCAWLoQ6eAykJhFFiedKBpthTwgwTJvG8" />
  <meta name="google-site-verification" content="_2VnVyJmUx0oZ193uFbebNyiEgKuQU1D8iYAy97LBHc" />
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% if template == 'index' and settings.slider_1_enable %}<link rel="preload" as="image" href="{{ 'slider_1_new.jpg' | asset_url | img_url: '1024x1024' }}" fetchpriority="high">{% endif %}		
 		<title>{%if page_title == 'All'%}Tất cả sản phẩm{% elsif template == "search" %}Tìm kiếm sản phẩm{%else%}{{ page_title }}{%endif%}{% if current_tags %} tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} - Trang {{ current_page }}{% endif %}{% unless page_title contains store.name %} | {{ store.name }}{% endunless %}</title>		
 		{% if page_description != ""%}
 		<meta name="description" content="{{ page_description | escape }}">

@@ -164,7 +164,7 @@
 						</div>
 						<div class="bocongthuong">
 							<a target="_blank" href="{{ settings.bocongthuong_url }}" rel="nofollow">
-								<img style="max-width: 170px" src="{{ 'bocongthuong.png' | asset_url }}" alt="Bộ công thương">
+								<img style="max-width: 170px" src="{{ 'bocongthuong.png' | asset_url }}" alt="Bộ công thương" loading="lazy" decoding="async">
 							</a>
 						</div>
 						<div id="fb-root"></div>

@@ -48,11 +48,11 @@
 						{% if section_group_banner_image %}
 						<div class="col-md-2 category-group-banner">
 							<a href="{{ section_group_banner_link }}" class="cgb-link" title="{{ settings.group_product_sec_tab_1_title_10 }}">
-								<img src="{{ 'group_product_banner_10.jpg' | asset_url }}"
-								     data-banner-fallback="{{ section_group_banner_image | img_url: 'master' }}"
+								<img src="{{ 'group_product_banner_10.jpg' | asset_url | img_url: 'grande' }}"
+								     data-banner-fallback="{{ section_group_banner_image | img_url: 'large' }}"
 								     onerror="if(this.dataset.bannerFallback){this.onerror=null;this.src=this.dataset.bannerFallback;}"
 								     alt="{{ settings.group_product_sec_tab_1_title_10 }}"
-								     loading="lazy">
+								     loading="lazy" decoding="async">
 								<span class="cgb-overlay">
 									<span class="cgb-title">{{ settings.group_product_sec_tab_1_title_10 }}</span>
 									<span class="cgb-btn">Xem ngay</span>

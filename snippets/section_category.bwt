@@ -15,7 +15,7 @@
 						{% if linklists[link.alias] != null %}
 						<li class="category-frame-item li-has-subs">
 							<h3>
-								<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" />
+								<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" width="24" height="24" loading="lazy" />
 								<a class="open-close" href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
 							</h3>				
 							<ul class="category-sub submenu">													
@@ -42,7 +42,7 @@
 						{% else %}
 						<li class="category-frame-item">
 							<h3>
-								<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" />
+								<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" width="24" height="24" loading="lazy" />
 								<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
 							</h3>
 						</li>
