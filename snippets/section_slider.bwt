@@ -1,3 +1,22 @@
+<style>
+	.home-slider .item > a {
+		display: block;
+		width: 100%;
+		aspect-ratio: 855 / 364;
+		overflow: hidden;
+		background: #f1f1f1;
+	}
+
+	.home-slider .item > a > img {
+		display: block;
+		width: 100% !important;
+		height: 100% !important;
+		max-height: none !important;
+		object-fit: contain;
+		object-position: center;
+		margin: 0;
+	}
+</style>
 <div class="container">
 	<div class="col-md-3 no-padding"></div>
 	<div class="col-md-9 no-padding">
@@ -6,7 +25,7 @@
 
 			{% for i in (1..5) %}
 				{% capture enable %}slider_{{i}}_enable{% endcapture %}
-				{% capture image %}slider_{{i}}.jpg{% endcapture %}
+				{% capture image %}slider_{{i}}_new.jpg{% endcapture %}
 				{% capture url %}slider_{{i}}_url{% endcapture %}
 				{% capture title1 %}slider_{{i}}_text_1{% endcapture %}
 
@@ -17,6 +36,8 @@
 								src="{{ image | asset_url | img_url:'1024x1024' }}"
 								alt="{{ settings[title1] | escape }}"
 								class="img-responsive center-block"
+								width="855"
+								height="364"
 								{% if first_enabled_slide %}
 									loading="eager"
 									fetchpriority="high"

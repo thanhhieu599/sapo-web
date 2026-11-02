@@ -45,6 +45,10 @@ header nav .nav-item>a{
 header nav .nav-item>a:hover, header nav .nav-item>a:focus{
 	color: #ffe000;
 }
+/*Cập nhật 29/10/2026*/
+header .main-navigation #nav > li > a.nav-link {
+    font-weight: 700;
+}
 header .top-header .hotline span,
 header .top-header .index-account span{
 	color: #e8797b;
@@ -164,6 +168,17 @@ footer .copyright{
 .section_group_product.background-title .section_tab_product-owl{
 	padding: 5px;
 }
+/*Cập nhật ngày 29/10/2026*/
+.section_group_product .box-shock .barbox .titlecate,
+.section_group_product .box-shock .barbox > ul > li > a {
+    font-weight: 700;
+}
+.section_group_product .box-shock .barbox > ul > li > a:hover{
+    color: #ffe000;
+}
+/*header nav .nav-item>a:hover, header nav .nav-item>a:focus{
+	color: #ffe000;
+}*/
 .category-gallery{
 	margin-bottom: 0;
 }
@@ -318,14 +333,21 @@ footer .copyright{
 /* Tăng kích cỡ tên sản phẩm (to rõ, dễ đọc) */
 .section_group_product .product-box .product-name a {
   font-size: 15px !important;     /* Cũ là 13px */
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
   color: #333;
   height: 42px;                  /* Hiển thị 2 dòng tiêu đề */
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
+  overflow: visible;			 /* Cũ là hidden*/
+  display: block;			/* Cũ là -webkit-box*/
+  -webkit-line-clamp: Unset;		/* Cũ là 2*/
   -webkit-box-orient: vertical;
+  overflow-wrap: break-word;
+}
+@media (max-width: 767px) {
+    .section_group_product .product-box .product-name {
+        flex-shrink: 0;
+        margin-bottom: 10px;
+    }
 }
 /* Tăng kích cỡ giá tiền nổi bật */
 .section_group_product .product-box .price-box {
@@ -601,3 +623,17 @@ header.header.header .top-header .index-account ul li a i {
 .product-box .pcx-qty button{background:#fff!important;color:#888!important;border:0!important}
 .product-box .pcx-qty button:hover{background:#f2f2f2!important;color:#bf2026!important}
 .pcx-home .pcx-qty button{background:#f7f7f7!important;color:#666!important}
+
+.product-box .product-thumbnail img,
+.item-product .image_thumb img {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  width: 100%;
+  height: auto;
+}
+
+.cate-item-icon img,
+.index-cate-item img {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}

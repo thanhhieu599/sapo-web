@@ -33,13 +33,29 @@
 {{ product.selected_or_first_available_variant.compare_at_price | minus:product.selected_or_first_available_variant.price | times:100 | divided_by:product.selected_or_first_available_variant.compare_at_price | round }}% 
 {% endcapture %}
 
+
 {% comment %}
-  === DỮ LIỆU THÊM (tạm thời lấy từ Tags của sản phẩm) ===
-  Tag mẫu: ketthuc_2026-10-20  daban_229  danhgia_4.9  soluotdanhgia_3
+	{% comment %}
+	  Thuật toán generate số sao dựa trên product id
+	{% endcomment %}
+	{% assign pcx_end = '' %}
+	{% assign pcx_sold = 0 %}
+	{% assign pcx_random = product.id | modulo: 4 %}
+
+	{% case pcx_random %}
+	  {% when 0 %}
+		{% assign pcx_stars = 4.7 %}
+	  {% when 1 %}
+		{% assign pcx_stars = 4.8 %}
+	  {% when 2 %}
+		{% assign pcx_stars = 4.9 %}
+	  {% when 3 %}
+		{% assign pcx_stars = 5.0 %}
+	{% endcase %}
 {% endcomment %}
-{% assign pcx_end = '' %}
-{% assign pcx_sold = 0 %}
-{% assign pcx_stars = 0 %}
+
+{% assign pcx_stars = 5 %}
+{% assign pcx_stars_num = pcx_stars | times: 1.0 %}
 {% assign pcx_reviews = 0 %}
 {% for tag in product.tags %}
 {% if tag contains 'ketthuc_' %}
@@ -88,7 +104,14 @@
 		<div class="product-image-flip">
 			<a href="{{ product.url }}" title="{{ product.name }}">
 				{% if product.featured_image != null %}
-				<img src="{{ 'loaders.svg' | asset_url }}" data-lazyload="{{ product.featured_image.src | img_url:'large' }}" alt="{{ product.name }}" class="img-responsive center-block" />
+				<img src="{{ 'loaders.svg' | asset_url }}" 
+				 data-lazyload="{{ product.featured_image.src | img_url: 'medium' }}" 
+				 alt="{{ product.name | escape }}" 
+				 class="img-responsive center-block" 
+				 loading="lazy" 
+				 decoding="async" 
+				 width="240" 
+				 height="240" />
 				{% else %}
 				<img src="{{ 'no_image.jpg' | asset_url | img_url: 'medium' }}" alt="{{ product.name }}" class="img-responsive center-block" />
 				{% endif %}
@@ -170,9 +193,9 @@
 			<form action="/cart/add" method="post" class="pcx-form" enctype="multipart/form-data">
 				<input type="hidden" name="variantId" value="{{ product.variants[0].id }}" />
 				<div class="pcx-qty">
-					<button type="button" data-pcx-minus>−</button>
-					<input type="number" name="quantity" value="1" min="1" />
-					<button type="button" data-pcx-plus>+</button>
+					<button type="button" data-pcx-minus aria-label="Giảm số lượng">−</button>
+					<input type="number" name="quantity" value="1" min="1" aria-label="Số lượng" />
+					<button type="button" data-pcx-plus aria-label="Tăng số lượng">+</button>
 				</div>
 				<button type="submit" class="pcx-btn">Thêm vào giỏ hàng</button>
 			</form>

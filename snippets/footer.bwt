@@ -155,12 +155,12 @@
 					<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 footer-widget">
 						<h4>{{c4_title}}</h4>
 						<div class="footer-payment">
-							<img src="{{ 'payment_1.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
-							<img src="{{ 'payment_2.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
-							<img src="{{ 'payment_3.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
-							<img src="{{ 'payment_4.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
-							<img src="{{ 'payment_5.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
-							<img src="{{ 'payment_6.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" />
+							<img src="{{ 'payment_1.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" width="42" height="26" />
+							<img src="{{ 'payment_2.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" width="42" height="26" />
+							<img src="{{ 'payment_3.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" width="42" height="26" />
+							<img src="{{ 'payment_4.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" width="42" height="26" />
+							<img src="{{ 'payment_5.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" width="42" height="26" />
+							<img src="{{ 'payment_6.svg' | asset_url }}" alt="{{settings.fot_c4_title}}" width="42" height="26" />
 						</div>
 						<div class="bocongthuong">
 							<a target="_blank" href="{{ settings.bocongthuong_url }}" rel="nofollow">
@@ -168,7 +168,25 @@
 							</a>
 						</div>
 						<div id="fb-root"></div>
-						<script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0" nonce="2kTuVyXh"></script>
+						<script>
+						(function() {
+						  var fbLoaded = false;
+						  function loadFB() {
+							if (fbLoaded) return;
+							fbLoaded = true;
+							var js = document.createElement('script');
+							js.async = true;
+							js.defer = true;
+							js.crossOrigin = 'anonymous';
+							js.src = 'https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v14.0';
+							document.body.appendChild(js);
+						  }
+						  // Chỉ tải khi người dùng bắt đầu cuộn chuột, chạm màn hình hoặc sau 4 giây
+						  ['scroll', 'mousemove', 'touchstart'].forEach(function(e) {
+							window.addEventListener(e, loadFB, { once: true, passive: true });
+						  });
+						})();
+						</script>
 						<div class="fb-page" data-href="{{ settings.social_facebook_link }}" data-tabs="" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="{{ settings.social_facebook_link }}" class="fb-xfbml-parse-ignore"><a rel="nofollow" href="{{ settings.social_facebook_link }}">Fanpage</a></blockquote></div>
 					</div>
 				</div>
@@ -197,63 +215,83 @@
 		
 	</div>
 
+<style>
+.quote-request-button{display:inline-block;text-decoration:none;border:0;border-radius:4px;background:#c52228;color:#fff;padding:11px 20px;font-weight:700;cursor:pointer}.quote-request-button:hover{background:#a91c22;color:#fff;text-decoration:none}.quote-product-cta{margin:8px 0 12px}.quote-footer-cta{text-align:center;padding:16px 15px}
+
+.footer-payment{display:grid;grid-template-columns:repeat(3,42px);gap:7px 6px;align-items:center;justify-content:start;width:max-content;max-width:100%}.footer-payment img{display:block;width:42px!important;height:26px;max-width:42px;object-fit:contain}
+</style>
+<script>
+(function(){
+	if(!window.matchMedia('(max-width: 767px)').matches)return;
+	document.querySelectorAll('.section_group_product.background-title .section_tab_product-owl').forEach(function(carousel){
+		Array.prototype.slice.call(carousel.children,8).forEach(function(item){item.remove();});
+	});
+})();
+</script>
+	
+<!-- KHỐI POPUP YÊU CẦU BÁO GIÁ & CLOUDINARY (ĐÃ TỐI ƯU LAZY-LOAD RECAPTCHA) -->
 <div id="quote-request-modal" class="quote-request-modal" hidden aria-hidden="true">
 	<div class="quote-request-dialog" role="dialog" aria-modal="true" aria-labelledby="quote-request-title">
 		<button type="button" class="quote-request-close" data-quote-close aria-label="Đóng">&times;</button>
 		<h2 id="quote-request-title">Yêu cầu báo giá</h2>
 		<p class="quote-request-intro">Vui lòng để lại thông tin, chúng tôi sẽ liên hệ tư vấn và báo giá.</p>
-		{% form 'contact' %}
-		{% if form.posted_successfully %}
-		<div class="quote-form-success" role="status">Cảm ơn bạn đã gửi yêu cầu báo giá. Chúng tôi sẽ liên hệ sớm nhất.</div>
-		{% endif %}
-		{% include 'form-errors-custom' %}
-		<div class="quote-request-grid">
-			<div class="quote-request-field">
-				<label for="quote-request-name">Họ tên <span>*</span></label>
-				<input id="quote-request-name" type="text" name="contact[name]" autocomplete="name" placeholder="Nhập họ tên" required>
+		
+		<form method="post" action="/postcontact" id="contact" accept-charset="UTF-8">
+			<input name="FormType" type="hidden" value="contact"/>
+			<input name="utf8" type="hidden" value="true"/>
+			<input type="hidden" id="quote-recaptcha-token" name="Token" value="" />
+			
+			<div class="quote-form-success" id="quote-success-msg" role="status" style="display:none;">
+				Cảm ơn bạn đã gửi yêu cầu báo giá. Chúng tôi sẽ liên hệ sớm nhất.
 			</div>
-			<div class="quote-request-field">
-				<label for="quote-request-phone">Số điện thoại <span>*</span></label>
-				<input id="quote-request-phone" type="tel" name="contact[tel]" autocomplete="tel" placeholder="Nhập số điện thoại" required>
+
+			<div class="quote-request-grid">
+				<div class="quote-request-field">
+					<label for="quote-request-name">Họ tên <span>*</span></label>
+					<input id="quote-request-name" type="text" name="contact[name]" autocomplete="name" placeholder="Nhập họ tên" required>
+				</div>
+				<div class="quote-request-field">
+					<label for="quote-request-phone">Số điện thoại <span>*</span></label>
+					<input id="quote-request-phone" type="tel" name="contact[tel]" autocomplete="tel" placeholder="Nhập số điện thoại" required>
+				</div>
+				<div class="quote-request-field">
+					<label for="quote-request-email">Email <span>*</span></label>
+					<input id="quote-request-email" type="email" name="contact[email]" autocomplete="email" placeholder="name@example.com" required>
+				</div>
+				<div class="quote-request-field">
+					<label for="quote-request-company">Tên công ty</label>
+					<input id="quote-request-company" type="text" name="contact[company]" autocomplete="organization" placeholder="Tên công ty (không bắt buộc)">
+				</div>
+				<div class="quote-request-field">
+					<label for="quote-request-address">Địa chỉ</label>
+					<input id="quote-request-address" type="text" name="contact[address]" autocomplete="street-address" placeholder="Địa chỉ (không bắt buộc)">
+				</div>
+				<div class="quote-request-field">
+					<label for="quote-request-tax">Mã số thuế</label>
+					<input id="quote-request-tax" type="text" name="contact[tax_code]" placeholder="Mã số thuế (không bắt buộc)">
+				</div>
+				<div class="quote-request-field quote-request-message">
+					<label for="quote-request-body">Nội dung <span>*</span></label>
+					<textarea id="quote-request-body" name="contact[body]" rows="4" placeholder="Mô tả sản phẩm và số lượng cần báo giá" required></textarea>
+				</div>
 			</div>
-			<div class="quote-request-field">
-				<label for="quote-request-email">Email <span>*</span></label>
-				<input id="quote-request-email" type="email" name="contact[email]" autocomplete="email" placeholder="name@example.com" required>
+			<div class="quote-request-field quote-request-upload">
+				<label for="quote-request-file">Tệp đính kèm <span class="quote-request-optional">(không bắt buộc, tối đa 10 MB)</span></label>
+				<input id="quote-request-file" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" data-cloudinary-cloud-name="jq5uqgef" data-cloudinary-upload-preset="sapo_form_preset">
 			</div>
-			<div class="quote-request-field">
-				<label for="quote-request-company">Tên công ty</label>
-				<input id="quote-request-company" type="text" name="contact[company]" autocomplete="organization" placeholder="Tên công ty (không bắt buộc)">
-			</div>
-			<div class="quote-request-field">
-				<label for="quote-request-address">Địa chỉ</label>
-				<input id="quote-request-address" type="text" name="contact[address]" autocomplete="street-address" placeholder="Địa chỉ (không bắt buộc)">
-			</div>
-			<div class="quote-request-field">
-				<label for="quote-request-tax">Mã số thuế</label>
-				<input id="quote-request-tax" type="text" name="contact[tax_code]" placeholder="Mã số thuế (không bắt buộc)">
-			</div>
-			<div class="quote-request-field quote-request-message">
-				<label for="quote-request-body">Nội dung <span>*</span></label>
-				<textarea id="quote-request-body" name="contact[body]" rows="4" placeholder="Mô tả sản phẩm và số lượng cần báo giá" required></textarea>
-			</div>
-		</div>
-		<div class="quote-request-field quote-request-upload">
-			<label for="quote-request-file">Tệp đính kèm <span class="quote-request-optional">(không bắt buộc, tối đa 10 MB)</span></label>
-			<input id="quote-request-file" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" data-cloudinary-cloud-name="jq5uqgef" data-cloudinary-upload-preset="sapo_form_preset">
-		</div>
-		<input type="hidden" name="contact[attachment_url]" id="quote-request-attachment-url">
-		<p class="quote-request-status" data-quote-status role="status" aria-live="polite"></p>
-		<p class="quote-request-file-note">Đính kèm danh sách vật tư (BOQ), bản vẽ hoặc ảnh mẫu để nhận báo giá chính xác. Bộ phận kinh doanh phản hồi trong giờ làm việc.</p>
-		<button type="submit" class="quote-request-submit">Gửi yêu cầu</button>
-		{% endform %}
+			<input type="hidden" name="contact[attachment_url]" id="quote-request-attachment-url">
+			<p class="quote-request-status" data-quote-status role="status" aria-live="polite"></p>
+			<p class="quote-request-file-note">Tệp sẽ được tải lên Cloudinary an toàn qua unsigned preset; liên kết công khai sẽ được gửi kèm yêu cầu báo giá. Email nhận yêu cầu theo cấu hình liên hệ quản trị trong Sapo.</p>
+			<button type="submit" class="quote-request-submit">Gửi yêu cầu</button>
+		</form>
 	</div>
 </div>
+
 <style>
 .quote-request-button,.quote-request-submit{border:0;border-radius:4px;background:#c52228;color:#fff;padding:11px 20px;font-weight:700;cursor:pointer}.quote-request-button:hover,.quote-request-submit:hover{background:#a91c22;color:#fff}.quote-product-cta{margin:8px 0 12px}.quote-footer-cta{text-align:center;padding:16px 15px}.quote-request-modal[hidden]{display:none!important}.quote-request-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55)}.quote-request-dialog{position:relative;width:min(600px,100%);max-height:calc(100vh - 32px);overflow-y:auto;background:#fff;border-radius:10px;padding:28px;box-shadow:0 12px 50px rgba(0,0,0,.25)}.quote-request-dialog h2{margin:0 40px 8px 0;color:#c52228;text-align:center;text-transform:uppercase;font-size:22px}.quote-request-intro{text-align:center;color:#666;margin:0 0 20px}.quote-request-close{position:absolute;right:14px;top:10px;border:0;background:none;color:#777;font-size:28px;line-height:1;cursor:pointer}.quote-request-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.quote-request-field label{display:block;margin:0 0 5px;font-weight:600}.quote-request-field label span{color:#c52228}.quote-request-field input,.quote-request-field textarea{width:100%;border:1px solid #d8d8d8;border-radius:5px;padding:10px 12px;box-sizing:border-box;font:inherit}.quote-request-field input:focus,.quote-request-field textarea:focus{outline:2px solid rgba(197,34,40,.18);border-color:#c52228}.quote-request-message{grid-column:1/-1}.quote-request-message textarea{resize:vertical}.quote-request-file-note{font-size:12px;line-height:1.5;color:#666;margin:12px 0}.quote-request-submit{width:100%;min-height:44px}.quote-form-success{padding:12px;margin-bottom:14px;background:#eaf7ed;color:#216e39;border-radius:5px}@media(max-width:575px){.quote-request-dialog{padding:24px 18px}.quote-request-grid{grid-template-columns:1fr}.quote-request-message{grid-column:auto}}
 .quote-request-upload input[type=file]{display:block;width:100%;padding:10px;border:1px dashed #c8c8c8;border-radius:5px;background:#fafafa;font:inherit}.quote-request-optional{color:#777;font-size:12px;font-weight:400}.quote-request-status{min-height:20px;margin:10px 0;color:#555;font-size:14px}.quote-request-status[data-state="error"]{color:#c52228}.quote-request-status[data-state="success"]{color:#216e39}.quote-request-submit:disabled{opacity:.65;cursor:wait}
-
-.footer-payment{display:grid;grid-template-columns:repeat(3,42px);gap:7px 6px;align-items:center;justify-content:start;width:max-content;max-width:100%}.footer-payment img{display:block;width:42px!important;height:26px;max-width:42px;object-fit:contain}
 </style>
+
 <script>
 (function(){
 	var modal=document.getElementById('quote-request-modal');
@@ -268,40 +306,103 @@
 	var submitting=false;
 	var allowSubmit=false;
 	var metadataAdded=false;
+	var recaptchaLoaded=false;
+
 	function setStatus(message,state){if(!status)return;status.textContent=message;status.dataset.state=state||'';}
+
+	// Chỉ nạp reCAPTCHA khi người dùng click mở Popup
+	function loadRecaptcha(){
+		if(recaptchaLoaded)return;
+		recaptchaLoaded=true;
+		var script=document.createElement('script');
+		script.src='https://www.google.com/recaptcha/api.js?render=6Ldtu4IUAAAAAMQzG1gCw3wFlx_GytlZyLrXcsuK';
+		script.onload=function(){
+			if(window.grecaptcha){
+				grecaptcha.ready(function(){
+					grecaptcha.execute('6Ldtu4IUAAAAAMQzG1gCw3wFlx_GytlZyLrXcsuK',{action:'contact'}).then(function(token){
+						var t=document.getElementById('quote-recaptcha-token');
+						if(t)t.value=token;
+					});
+				});
+			}
+		};
+		document.body.appendChild(script);
+	}
+
 	function openModal(trigger){
 		previousFocus=document.activeElement;
 		modal.hidden=false;
 		modal.setAttribute('aria-hidden','false');
 		document.body.style.overflow='hidden';
+		loadRecaptcha(); // Kích hoạt nạp reCAPTCHA ngầm khi mở popup
 		var product=trigger&&trigger.getAttribute('data-quote-product');
 		var url=trigger&&trigger.getAttribute('data-quote-url');
 		if(product&&body&&!body.value){body.value='Sản phẩm: '+product+(url?'\n'+url:'')+'\n\n';}
 		var first=modal.querySelector('input:not([type=hidden]),textarea,button[type=submit]');
 		if(first)first.focus();
 	}
+
 	function closeModal(){modal.hidden=true;modal.setAttribute('aria-hidden','true');document.body.style.overflow='';if(previousFocus)previousFocus.focus();}
+
 	document.addEventListener('click',function(event){
 		var trigger=event.target.closest('[data-quote-open]');
 		if(trigger){event.preventDefault();openModal(trigger);return;}
 		if(event.target===modal||event.target.closest('[data-quote-close]'))closeModal();
 	});
+
 	document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!modal.hidden)closeModal();});
+
 	var allowedExtensions=['jpg','jpeg','png','webp','gif','pdf','doc','docx','xls','xlsx','ppt','pptx','zip'];
 	function isAllowedFile(file){var parts=file.name.toLowerCase().split('.');return parts.length>1&&allowedExtensions.indexOf(parts.pop())!==-1;}
+
 	if(fileInput){fileInput.addEventListener('change',function(){if(fileInput.files&&fileInput.files[0]){var file=fileInput.files[0];if(!isAllowedFile(file)){fileInput.value='';setStatus('Định dạng tệp không được hỗ trợ. Hãy chọn ảnh, PDF, Office hoặc ZIP.','error');return;}if(file.size>10*1024*1024){fileInput.value='';setStatus('Tệp vượt quá giới hạn 10 MB. Vui lòng chọn tệp nhỏ hơn.','error');return;}setStatus('Đã chọn tệp: '+file.name,'');}else{setStatus('','');}});}
+
 	function addContactDetails(){if(metadataAdded)return;metadataAdded=true;var details=[];var address=form.querySelector('[name="contact[address]"]');var company=form.querySelector('[name="contact[company]"]');var tax=form.querySelector('[name="contact[tax_code]"]');if(address&&address.value.trim())details.push('Địa chỉ: '+address.value.trim());if(company&&company.value.trim())details.push('Công ty: '+company.value.trim());if(tax&&tax.value.trim())details.push('Mã số thuế: '+tax.value.trim());if(details.length&&body)body.value=body.value+'\n\n'+details.join('\n');}
+
 	async function uploadFile(file){var cloud=fileInput.dataset.cloudinaryCloudName;var preset=fileInput.dataset.cloudinaryUploadPreset;if(!cloud||!preset)throw new Error('Thiếu cấu hình Cloudinary cloud name hoặc unsigned upload preset.');var data=new FormData();data.append('file',file);data.append('upload_preset',preset);var response=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(cloud)+'/auto/upload',{method:'POST',body:data});var result;try{result=await response.json();}catch(error){throw new Error('Cloudinary trả về phản hồi không hợp lệ.');}if(!response.ok||!result.secure_url)throw new Error(result.error&&result.error.message?result.error.message:'Không tải được tệp lên Cloudinary.');return result.secure_url;}
-	if(form){form.addEventListener('submit',async function(event){if(allowSubmit){addContactDetails();return;}event.preventDefault();if(submitting)return;submitting=true;submitButton.disabled=true;try{var file=fileInput&&fileInput.files&&fileInput.files[0];if(file){if(!isAllowedFile(file))throw new Error('Định dạng tệp không được hỗ trợ. Hãy chọn ảnh, PDF, Office hoặc ZIP.');if(file.size>10*1024*1024)throw new Error('Tệp vượt quá giới hạn 10 MB. Vui lòng chọn tệp nhỏ hơn.');setStatus('Đang tải tệp lên Cloudinary...','');var fileUrl=await uploadFile(file);fileUrlInput.value=fileUrl;if(body)body.value=body.value+'\n\nTệp đính kèm: '+fileUrl;setStatus('Tải tệp thành công. Đang gửi yêu cầu báo giá...','success');}else{setStatus('Đang gửi yêu cầu báo giá...','');}addContactDetails();allowSubmit=true;form.requestSubmit(event.submitter||undefined);}catch(error){submitting=false;submitButton.disabled=false;setStatus('Không thể gửi yêu cầu: '+(error&&error.message?error.message:'Lỗi không xác định.')+' Vui lòng thử lại.','error');}});}
-	if(modal.querySelector('.quote-form-success')){setStatus('Yêu cầu báo giá đã được gửi thành công.','success');openModal(null);}
-})();
-</script>
-<script>
-(function(){
-	if(!window.matchMedia('(max-width: 767px)').matches)return;
-	document.querySelectorAll('.section_group_product.background-title .section_tab_product-owl').forEach(function(carousel){
-		Array.prototype.slice.call(carousel.children,8).forEach(function(item){item.remove();});
-	});
+
+	if(form){form.addEventListener('submit',async function(event){
+		if(allowSubmit){addContactDetails();return;}
+		event.preventDefault();
+		if(submitting)return;
+		submitting=true;
+		submitButton.disabled=true;
+		try{
+			if(window.grecaptcha){
+				try{
+					var token=await grecaptcha.execute('6Ldtu4IUAAAAAMQzG1gCw3wFlx_GytlZyLrXcsuK',{action:'contact'});
+					var tInput=document.getElementById('quote-recaptcha-token');
+					if(tInput)tInput.value=token;
+				}catch(recaptchaErr){}
+			}
+			var file=fileInput&&fileInput.files&&fileInput.files[0];
+			if(file){
+				if(!isAllowedFile(file))throw new Error('Định dạng tệp không được hỗ trợ. Hãy chọn ảnh, PDF, Office hoặc ZIP.');
+				if(file.size>10*1024*1024)throw new Error('Tệp vượt quá giới hạn 10 MB. Vui lòng chọn tệp nhỏ hơn.');
+				setStatus('Đang tải tệp lên Cloudinary...','');
+				var fileUrl=await uploadFile(file);
+				fileUrlInput.value=fileUrl;
+				if(body)body.value=body.value+'\n\nTệp đính kèm: '+fileUrl;
+				setStatus('Tải tệp thành công. Đang gửi yêu cầu báo giá...','success');
+			}else{
+				setStatus('Đang gửi yêu cầu báo giá...','');
+			}
+			addContactDetails();
+			allowSubmit=true;
+			form.requestSubmit(event.submitter||undefined);
+		}catch(error){
+			submitting=false;
+			submitButton.disabled=false;
+			setStatus('Không thể gửi yêu cầu: '+(error&&error.message?error.message:'Lỗi không xác định.')+' Vui lòng thử lại.','error');
+		}
+	});}
+
+	if(window.location.search.indexOf('contact_posted=true')!==-1){
+		var successMsg=document.getElementById('quote-success-msg');
+		if(successMsg)successMsg.style.display='block';
+		setStatus('Yêu cầu báo giá đã được gửi thành công.','success');
+		openModal(null);
+	}
 })();
 </script>
 </footer>

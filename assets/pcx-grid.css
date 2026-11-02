@@ -1,19 +1,20 @@
 /* ===== KHUNG SẢN PHẨM ĐỀU NHAU - TOÀN WEBSITE - trangthietbi.vn =====
    Gọi trong theme.bwt, ngay trên </head>:
-   {{ 'pcx-grid.css' | asset_url | stylesheet_tag }} */
+   {{ 'pcx-grid.css' | asset_url | stylesheet_tag }} 
+	Cập nhật ngày 29/10/2026*/
 
 /* 1. Lưới trang danh mục / tìm kiếm: xếp hàng bằng flex, hết lủng lỗ */
 .products-view-grid .row,
 .category-products .row,
 .category-products .products-view-grid,
-.row:has(> [class*="col-"] .product-box){display:flex!important;flex-wrap:wrap!important}
+.row:has(> [class*="col-"] > .product-box){display:flex!important;flex-wrap:wrap!important}
 .products-view-grid .row::before,.products-view-grid .row::after,
 .category-products .row::before,.category-products .row::after,
-.row:has(> [class*="col-"] .product-box)::before,
-.row:has(> [class*="col-"] .product-box)::after{display:none!important}
+.row:has(> [class*="col-"] > .product-box)::before,
+.row:has(> [class*="col-"] > .product-box)::after{display:none!important}
 .products-view-grid [class*="col-"],
 .category-products [class*="col-"],
-.row > [class*="col-"]:has(.product-box){display:flex!important;flex-direction:column;float:none!important;margin-bottom:15px}
+.row > [class*="col-"]:has(> .product-box){display:flex!important;flex-direction:column;float:none!important;margin-bottom:15px}
 .products-view-grid [class*="col-"] > *,
 .category-products [class*="col-"] > *{flex:1 1 auto}
 
@@ -31,4 +32,3 @@
 .product-box .product-name{min-height:2.8em}
 .product-box .price-box{min-height:44px}
 .product-box .pcx-actions{margin-top:auto!important}
-

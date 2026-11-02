@@ -1,0 +1,174 @@
+/* Chỉ áp dụng cho dải thương hiệu; không dùng các class row/product-box/owl. */
+.ttb-brands {
+  --ttb-brand-width: 156px;
+  --ttb-brand-gap: 14px;
+  margin: 24px 0;
+  color: #27313b;
+}
+.ttb-brands .ttb-brands__panel {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e7e9ed;
+  border-radius: 8px;
+}
+.ttb-brands .ttb-brands__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ttb-brands .ttb-brands__heading {
+  margin: 0;
+  color: #27313b;
+  font: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.ttb-brands .ttb-brands__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.ttb-brands .ttb-brands__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid #e1e4e8;
+  border-radius: 5px;
+  background: #fff;
+  color: #5e6670;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.ttb-brands .ttb-brands__toggle[hidden] { display: none; }
+.ttb-brands .ttb-brands__arrow[hidden] { display: none; }
+.ttb-brands .ttb-brands__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #e1e4e8;
+  border-radius: 5px;
+  color: #5e6670;
+  background: #fff;
+  font: inherit;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ttb-brands .ttb-brands__arrow:hover { border-color: #be2326; color: #be2326; }
+.ttb-brands .ttb-brands__toggle:hover { border-color: #be2326; color: #be2326; }
+.ttb-brands .ttb-brands__icon { width: 14px; height: 14px; flex: 0 0 14px; }
+.ttb-brands .ttb-brands__icon--play { display: none; }
+.ttb-brands .ttb-brands__toggle[aria-pressed="true"] .ttb-brands__icon--pause { display: none; }
+.ttb-brands .ttb-brands__toggle[aria-pressed="true"] .ttb-brands__icon--play { display: block; }
+.ttb-brands .ttb-brands__viewport {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-behavior: auto;
+  padding: 2px 0 4px;
+}
+.ttb-brands .ttb-brands__viewport::-webkit-scrollbar { display: none; }
+.ttb-brands .ttb-brands__track {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  min-width: 100%;
+}
+.ttb-brands .ttb-brands__group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  gap: var(--ttb-brand-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--ttb-brand-gap) 0 0;
+}
+.ttb-brands .ttb-brands__item { flex: 0 0 var(--ttb-brand-width); width: var(--ttb-brand-width); margin: 0; padding: 0; }
+.ttb-brands .ttb-brands__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 104px;
+  padding: 14px 10px;
+  box-sizing: border-box;
+  border: 1px solid #e9ebef;
+  border-radius: 6px;
+  background: #fff;
+  color: #35404c;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.ttb-brands .ttb-brands__card:hover { border-color: #be2326; background: #fffafa; color: #be2326; }
+.ttb-brands .ttb-brands__logo {
+  display: block;
+  width: 132px;
+  height: 46px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.ttb-brands .ttb-brands__name {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+.ttb-brands .ttb-brands__card--text .ttb-brands__name,
+.ttb-brands .ttb-brands__card--fallback .ttb-brands__name {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .35px;
+  overflow-wrap: anywhere;
+}
+.ttb-brands .ttb-brands__card--fallback .ttb-brands__logo { display: none; }
+.ttb-brands a:focus-visible,
+.ttb-brands button:focus-visible { outline: 2px solid #be2326; outline-offset: 3px; }
+.ttb-brands:not(.is-looping) .ttb-brands__track { justify-content: flex-start; }
+.ttb-brands .ttb-brands__toggle {
+  display: none !important;
+}
+.ttb-brands .ttb-brands__all {
+  color: #be2326;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .ttb-brands { margin: 18px 0; --ttb-brand-width: 124px; --ttb-brand-gap: 12px; }
+  .ttb-brands .ttb-brands__panel { padding: 14px 12px; }
+  .ttb-brands .ttb-brands__header { align-items: flex-start; flex-wrap: wrap; margin-bottom: 12px; gap: 8px 12px; }
+  .ttb-brands .ttb-brands__heading { font-size: 18px; }
+  .ttb-brands .ttb-brands__controls { gap: 6px; margin-left: auto; }
+  .ttb-brands .ttb-brands__card { min-height: 94px; padding: 12px 8px; }
+  .ttb-brands .ttb-brands__logo { width: 106px; height: 40px; }
+  .ttb-brands .ttb-brands__name { font-size: 11px; }
+  .ttb-brands .ttb-brands__card--text .ttb-brands__name,
+  .ttb-brands .ttb-brands__card--fallback .ttb-brands__name { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ttb-brands .ttb-brands__card { transition: none; }
+}
