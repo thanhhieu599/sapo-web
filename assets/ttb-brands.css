@@ -172,3 +172,21 @@
 @media (prefers-reduced-motion: reduce) {
   .ttb-brands .ttb-brands__card { transition: none; }
 }
+
+/* ===== Chuyển động bằng CSS (02/11/2026) - thay cho vòng lặp JavaScript cũ ===== */
+.ttb-brands.is-looping .ttb-brands__viewport { overflow: hidden; }
+.ttb-brands .ttb-brands__track.is-marquee {
+  animation: ttb-brands-marquee var(--ttb-dur, 60s) linear infinite;
+  will-change: transform;
+}
+.ttb-brands .ttb-brands__viewport:hover .is-marquee,
+.ttb-brands:focus-within .is-marquee,
+.ttb-brands.is-paused .is-marquee,
+.ttb-brands.is-offscreen .is-marquee { animation-play-state: paused; }
+@keyframes ttb-brands-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--ttb-shift, -50%), 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ttb-brands .ttb-brands__track.is-marquee { animation: none; }
+}
