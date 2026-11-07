@@ -254,36 +254,6 @@
 								  {% if product_pdf_download_url != blank %}<a href="{{ product_pdf_download_url | escape }}" target="_blank" rel="noopener noreferrer" title="Tải file PDF" aria-label="Tải file PDF" style="display: inline-flex;"><img src="{{ 'product_pdf_icon.png' | asset_url }}" alt="PDF" loading="lazy" style="display: block; width: 36px; height: 36px; object-fit: contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';"><span aria-hidden="true" style="display: none; width: 36px; height: 36px; align-items: center; justify-content: center; box-sizing: border-box; border: 2px solid #d92d20; border-radius: 3px; color: #d92d20; font-size: 10px; font-weight: 700; line-height: 1;">PDF</span></a>{% endif %}
 								</p>
 								{% endif %}
-							<div class="product-summary product_description ahahah margin-bottom-15">
-								<div class="rte description">
-									<a href="/" style="font-weight: bold; color: #be2326;">TRANGTHIETBI.VN</a> Cung cấp sản phẩm, dịch vụ, giao hàng toàn quốc <b>UY TÍN SỐ 1 VIỆT NAM</b><br>
-									<b><i class="fa fa-home"></i> VPGD: 87 đường 16, KDC Phong Phú 4, Phong Phú, Bình Chánh, TP. Hồ Chí Minh</b><br>
-									<b><i class="fa fa-clock-o"></i> Thời gian hoạt động:</b><br>
-									Từ 8h - 19h00 Thứ 2 đến thứ 6<br>
-									Từ 8h - 17h30 Thứ 7 & Chủ nhật<br>
-									<b><i class="fa fa-comments"></i> Chat với Trang Thiết Bị:</b>
-									<ul class="product-social-support">										
-										<li>
-											<a target="_blank" href="{{ settings.product_social_mesenger }}" rel="nofollow">
-												<img src="{{ 'social_mesenger.png' | asset_url }}" alt="Mesenger"> trangthietbi.vn
-											</a>
-										</li>
-										<li>
-											<a target="_blank" href="https://zalo.me/{{ settings.product_social_zalo }}" rel="nofollow">
-												<img src="{{ 'social_zalo.png' | asset_url }}" alt="Zalo"> {{ settings.product_social_zalo }}
-											</a>
-										</li>
-										<li>
-											<a target="_blank" href="skype:{{ settings.product_social_skype }}?call" rel="nofollow">
-												<img src="{{ 'social_skype.png' | asset_url }}" alt="Skype"> {{ settings.product_social_skype }}
-											</a>
-										</li>
-									</ul>
-									<b><i class="fa fa-phone-square"></i> Khiếu nại & bảo hành:</b><br>
-									028 6655 1579 - 0933 568 088<br>
-									<i class="fa fa-envelope"></i> Email: hotro@dt-safety.com
-								</div>
-							</div>
 							<div class="product-sidebar-ant-fashion hidden-lg hidden-md">
 								{% include 'product_promotion_mobile' %}
 								{% if settings.product_hotline_enable %}
