@@ -197,9 +197,6 @@
 								</div>
 								{% endif %}
 							</div>
-							<div class="quote-product-cta">
-								<button type="button" class="quote-request-button" data-quote-open data-quote-product="{{ product.name | escape }}" data-quote-url="{{ shop.url }}{{ product.url }}">Yêu cầu báo giá</button>
-							</div>
 							<div class="taxable1">
 								<em>{% if product.variants[0].taxable == true %}<span style="color: green">{{ 'Giá sản phẩm đã bao gồm VAT' }}</span>
 									{% elsif product.variants[0].taxable == false %}<span style="color: red">{{ 'Giá sản phẩm chưa bao gồm VAT' }}</span>{% endif %}
@@ -280,6 +277,9 @@
 											<i class="fa fa-phone" aria-hidden="true"></i>
 										</a>
 										{% endif %}
+									</div>
+									<div class="quote-product-cta" style="clear:both;padding-top:12px;">
+										<button type="button" class="quote-request-button" data-quote-open data-quote-product="{{ product.name | escape }}" data-quote-url="{{ shop.url }}{{ product.url }}" style="display:block;width:100%;text-align:center;">Yêu cầu báo giá</button>
 									</div>
 								</div>
 								{% endif %}
@@ -377,6 +377,9 @@
 									<i class="fa fa-phone" aria-hidden="true"></i>
 								</a>
 								{% endif %}
+							</div>
+							<div class="quote-product-cta" style="clear:both;padding-top:12px;">
+								<button type="button" class="quote-request-button" data-quote-open data-quote-product="{{ product.name | escape }}" data-quote-url="{{ shop.url }}{{ product.url }}" style="display:block;width:100%;text-align:center;">Yêu cầu báo giá</button>
 							</div>
 						</div>
 						{% endif %}
