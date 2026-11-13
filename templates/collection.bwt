@@ -118,5 +118,7 @@
 		</section>
 	</div>
 </div>
+{% comment %}Tin tức liên quan danh mục - cùng giao diện khối Tin tức mới ở trang chủ{% endcomment %}
+{% include 'ttb-collection-news' %}
 {% include 'appbulk-selling-products' %}
 <div class="ab-most-view-product-module ab-hide"></div>
