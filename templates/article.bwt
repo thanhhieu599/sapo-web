@@ -66,7 +66,40 @@
 				{% if settings.article_social_enable %}
 				<div class="art-sharebar">
 					<span class="art-sharebar-label">Chia sẻ bài viết:</span>
-					{% include 'social-sharing' %}
+					<ul class="social art-social">
+							<li class="fb">
+								<a href="{{ settings.social_facebook_link }}" target="_blank" aria-label="Facebook" title="Facebook" rel="nofollow">
+									<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25px" height="25px" viewBox="0 0 96.124 96.123" style="enable-background:new 0 0 96.124 96.123;" xml:space="preserve">
+										<path d="M72.089,0.02L59.624,0C45.62,0,36.57,9.285,36.57,23.656v10.907H24.037c-1.083,0-1.96,0.878-1.96,1.961v15.803   c0,1.083,0.878,1.96,1.96,1.96h12.533v39.876c0,1.083,0.877,1.96,1.96,1.96h16.352c1.083,0,1.96-0.878,1.96-1.96V54.287h14.654   c1.083,0,1.96-0.877,1.96-1.96l0.006-15.803c0-0.52-0.207-1.018-0.574-1.386c-0.367-0.368-0.867-0.575-1.387-0.575H56.842v-9.246   c0-4.444,1.059-6.7,6.848-6.7l8.397-0.003c1.082,0,1.959-0.878,1.959-1.96V1.98C74.046,0.899,73.17,0.022,72.089,0.02z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#EBE7E7"/>
+									</svg>
+								</a>
+							</li>
+							<li class="tt">
+								<a href="{{settings.social_twitter_link}}" target="_blank" aria-label="Twitter" title="Twitter" rel="nofollow">
+									<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="25px" height="25px">
+										<path d="M512,97.248c-19.04,8.352-39.328,13.888-60.48,16.576c21.76-12.992,38.368-33.408,46.176-58.016    c-20.288,12.096-42.688,20.64-66.56,25.408C411.872,60.704,384.416,48,354.464,48c-58.112,0-104.896,47.168-104.896,104.992    c0,8.32,0.704,16.32,2.432,23.936c-87.264-4.256-164.48-46.08-216.352-109.792c-9.056,15.712-14.368,33.696-14.368,53.056    c0,36.352,18.72,68.576,46.624,87.232c-16.864-0.32-33.408-5.216-47.424-12.928c0,0.32,0,0.736,0,1.152    c0,51.008,36.384,93.376,84.096,103.136c-8.544,2.336-17.856,3.456-27.52,3.456c-6.72,0-13.504-0.384-19.872-1.792    c13.6,41.568,52.192,72.128,98.08,73.12c-35.712,27.936-81.056,44.768-130.144,44.768c-8.608,0-16.864-0.384-25.12-1.44    C46.496,446.88,101.6,464,161.024,464c193.152,0,298.752-160,298.752-298.688c0-4.64-0.16-9.12-0.384-13.568    C480.224,136.96,497.728,118.496,512,97.248z" data-original="#000000" class="active-path" data-old_color="#000000" fill="#EBE7E7"/>
+									</svg>
+								</a>
+							</li>
+							<li class="yt">
+								<a href="{{settings.social_pinterest_link}}" target="_blank" aria-label="Youtube" title="Youtube" rel="nofollow">
+									<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+										<path d="M490.24,113.92c-13.888-24.704-28.96-29.248-59.648-30.976C399.936,80.864,322.848,80,256.064,80
+												 c-66.912,0-144.032,0.864-174.656,2.912c-30.624,1.76-45.728,6.272-59.744,31.008C7.36,138.592,0,181.088,0,255.904
+												 C0,255.968,0,256,0,256c0,0.064,0,0.096,0,0.096v0.064c0,74.496,7.36,117.312,21.664,141.728
+												 c14.016,24.704,29.088,29.184,59.712,31.264C112.032,430.944,189.152,432,256.064,432c66.784,0,143.872-1.056,174.56-2.816
+												 c30.688-2.08,45.76-6.56,59.648-31.264C504.704,373.504,512,330.688,512,256.192c0,0,0-0.096,0-0.16c0,0,0-0.064,0-0.096
+												 C512,181.088,504.704,138.592,490.24,113.92z M192,352V160l160,96L192,352z"/>
+									</svg>
+								</a>
+							</li>
+							<li class="ins">
+								<a href="{{settings.social_instagram_link}}" target="_blank" aria-label="Instagram" title="Instagram" rel="nofollow">
+									<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m75 512h362c41.355469 0 75-33.644531 75-75v-362c0-41.355469-33.644531-75-75-75h-362c-41.355469 0-75 33.644531-75 75v362c0 41.355469 33.644531 75 75 75zm-45-437c0-24.8125 20.1875-45 45-45h362c24.8125 0 45 20.1875 45 45v362c0 24.8125-20.1875 45-45 45h-362c-24.8125 0-45-20.1875-45-45zm0 0"/><path d="m256 391c74.4375 0 135-60.5625 135-135s-60.5625-135-135-135-135 60.5625-135 135 60.5625 135 135 135zm0-240c57.898438 0 105 47.101562 105 105s-47.101562 105-105 105-105-47.101562-105-105 47.101562-105 105-105zm0 0"/><path d="m406 151c24.8125 0 45-20.1875 45-45s-20.1875-45-45-45-45 20.1875-45 45 20.1875 45 45 45zm0-60c8.269531 0 15 6.730469 15 15s-6.730469 15-15 15-15-6.730469-15-15 6.730469-15 15-15zm0 0"/></svg>
+								</a>
+							</li>
+						</ul>
+					
 				</div>
 				{% endif %}
 
@@ -250,7 +283,6 @@ html { scroll-behavior: smooth; }
 .art-toc a { color: #444; text-decoration: none; }
 .art-toc a:hover { color: #bf2026; text-decoration: underline; }
 
-/* ===== Nội dung bài (ghi đè style dán từ Word) ===== */
 .art-content {
 	font-size: 17px;
 	line-height: 1.85;
@@ -276,6 +308,24 @@ html { scroll-behavior: smooth; }
 	color: #333 !important;
 	text-align: left !important;
 }
+
+/* Chú thích ảnh: đoạn in nghiêng ngay sau ảnh thì căn giữa */
+.art-content p:has(> img) + p:has(> em:only-child),
+.art-content p:has(> img) + p:has(> i:only-child),
+.art-content figure + p:has(> em:only-child) {
+	margin-top: -10px;
+	font-size: 14px !important;
+	font-style: italic;
+	color: #777 !important;
+	text-align: center !important;
+}
+
+/* Cho phép căn giữa bằng nút căn giữa trong trình soạn thảo */
+.art-content p[style*="text-align: center"],
+.art-content p[style*="text-align:center"] {
+	text-align: center !important;
+}
+	
 .art-content span { font-size: inherit !important; color: inherit !important; background: none !important; }
 .art-content strong, .art-content b { color: #1d1d1d !important; }
 .art-content a { color: #bf2026 !important; text-decoration: underline; }
@@ -363,6 +413,90 @@ html { scroll-behavior: smooth; }
 .art-sharebar-label { font-size: 14px; font-weight: 600; color: #333; }
 
 .art-products { margin-top: 30px; }
+
+/* ===== Mạng xã hội =====*/
+.art-sharebar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.art-sharebar-label {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.art-sharebar ul.art-social {
+    display: flex !important;
+    align-items: center;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    gap: 10px;
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.art-sharebar .art-social li {
+    display: flex;
+    float: none !important;
+    width: auto !important;
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto;
+}
+
+.art-sharebar .art-social li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #555;
+    text-decoration: none;
+}
+
+.art-sharebar .art-social svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.art-sharebar .art-social svg path {
+    fill: currentColor;
+}
+
+.art-sharebar .art-social a:hover {
+    color: #bb2025;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .art-sharebar {
+        gap: 8px;
+    }
+
+    .art-sharebar ul.art-social {
+        gap: 5px;
+        min-width: 0;
+        overflow-x: auto;
+    }
+
+    .art-sharebar .art-social li a {
+        width: 28px;
+        height: 28px;
+    }
+
+    .art-sharebar .art-social svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+		
+	
 
 /* ===== Kêu gọi hành động ===== */
 .art-cta {
@@ -504,6 +638,8 @@ html { scroll-behavior: smooth; }
 .art-back .fa { margin-right: 6px; }
 .art-back:hover { color: #a01a20; }
 
+
+	
 /* ===== Sidebar dạng thẻ (dùng chung với trang tin tức) ===== */
 
 

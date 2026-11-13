@@ -1,0 +1,40 @@
+:root {
+	--ttb-font: "Roboto", -apple-system, "Segoe UI", Arial, sans-serif;
+	--ttb-text: #222;
+}
+
+/* Noi dung chung */
+body, input, textarea, button, select, .btn, .form-control,
+h1, h2, h3, h4, h5, h6, header nav {
+	font-family: var(--ttb-font);
+	letter-spacing: 0;
+}
+body { color: var(--ttb-text); }
+
+/* Tieu de */
+h1, h2, h3, h4, h5, h6,
+.title-head, .titlecate, .title-section-page, .art-title, .auth-title,
+.ttb-cat__heading, .quote-request-dialog h2 {
+	font-weight: 700;
+	color: var(--ttb-text);
+}
+.titlecate, .cgb-title { font-weight: 700; }
+
+/* Menu ngang (thanh do) & menu danh muc ben trai */
+#nav .nav-link { font-weight: 700; font-size: 14px; }
+.mainmenu, .nav-cate a, .aside-content a { font-weight: 500; }
+
+/* Ten san pham: dam vua, mau dam */
+.product-name, .product-name a, .product-box .product-name a { font-weight: 500; color: #333; }
+
+/* Gia */
+.price, .product-price, .special-price .price { font-weight: 700; }
+.old-price .price, .product-price-old { font-weight: 400; }
+
+/* Nut */
+.pcx-btn, .quote-request-button, .quote-request-submit, .btn, .cgb-btn, .ttb-cat__more, .toggle-desc-btn {
+	font-weight: 700;
+}
+
+/* Ten danh muc trong luoi danh muc */
+.ttb-cat__name { font-weight: 500; }

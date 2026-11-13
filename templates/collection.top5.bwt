@@ -1,0 +1,31 @@
+{% comment %}
+  Template phụ: chỉ để lấy dữ liệu top 5. Được gọi qua ?view=top5&sort_by=best-selling
+  Chỉ phần .top5-data được JS của snippet collection-top5 lấy ra.
+{% endcomment %}
+{% paginate collection.products by 5 %}
+<div class="top5-data">
+	{% for product in collection.products limit: 5 %}
+	<article class="t5-card">
+		<span class="t5-rank">{{ forloop.index }}</span>
+		{% if product.compare_at_price > product.price and product.price > 0 %}
+		<span class="t5-sale">-{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}%</span>
+		{% endif %}
+		<a class="t5-img" href="{{ product.url }}" title="{{ product.name | escape }}">
+			<img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.name | escape }}" loading="lazy">
+		</a>
+		<div class="t5-body">
+			<h3 class="t5-name"><a href="{{ product.url }}" title="{{ product.name | escape }}">{{ product.name }}</a></h3>
+			<div class="t5-price">
+				{% if product.price > 0 %}
+				<span class="now">{{ product.price | money }}</span>
+				{% if product.compare_at_price > product.price %}<del>{{ product.compare_at_price | money }}</del>{% endif %}
+				{% else %}
+				<span class="now">Liên hệ</span>
+				{% endif %}
+			</div>
+			{% unless product.available %}<span class="t5-out">Tạm hết hàng</span>{% endunless %}
+		</div>
+	</article>
+	{% endfor %}
+</div>
+{% endpaginate %}

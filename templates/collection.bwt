@@ -1,23 +1,109 @@
 {% include 'breadcrumb' %}
-{%assign sb = settings.collection_layout%}
+{% assign sb = settings.collection_layout %}
 {% assign group_key = 'nhom-' | append: collection.handle %}
+<style>
+	:root{--t5-accent:#e53935;--t5-dark:#1f2937}
+	/* ===== Tiêu đề danh mục ===== */
+	.cl-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid #eee}
+	.cl-head .cl-title{margin:0;font-size:24px;font-weight:700;line-height:1.3;text-align:left;padding-left:12px;border-left:4px solid var(--t5-accent)}
+	.cl-head .cl-count{font-size:13px;color:#666;background:#f4f5f7;border-radius:999px;padding:4px 12px;white-space:nowrap}
+	@media(max-width:767px){.cl-head .cl-title{font-size:20px}}
+	/* ===== Top 5 bán chạy ===== */
+	.top5{margin:0 0 28px;padding:18px 16px 16px;border-radius:14px;background:linear-gradient(180deg,#fff6f5 0%,#fff 70%);border:1px solid #fde1de}
+	.top5-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
+	.top5-title{margin:0;font-size:18px;font-weight:700;color:var(--t5-dark);display:flex;align-items:center;gap:8px}
+	.top5-title .fire{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:var(--t5-accent);color:#fff;font-size:15px}
+	.top5-sub{font-size:12px;color:#6b7280}
+	.top5-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+	.t5-card{position:relative;background:#fff;border:1px solid #eceff3;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s,border-color .2s}
+	.t5-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(17,24,39,.10);border-color:#f3b4af}
+	.t5-rank{position:absolute;top:8px;left:8px;z-index:2;min-width:26px;height:26px;padding:0 6px;border-radius:8px;background:var(--t5-dark);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+	.t5-card:nth-child(1) .t5-rank{background:#f59e0b}
+	.t5-card:nth-child(2) .t5-rank{background:#94a3b8}
+	.t5-card:nth-child(3) .t5-rank{background:#b45309}
+	.t5-sale{position:absolute;top:8px;right:8px;z-index:2;background:var(--t5-accent);color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px}
+	.t5-img{display:block;aspect-ratio:1/1;background:#f8fafc}
+	.t5-img img{width:100%;height:100%;object-fit:contain;display:block;padding:8px}
+	.t5-body{padding:10px 10px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+	.t5-name{margin:0;font-size:13px;line-height:1.4;font-weight:600;height:2.8em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+	.t5-name a{color:var(--t5-dark);text-decoration:none}
+	.t5-name a:hover{color:var(--t5-accent)}
+	.t5-price{margin-top:auto;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+	.t5-price .now{color:var(--t5-accent);font-weight:700;font-size:15px}
+	.t5-price del{color:#9ca3af;font-size:12px}
+	.t5-out{font-size:11px;color:#6b7280}
+	.t5-skel{height:230px;border-radius:12px;background:linear-gradient(90deg,#f1f3f6 25%,#e8ebf0 37%,#f1f3f6 63%);background-size:400% 100%;animation:t5shimmer 1.3s ease infinite}
+	@keyframes t5shimmer{0%{background-position:100% 50%}100%{background-position:0 50%}}
+	@media(prefers-reduced-motion:reduce){.t5-skel{animation:none}.t5-card{transition:none}}
+	@media(max-width:991px){
+		.top5{padding:14px 0 12px 12px;border-radius:12px}
+		.top5-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 12px 6px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+		.top5-list::-webkit-scrollbar{display:none}
+		.top5-list>*{flex:0 0 42%;scroll-snap-align:start}
+	}
+	@media(max-width:575px){.top5-list>*{flex-basis:62%}.top5-title{font-size:16px}}
+</style>
 <div class="container">
 	<div class="row">
 		<aside class="sidebar {{sb}} left-content col-md-3 col-sm-12 col-xs-12">
-			{%include 'sidebar-collection'%}
+			{% include 'sidebar-collection' %}
 		</aside>
 		<section class="main_container collection col-md-9 col-sm-12 col-xs-12">
-			{% include 'gallery_collections' %}
+			{% comment %}{% include 'gallery_collections' %}{% endcomment %}
 			<div class="pottion">
-				<h1 class="title-head margin-top-0">{%if page_title == 'All'%}Tất cả sản phẩm{%else%}{{ page_title }}{%endif%}</h1>
+				<header class="cl-head">
+					<h1 class="title-head cl-title">{% if page_title == 'All' %}Tất cả sản phẩm{% else %}{{ page_title }}{% endif %}</h1>
+					{% if collection.products_count > 0 %}<span class="cl-count">{{ collection.products_count }} sản phẩm</span>{% endif %}
+				</header>
+
+				{% unless collection.handle == 'all' %}
+				<section class="top5" id="top5-bestseller" data-url="{{ collection.url }}?view=top5&sort_by=best-selling" aria-label="Top 5 sản phẩm bán chạy nhất">
+					<div class="top5-head">
+						<h2 class="top5-title"><span class="fire" aria-hidden="true">&#128293;</span>Top 5 bán chạy nhất</h2>
+					</div>
+					<div class="top5-list" id="top5-list">
+						<div class="t5-skel"></div><div class="t5-skel"></div><div class="t5-skel"></div><div class="t5-skel"></div><div class="t5-skel"></div>
+					</div>
+				</section>
+				<script>
+				(function () {
+					var box = document.getElementById('top5-bestseller');
+					if (!box) return;
+					var m = location.search.match(/[?&]page=(\d+)/);
+					if (m && parseInt(m[1], 10) > 1) { box.parentNode.removeChild(box); return; }
+					var list = document.getElementById('top5-list');
+					var url = box.getAttribute('data-url');
+					var key = 'top5:' + url;
+					var TTL = 10 * 60 * 1000;
+					function render(html) {
+						var doc = new DOMParser().parseFromString(html, 'text/html');
+						var data = doc.querySelector('.top5-data');
+						if (!data || !data.children.length) { box.parentNode.removeChild(box); return; }
+						list.innerHTML = data.innerHTML;
+					}
+					try {
+						var c = JSON.parse(sessionStorage.getItem(key) || 'null');
+						if (c && Date.now() - c.t < TTL) { render(c.h); return; }
+					} catch (e) {}
+					fetch(url, { credentials: 'same-origin' })
+						.then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+						.then(function (html) {
+							try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), h: html })); } catch (e) {}
+							render(html);
+						})
+						.catch(function () { box.parentNode.removeChild(box); });
+				})();
+				</script>
+				{% endunless %}
+
 				{% if linklists[group_key].links.size > 0 %}
 				{% include 'brand-subcategories' %}
 				{% else %}
 				<div class="category-products products clearfix">
 					{% paginate collection.products by settings.collection_number_product %}
-					{%include 'collection-sortby'%}
+					{% include 'collection-sortby' %}
 					{% if collection.products.size > 0 %}
-					{%include 'products-grid-item'%}
+					{% include 'products-grid-item' %}
 					{% else %}
 					<div class="alert alert-warning alert-dismissible fade in" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>

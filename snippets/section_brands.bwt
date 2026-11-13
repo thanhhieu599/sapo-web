@@ -1,0 +1,53 @@
+{% comment %}
+Dải thương hiệu tự động. Chỉ include một lần, trước khối section_category.
+Nguồn tên: store.vendors. Link được tạo bằng url_for_vendor của Sapo.
+Không có mảng tên hãng/đường dẫn viết cố định, không đặt limit cho dữ liệu đầy đủ.
+Ảnh logo: tùy chọn dùng ảnh danh mục có alias trùng tên hãng và tên file chứa "logo".
+Nếu không có logo phù hợp, hiện tên hãng; không thay bằng ảnh sản phẩm.
+{% endcomment %}
+
+{% assign ttb_all_vendors = store.vendors | uniq | sort %}
+{% if ttb_all_vendors.size > 0 %}
+{{ 'ttb-brands.css' | asset_url | stylesheet_tag }}
+
+<section class="ttb-brands" data-ttb-brands data-speed="120" aria-labelledby="ttb-brands-heading">
+  <div class="container">
+    <div class="ttb-brands__panel">
+      <div class="ttb-brands__header">
+        <h2 id="ttb-brands-heading" class="ttb-brands__heading">Thương hiệu</h2>
+        <div class="ttb-brands__controls">
+          <button class="ttb-brands__arrow" type="button" data-ttb-brands-prev aria-label="Thương hiệu trước" hidden><span aria-hidden="true">‹</span></button>
+          <button class="ttb-brands__arrow" type="button" data-ttb-brands-next aria-label="Thương hiệu tiếp theo" hidden><span aria-hidden="true">›</span></button>
+          <button class="ttb-brands__toggle" type="button" data-ttb-brands-toggle
+                  aria-pressed="false" aria-controls="ttb-brands-viewport" hidden>
+            <svg class="ttb-brands__icon ttb-brands__icon--pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 4h3v12H5zm7 0h3v12h-3z" fill="currentColor"/></svg>
+            <svg class="ttb-brands__icon ttb-brands__icon--play" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 3 11 7-11 7z" fill="currentColor"/></svg>
+            <span data-ttb-brands-toggle-label>Tạm dừng</span>
+			
+          </button>
+			<a class="ttb-brands__all" href="/thuong-hieu">
+  				Xem tất cả →
+			</a>
+        </div>
+      </div>
+      <div id="ttb-brands-viewport" class="ttb-brands__viewport" data-ttb-brands-viewport
+           aria-label="Danh sách thương hiệu, có thể vuốt ngang" aria-live="off">
+        <div class="ttb-brands__track" data-ttb-brands-track></div>
+      </div>
+      <template data-ttb-brands-data>
+        {% for ttb_vendor in ttb_all_vendors %}
+          {% assign ttb_vendor_handle = ttb_vendor | handleize %}
+          {% assign ttb_vendor_collection = collections[ttb_vendor_handle] %}
+          {% assign ttb_vendor_image = '' %}
+		  {% if ttb_vendor_collection.image != blank %}
+ 		    {% assign ttb_vendor_image = ttb_vendor_collection | img_url: 'medium' %}
+          {% endif %}
+          <a href="{{ ttb_vendor | url_for_vendor | escape }}"
+             data-name="{{ ttb_vendor | escape }}" data-image="{{ ttb_vendor_image | escape }}"></a>
+        {% endfor %}
+      </template>
+    </div>
+  </div>
+</section>
+<script src="{{ 'ttb-brands.js' | asset_url }}" defer></script>
+{% endif %}

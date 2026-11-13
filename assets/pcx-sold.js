@@ -1,162 +1,102 @@
+/* pcx-sold.js (viet lai D&T 29/10/2026): hien so "Da ban" that tren the san pham (lay tu app thong ke san pham Sapo).
+   Chi dien so, KHONG sap xep lai san pham.
+   The can co trong product-grid-item.bwt: <span class="pcx-sold" data-pid="{{ product.id }}">Đã bán: <b>0</b></span> */
 (function(){
-  if (window.__pcxSold) return; window.__pcxSold = true;
+  if (window.__ttbDaBan) return; window.__ttbDaBan = true;
 
   var API = 'https://productstatistics.sapoapps.vn/Storefront/GetStats?storeAlias=trangthietbivn&productId=';
-  var W_SOLD = 10;       // 1 lượt mua = 10 lượt xem
-  var W_VIEW = 1;
-  var HIDE_ZERO = false; // true: sản phẩm 0 lượt mua thì ẩn chữ "Đã bán"
-  var MAX = 4;           // số yêu cầu chạy cùng lúc
-  var WAIT = 3000;       // chờ tối đa 3 giây rồi sắp xếp với dữ liệu đang có
+  var HIDE_ZERO = false;   // true: san pham chua ban duoc cai nao thi an chu "Da ban"
+  var CACHE_HOURS = 6;     // luu so lieu tren may khach 6 gio, chuyen trang khong phai goi lai
+  var MAX = 4;             // so yeu cau chay cung luc
 
-  /* ---------- Lấy & lưu tạm số liệu ---------- */
-  function cGet(id){ try { var v = sessionStorage.getItem('pcxStat_' + id); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
-  function cSet(id, st){ try { sessionStorage.setItem('pcxStat_' + id, JSON.stringify(st)); } catch(e){} }
+  function cGet(id){
+    try { var v = JSON.parse(localStorage.getItem('ttbSold_' + id) || 'null');
+      return v && (Date.now() - v.t) < CACHE_HOURS * 36e5 ? v.s : null; } catch(e){ return null; }
+  }
+  function cSet(id, s){ try { localStorage.setItem('ttbSold_' + id, JSON.stringify({ t: Date.now(), s: s })); } catch(e){} }
 
-  function pick(o, isView){
+  /* Doc so luot mua tu ket qua API (JSON hoac HTML) */
+  function parseSold(t){
     var r = null;
-    (function walk(x){
-      if (r !== null || !x || typeof x !== 'object') return;
-      for (var k in x) {
-        var v = x[k], ok = isView ? /view|xem/i.test(k) : (!/view|xem/i.test(k) && /order|purchas|sold|buy|sale|mua|bought/i.test(k));
-        if (ok && (typeof v === 'number' || /^\d+$/.test(v))) { r = +v; return; }
-        if (typeof v === 'object') walk(v);
-      }
-    })(o);
+    try {
+      (function walk(x){
+        if (r !== null || !x || typeof x !== 'object') return;
+        for (var k in x) {
+          var v = x[k];
+          if (!/view|xem/i.test(k) && /order|purchas|sold|buy|sale|mua|bought/i.test(k) && (typeof v === 'number' || /^\d+$/.test(v))) { r = +v; return; }
+          if (typeof v === 'object') walk(v);
+        }
+      })(JSON.parse(t));
+    } catch(e){}
+    if (r === null) { var m = String(t).replace(/<[^>]+>/g, ' ').match(/(\d[\d.,]*)\s*lượt mua/i); if (m) r = parseInt(m[1].replace(/[.,]/g, ''), 10); }
     return r;
   }
-  function parse(t){
-    var s = null, v = null;
-    try { var o = JSON.parse(t); s = pick(o, false); v = pick(o, true); } catch(e){}
-    var txt = String(t).replace(/<[^>]+>/g, ' ');
-    if (s === null) { var m = txt.match(/(\d[\d.,]*)\s*lượt mua/i); if (m) s = parseInt(m[1].replace(/[.,]/g, ''), 10); }
-    if (v === null) { var n = txt.match(/(\d[\d.,]*)\s*lượt xem/i); if (n) v = parseInt(n[1].replace(/[.,]/g, ''), 10); }
-    return s === null && v === null ? null : { s: s || 0, v: v || 0 };
+
+  function paint(id, s){
+    document.querySelectorAll('.pcx-sold[data-pid="' + id + '"]').forEach(function(el){
+      if (s === null) return;
+      if (s > 0 || !HIDE_ZERO) { (el.querySelector('b') || el).textContent = s; el.style.display = ''; }
+      else el.style.display = 'none';
+    });
   }
 
-  var stats = {}, waiting = {}, q = [], run = 0;
+  var q = [], run = 0, asked = {};
   function next(){
     while (run < MAX && q.length) (function(id){
       run++;
       fetch(API + encodeURIComponent(id))
         .then(function(r){ return r.ok ? r.text() : Promise.reject(r.status); })
-        .then(function(t){ var st = parse(t); if (st) { stats[id] = st; cSet(id, st); } })
+        .then(function(t){ var s = parseSold(t); if (s !== null) { cSet(id, s); paint(id, s); } })
         ['catch'](function(){})
-        .then(function(){ run--; done(id); next(); });
+        .then(function(){ run--; next(); });
     })(q.shift());
   }
-  function done(id){
-    var cbs = waiting[id] || []; delete waiting[id];
-    cbs.forEach(function(cb){ cb(stats[id] || null); });
-  }
-  function getStat(id, cb){
-    if (stats[id] !== undefined) return cb(stats[id]);
-    var c = cGet(id); if (c) { stats[id] = c; return cb(c); }
-    if (waiting[id]) { waiting[id].push(cb); return; }
-    waiting[id] = [cb]; q.push(id); next();
+  function want(id){
+    if (!id || asked[id]) return; asked[id] = 1;
+    var c = cGet(id);
+    if (c !== null) { paint(id, c); return; }   // co san trong bo nho -> hien ngay
+    q.push(id); next();
   }
 
-  /* ---------- Điền "Đã bán" ---------- */
-  function paint(el, st){
-    if (!st) return;
-    var b = el.querySelector('b') || el;
-    if (st.s > 0 || !HIDE_ZERO) { b.textContent = st.s; el.style.display = ''; }
-    else el.style.display = 'none';
-  }
-
-  /* ---------- Nạp ảnh thật (data-lazyload) cho khối sản phẩm ---------- */
-  function loadImgs(root){
-    root.querySelectorAll('img[data-lazyload]').forEach(function(img){
-      var real = img.getAttribute('data-lazyload');
-      if (real && img.getAttribute('src') !== real) img.setAttribute('src', real);
-    });
-  }
-
-  /* ---------- Sắp xếp ---------- */
-  function tier(box){
-    if (box.querySelector('.pcx-btn--contact')) return 2;   // Liên hệ
-    if (box.querySelector('.pcx-btn--out')) return 1;       // Hết hàng
-    return 0;                                               // Còn hàng
-  }
-  function score(box){
-    var el = box.querySelector('.pcx-sold[data-pid]'), st = el && stats[el.getAttribute('data-pid')];
-    return st ? st.s * W_SOLD + st.v * W_VIEW : 0;
-  }
-  function sortItems(items){
-    return items.map(function(it, i){ var box = it.querySelector('.product-box'); return { it: it, t: tier(box), sc: score(box), i: i }; })
-      .sort(function(a, b){ return a.t - b.t || b.sc - a.sc || a.i - b.i; })
-      .map(function(x){ return x.it; });
-  }
-  function rank(block){
-    if (block.__pcxRanked) return; block.__pcxRanked = true;
-    var $ = window.jQuery;
-    if (block.classList.contains('owl-carousel')) {
-      var loaded = block.querySelector('.owl-stage');
-      var items = loaded
-        ? [].slice.call(block.querySelectorAll('.owl-item:not(.cloned) > *'))
-        : [].slice.call(block.children).filter(function(c){ return c.querySelector('.product-box'); });
-      var sorted = sortItems(items);
-      if (sorted.every(function(x, i){ return x === items[i]; })) return;   // đã đúng thứ tự
-      if (loaded && $ && $.fn.owlCarousel) {
-        $(block).trigger('replace.owl.carousel', [$(sorted)]).trigger('refresh.owl.carousel');
-      } else if (!loaded) {
-        sorted.forEach(function(x){ block.appendChild(x); });
-      }
-      loadImgs(block);
-    } else {
-      // Lưới (trang danh mục, tìm kiếm): đổi thứ tự hiển thị bằng CSS order, không di chuyển HTML
-      var cols = [].slice.call(block.children).filter(function(c){ return c.querySelector('.product-box'); });
-      sortItems(cols).forEach(function(c, i){ c.style.order = i; });
-      loadImgs(block);
-    }
-  }
-
-  /* ---------- Tìm các khối sản phẩm ---------- */
-  function blockOf(box){
-    var owl = box.closest('.owl-carousel'); if (owl) return owl;
-    var p = box.parentElement;
-    while (p && p !== document.body) {
-      if (p.parentElement && [].filter.call(p.parentElement.children, function(c){ return c.querySelector && c.querySelector('.product-box'); }).length > 1) return p.parentElement;
-      p = p.parentElement;
-    }
-    return null;
-  }
-  function prepare(block){
-    if (block.__pcxSeen) return; block.__pcxSeen = true;
-    loadImgs(block);
-    var spans = [].slice.call(block.querySelectorAll('.pcx-sold[data-pid]'));
-    var seen = {}, ids = [];
-    spans.forEach(function(s){ var id = s.getAttribute('data-pid'); if (id && !seen[id]) { seen[id] = 1; ids.push(id); } });
-    var left = ids.length, timer = setTimeout(function(){ rank(block); }, WAIT);
-    if (!left) { clearTimeout(timer); rank(block); return; }
-    ids.forEach(function(id){
-      getStat(id, function(st){
-        block.querySelectorAll('.pcx-sold[data-pid="' + id + '"]').forEach(function(el){ paint(el, st); });
-        if (--left === 0) { clearTimeout(timer); rank(block); }
-      });
-    });
-  }
-
+  /* Chi goi API khi the san pham sap hien tren man hinh */
   var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(es){
-    es.forEach(function(e){ if (e.isIntersecting) { io.unobserve(e.target); prepare(e.target); } });
-  }, {rootMargin: '300px'}) : null;
+    es.forEach(function(e){ if (e.isIntersecting) { io.unobserve(e.target); want(e.target.getAttribute('data-pid')); } });
+  }, { rootMargin: '300px' }) : null;
+
+  /* Nap anh that cho the san pham (truoc day pcx-sold.js lam viec nay) - trinh duyet tu tai khi anh sap hien */
+  function loadImgs(){
+    document.querySelectorAll('.product-box img[data-lazyload]').forEach(function(img){
+      var real = img.getAttribute('data-lazyload');
+      if (real && img.getAttribute('src') !== real) { img.setAttribute('loading', 'lazy'); img.setAttribute('src', real); }
+    });
+  }
 
   function scan(){
-    document.querySelectorAll('.product-box').forEach(function(box){
-      if (box.__pcxScan) return; box.__pcxScan = true;
-      var b = blockOf(box);
-      if (b && !b.__pcxObs) { b.__pcxObs = true; io ? io.observe(b) : prepare(b); }
-      else if (!b) {   // ô đứng riêng lẻ: chỉ điền số
-        var el = box.querySelector('.pcx-sold[data-pid]');
-        if (el) getStat(el.getAttribute('data-pid'), function(st){ paint(el, st); });
-      }
+    loadImgs();
+    document.querySelectorAll('.pcx-sold[data-pid]').forEach(function(el){
+      if (el.__ttbSeen) return; el.__ttbSeen = true;
+      var id = el.getAttribute('data-pid'), c = cGet(id);
+      if (c !== null) { paint(id, c); asked[id] = 1; return; }
+      io ? io.observe(el) : want(id);
     });
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
-  var n = 0, t = setInterval(function(){ scan(); if (++n >= 10) clearInterval(t); }, 1000);
+  function start(){
+    scan();
+    /* Tu phat hien san pham moi xuat hien BAT KY LUC NAO: chuyen trang/loc/sap xep bang AJAX (col.js doSearch),
+       carousel trang chu, xem nhanh... (ban cu chi quet 10 giay dau nen trang 2, 3, 5... khong hien so) */
+    if ('MutationObserver' in window) {
+      var tm = null;
+      new MutationObserver(function(){ clearTimeout(tm); tm = setTimeout(scan, 80); })
+        .observe(document.body, { childList: true, subtree: true });
+    } else {
+      setInterval(scan, 1500);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
 
-/* ===== Nút +/- số lượng và đồng hồ khuyến mãi trên ô sản phẩm
-   (chuyển từ đoạn <script> cuối product-grid-item.bwt để không bị in lặp trong mọi ô) ===== */
+/* ===== Nut +/- so luong va dong ho dem nguoc tren the san pham (du phong, giu nhu ban cu) =====
+   Chi chay khi theme.bwt KHONG co doan <script> rieng lam viec nay (bien window.__pcxInit). */
 (function(){
   if (window.__pcxInit || window.__pcxCard) return; window.__pcxCard = true;
   document.addEventListener('click', function(e){

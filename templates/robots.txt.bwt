@@ -11,4 +11,5 @@
 
 Disallow: /*?fbclid=
 Disallow: /*?view=
+Disallow: /*?page=
 Disallow: /*?q=

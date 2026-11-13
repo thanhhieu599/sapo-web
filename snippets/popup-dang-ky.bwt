@@ -1,5 +1,6 @@
 {% comment %}
   Chỉnh thời gian ở dòng: var CFG = { firstDelay: 15, repeatDelay: 300 ... }
+  Đã sửa: form đăng ký dùng thẻ <form> thường, reCAPTCHA chỉ được nạp khi popup mở (hàm prepareForm).
 {% endcomment %}
 {% if customer %}
 <script>try{localStorage.setItem('dt_reg_done','1');}catch(e){}</script>
@@ -25,7 +26,7 @@
 
     <div class="dtreg-divider"><span>hoặc đăng ký bằng email</span></div>
 
-    {% form 'customer_register' %}
+    <form method="post" action="/account/register" id="customer_register" accept-charset="UTF-8">
       <div class="dtreg-row">
         <div class="dtreg-field">
           <label for="dtLastName">Họ</label>
@@ -49,7 +50,7 @@
       </div>
       <button type="submit" class="dtreg-submit">Đăng ký</button>
       <p class="dtreg-policy">Bằng việc đăng ký, bạn đồng ý với <a href="/chinh-sach-bao-mat" target="_blank">Chính sách bảo mật</a> của D&amp;T.</p>
-    {% endform %}
+    </form>
 
     <p class="dtreg-alt">Đã có tài khoản? <a href="/account/login">Đăng nhập</a></p>
   </div>
@@ -85,6 +86,7 @@
   .dtreg-eye{position:absolute;top:0;right:4px;height:46px;border:0;background:none;padding:0 12px;font-size:13px;font-weight:600;color:#555;cursor:pointer}
   .dtreg-submit{display:block;width:100%;height:50px;margin-top:6px;border:0;border-radius:10px;background:#c0202a;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.2s}
   .dtreg-submit:hover{background:#a51b24}
+  .dtreg-submit:disabled{opacity:.65;cursor:wait}
   .dtreg-policy{margin:10px 0 0;text-align:center;font-size:12px;color:#999}
   .dtreg-policy a{color:#777;text-decoration:underline}
   .dtreg-alt{margin:16px 0 0;text-align:center;font-size:14px;color:#555}
@@ -215,18 +217,82 @@
     });
   }
 
+  // ===== Nạp reCAPTCHA cho form email CHỈ KHI popup mở =====
+  // Lấy các ô ẩn (FormType, utf8, Token) và script reCAPTCHA do Sapo sinh ra từ trang đăng ký.
+  var regForm = document.getElementById('customer_register');
+  var formLoading = false, formReady = false;
+
+  function prepareForm(){
+    if (!regForm || formLoading || formReady) return;
+    formLoading = true;
+    getRegDoc().then(function(doc){
+      var srcForm = doc.getElementById('customer_register') || doc.querySelector('form[action*="/account/register"]');
+      if (!srcForm) { formLoading = false; return; }
+
+      var hidden = srcForm.querySelectorAll('input[type="hidden"]');
+      for (var i = hidden.length - 1; i >= 0; i--) {
+        regForm.insertBefore(document.importNode(hidden[i], true), regForm.firstChild);
+      }
+
+      // Nạp tuần tự: tệp api.js của reCAPTCHA trước, rồi mới chạy đoạn lấy Token
+      var scripts = [].slice.call(srcForm.querySelectorAll('script'));
+      (function next(n){
+        if (n >= scripts.length) { formReady = true; return; }
+        var o = scripts[n], s = document.createElement('script'), srcAttr = o.getAttribute('src');
+        if (srcAttr) {
+          s.src = srcAttr;
+          s.onload = function(){ next(n + 1); };
+          s.onerror = function(){ formLoading = false; };
+          document.body.appendChild(s);
+        } else {
+          s.text = o.textContent;
+          document.body.appendChild(s);
+          next(n + 1);
+        }
+      })(0);
+    })['catch'](function(){ formLoading = false; });
+  }
+
+  // Khi gửi form: nếu chưa có Token thì chờ tối đa 6 giây, hết hạn thì chuyển sang trang đăng ký
+  if (regForm) {
+    var sending = false;
+    regForm.addEventListener('submit', function(e){
+      var tokenInput = regForm.querySelector('input[name="Token"]');
+      if (tokenInput && tokenInput.value) return;
+      e.preventDefault();
+      if (sending) return;
+      sending = true;
+      var btn = regForm.querySelector('.dtreg-submit');
+      if (btn) btn.disabled = true;
+      prepareForm();
+      var tries = 0;
+      var wait = setInterval(function(){
+        tries++;
+        var t = regForm.querySelector('input[name="Token"]');
+        if (t && t.value) {
+          clearInterval(wait);
+          regForm.submit();
+        } else if (tries > 24) {
+          clearInterval(wait);
+          try { localStorage.removeItem('dt_reg_done'); } catch(err) {}
+          goRegister();
+        }
+      }, 250);
+    });
+  }
+
   var loop = null;
   function fmt(sec){ var m = Math.floor(sec/60), s = sec%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
   function stop(){ if (loop) { clearInterval(loop); loop = null; } }
 
   function openPop(){
-    stop();
-    timer.style.display = 'none';
-    getRegDoc()["catch"](function(){});
-    pop.classList.add('is-open');
-    pop.setAttribute('aria-hidden','false');
-    document.body.classList.add('dtreg-lock');
-  }
+	  stop();
+	  timer.style.display = 'none';
+	  pop.classList.add('is-open');
+	  pop.setAttribute('aria-hidden','false');
+	  document.body.classList.add('dtreg-lock');
+	}
+  if (regForm) regForm.addEventListener('focusin', prepareForm, { once: true });
 
   function closePop(){
     pop.classList.remove('is-open');

@@ -15,7 +15,7 @@
 					{% if linklists[link.alias] != null %}
 					<li class="dropdown menu-item-count">
 						<h3>
-							<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" />
+							<img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" width="24" height="24" />
 							<a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a>
 						</h3>
 						<div class="subcate gd-menu">
@@ -40,7 +40,7 @@
 					</li>
 					{% else %}
 					<li class="menu-item-count">
-						<h3><img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" /><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></h3>
+						<h3><img src="{{ icon_cate | asset_url }}" alt="{{ link.title }}" width="24" height="24" /><a href="{{ link.url }}" title="{{ link.title }}">{{ link.title }}</a></h3>
 					</li>
 					{% endif %}
 					{% endfor %}

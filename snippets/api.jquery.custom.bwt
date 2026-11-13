@@ -345,7 +345,7 @@
 			 $.ajax({
 				 type: 'GET',
 				 url: '/cart.js',
-				 async: false,
+				 async: true,
 				 cache: false,
 				 dataType: 'json',
 				 success: function (cart){

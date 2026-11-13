@@ -9,7 +9,7 @@
 		<div class="container">
 			<span class="bl-eyebrow">Tin tức</span>
 			<h1>{{ blog.name }}</h1>
-			<p>Cập nhật kiến thức an toàn lao động, hướng dẫn chọn thiết bị bảo hộ và tin tức mới nhất từ D&amp;T.</p>
+			<p>Cập nhật kiến thức an toàn lao động, hướng dẫn chọn thiết bị bảo hộ và tin tức mới nhất từ D&T.</p>
 		</div>
 	</div>
 

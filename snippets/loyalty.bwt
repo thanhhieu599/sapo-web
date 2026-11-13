@@ -18,5 +18,3 @@
 	data-domain='{{ store.domain }}'
 	data-token-public='{{ token_public }}'
 ><div class="sapo-rewards-base" style="left: 55px; bottom: 55px;"></div></div>
-<script src="https://loyalty.sapocorp.net/api/loyalty.js?alias={{ store.domain }}"></script>
-
