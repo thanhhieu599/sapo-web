@@ -118,7 +118,89 @@
 		</section>
 	</div>
 </div>
-{% comment %}Tin tức liên quan danh mục - cùng giao diện khối Tin tức mới ở trang chủ{% endcomment %}
-{% include 'ttb-collection-news' %}
+{% comment %}===== TIN TỨC LIÊN QUAN DANH MỤC (D&T 13/11/2026) - cùng giao diện khối Tin tức mới ở trang chủ. Ưu tiên bài có tag trùng tên danh mục, thiếu thì lấy bài mới nhất ====={% endcomment %}
+{% assign ttb_nb = blogs[settings.sec_new_blog] %}
+{% if ttb_nb and ttb_nb.articles.size > 0 %}
+{% assign ttb_limit = 8 %}
+{% assign ttb_ctitle = collection.title | downcase %}
+{% assign ttb_ids = '|' %}
+{% assign ttb_rel = 0 %}
+
+{% comment %}Bước 1: tìm bài liên quan{% endcomment %}
+{% for article in ttb_nb.articles %}
+	{% if ttb_rel >= ttb_limit %}{% break %}{% endif %}
+	{% assign ttb_match = false %}
+	{% for tag in article.tags %}
+		{% assign ttb_tag_h = tag | handleize %}
+		{% if ttb_tag_h == collection.handle %}{% assign ttb_match = true %}{% break %}{% endif %}
+	{% endfor %}
+	{% unless ttb_match %}
+		{% assign ttb_atitle = article.title | downcase %}
+		{% if ttb_ctitle != blank and ttb_atitle contains ttb_ctitle %}{% assign ttb_match = true %}{% endif %}
+	{% endunless %}
+	{% if ttb_match %}
+		{% assign ttb_ids = ttb_ids | append: article.url | append: '|' %}
+		{% assign ttb_rel = ttb_rel | plus: 1 %}
+	{% endif %}
+{% endfor %}
+
+<section class="section_group_product section-news ttb-collection-news">
+	<div class="container">
+		<div class="blogs-content">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="box-shock">
+						<div class="barbox clearfix">
+							<h2 class="titlecate">{% if ttb_rel > 0 %}Kiến thức &amp; tin tức về {{ collection.title }}{% else %}{{ settings.sec_new_title }}{% endif %}</h2>
+							<a href="{{ ttb_nb.url }}" class="viewmoretext" title="Xem tất cả">Xem tất cả</a>
+						</div>
+						<div class="list-blogs-link">
+							<div class="section_blogs_owl owl-carousel owl-theme not-dqowl">
+								{% assign ttb_shown = 0 %}
+								{% comment %}Bước 2: bài liên quan trước, rồi bài mới nhất cho đủ số lượng{% endcomment %}
+								{% for ttb_pass in (1..2) %}
+								{% for article in ttb_nb.articles %}
+									{% if ttb_shown >= ttb_limit %}{% break %}{% endif %}
+									{% assign ttb_key = '|' | append: article.url | append: '|' %}
+									{% assign ttb_is_rel = false %}
+									{% if ttb_ids contains ttb_key %}{% assign ttb_is_rel = true %}{% endif %}
+									{% assign ttb_show = false %}
+									{% if ttb_pass == 1 and ttb_is_rel %}{% assign ttb_show = true %}{% endif %}
+									{% if ttb_pass == 2 and ttb_is_rel == false %}{% assign ttb_show = true %}{% endif %}
+									{% if ttb_show %}
+									{% assign ttb_shown = ttb_shown | plus: 1 %}
+								<div class="item">
+									<article class="blog-item">
+										<div class="blog-item-thumbnail">
+											<a href="{{ article.url }}">
+												{% if article.image == null %}
+												<img src="{{ 'no-image.jpg' | asset_url }}" alt="{{ article.title | escape }}" loading="lazy">
+												{% else %}
+												<img src="{{ article.image.src | img_url: 'large' }}" alt="{{ article.title | escape }}" class="img-responsive center-block" loading="lazy" decoding="async" />
+												{% endif %}
+											</a>
+										</div>
+										<div class="blog-item-contens">
+											<h3 class="blog-item-name margin-top-10"><a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title }}</a></h3>
+											<div class="post-time">
+												<span>Đăng bởi <b>{{ article.author }}</b> - {{ article.created_on | date: 'dd/MM/yyyy' }}</span>
+											</div>
+											<p class="blog-item-summary margin-bottom-5">{{ article.summary_or_content | strip_html | truncate: 100 }}</p>
+										</div>
+									</article>
+								</div>
+									{% endif %}
+								{% endfor %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endif %}
+{% comment %}===== HẾT KHỐI TIN TỨC ====={% endcomment %}
 {% include 'appbulk-selling-products' %}
 <div class="ab-most-view-product-module ab-hide"></div>
