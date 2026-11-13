@@ -142,9 +142,10 @@
 
 				<style>
 					.ttb-collection-news{margin:25px 0 10px}
-					.ttb-collection-news .barbox{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #eee}
-					.ttb-collection-news .titlecate{margin:0;font-size:18px;font-weight:700}
-					.ttb-collection-news .viewmoretext{white-space:nowrap;font-weight:600}
+					.ttb-collection-news .barbox{display:flex!important;align-items:center;justify-content:space-between!important;gap:10px;width:100%;margin-bottom:12px!important;padding:0 0 10px!important;border-bottom:1px solid #eee;background:none!important}
+					.ttb-collection-news .barbox .titlecate{flex:1 1 auto;margin:0!important;padding:0!important;float:none!important;width:auto!important;text-align:left!important;font-size:18px;font-weight:700}
+					.ttb-collection-news .barbox .titlecate:before,.ttb-collection-news .barbox .titlecate:after{display:none!important}
+					.ttb-collection-news .barbox .viewmoretext{flex:0 0 auto;margin-left:auto!important;float:none!important;position:static!important;white-space:nowrap;font-weight:600}
 					.ttb-news-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 					.ttb-news-grid .blog-item{margin:0;height:100%;border:1px solid #eee;border-radius:6px;overflow:hidden;background:#fff}
 					.ttb-news-grid .blog-item-thumbnail{height:auto!important;aspect-ratio:16/10;overflow:hidden;background:#f6f6f6}
